@@ -4,6 +4,10 @@ import { NAV_ITEMS, type NavigationRoute } from "./components/layout/navigation"
 import { Header } from "./components/layout/Header";
 import { DashboardView } from "./components/dashboard/DashboardView";
 import { PlaceholderView } from "./components/views/PlaceholderView";
+import { ConsentManagementView } from "./components/consents/ConsentManagementView";
+import { PatientTimelineView } from "./components/records/PatientTimelineView";
+import { LaboratoryDashboardView } from "./components/laboratory/LaboratoryDashboardView";
+import { PharmacyDashboardView } from "./components/pharmacy/PharmacyDashboardView";
 import { RecordDetailsModal } from "./components/dashboard/RecordDetailsModal";
 import { UploadRecordModal } from "./components/dashboard/UploadRecordModal";
 import { ConsentDetailsModal } from "./components/dashboard/ConsentDetailsModal";
@@ -226,6 +230,14 @@ export default function App() {
                 records={records}
                 consents={consents}
               />
+            ) : currentRoute === "consents" ? (
+              <ConsentManagementView />
+            ) : currentRoute === "records" ? (
+              <PatientTimelineView />
+            ) : currentRoute === "labs" ? (
+              <LaboratoryDashboardView />
+            ) : currentRoute === "prescriptions" ? (
+              <PharmacyDashboardView />
             ) : (
               <PlaceholderView
                 route={currentRoute}

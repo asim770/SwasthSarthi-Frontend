@@ -6,6 +6,16 @@ import type {
   AuthVerifyResponse,
   AuthenticatedUser,
   MockOtpResponse,
+  ConsentItem,
+  ConsentDecision,
+  DiscoverablePatient,
+  TimelineRecordItem,
+  CareContextItem,
+  HealthTransferReport,
+  LabOrderItem,
+  PrescriptionItem,
+  DispensingRecordItem,
+  DiagnosticObservationItem,
 } from "../types/api";
 
 export class ApiError extends Error {
@@ -208,25 +218,97 @@ export async function fetchHealthRecords(params?: {
 }
 
 /**
- * Fetch electronic consent artefacts for principal
+ * Fetch electronic consent artefacts for principal with optional status filter
  */
-export async function fetchConsents(): Promise<unknown[]> {
-  return apiRequest<unknown[]>("/consents");
+export async function fetchConsents(statusFilter?: string): Promise<ConsentItem[]> {
+  const qs = statusFilter && statusFilter !== "ALL" ? `?status=${encodeURIComponent(statusFilter)}` : "";
+  return apiRequest<ConsentItem[]>(`/consents${qs}`);
 }
 
 /**
- * Fetch laboratory orders assigned to facility
+ * Fetch a single consent artefact by ID
+ */
+export async function fetchConsentById(consentId: string): Promise<ConsentItem> {
+  return apiRequest<ConsentItem>(`/consents/${encodeURIComponent(consentId)}`);
+}
+
+/**
+ * Create a new consent request (Doctor only)
+ */
+export async function createConsentRequest(data: {
+  patientId: string;
+  purpose: string;
+  hiTypes: string[];
+  dateRangeFrom: string;
+  dateRangeTo: string;
+  expiresAt: string;
+}): Promise<ConsentItem> {
+  return apiRequest<ConsentItem>("/consents", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Approve pending consent request (Patient only)
+ */
+export async function approveConsent(
+  consentId: string,
+  data?: { approvedHiTypes?: string[]; note?: string }
+): Promise<ConsentItem> {
+  return apiRequest<ConsentItem>(`/consents/${encodeURIComponent(consentId)}/approve`, {
+    method: "POST",
+    body: JSON.stringify(data || {}),
+  });
+}
+
+/**
+ * Deny pending consent request (Patient only)
+ */
+export async function denyConsent(
+  consentId: string,
+  reason?: string
+): Promise<ConsentItem> {
+  return apiRequest<ConsentItem>(`/consents/${encodeURIComponent(consentId)}/deny`, {
+    method: "POST",
+    body: JSON.stringify({ reason }),
+  });
+}
+
+/**
+ * Revoke active consent (Patient only)
+ */
+export async function revokeConsent(
+  consentId: string,
+  reason?: string
+): Promise<ConsentItem> {
+  return apiRequest<ConsentItem>(`/consents/${encodeURIComponent(consentId)}/revoke`, {
+    method: "POST",
+    body: JSON.stringify({ reason }),
+  });
+}
+
+/**
+ * Fetch decision history for a consent artefact
+ */
+export async function fetchConsentHistory(consentId: string): Promise<ConsentDecision[]> {
+  return apiRequest<ConsentDecision[]>(`/consents/${encodeURIComponent(consentId)}/history`);
+}
+
+/**
+ * Fetch patients discoverable by practitioner
+ */
+export async function fetchDiscoverablePatients(): Promise<DiscoverablePatient[]> {
+  return apiRequest<DiscoverablePatient[]>("/patients");
+}
+
+/**
+ * Fetch laboratory orders assigned to facility (alias)
  */
 export async function fetchLabOrders(): Promise<unknown[]> {
   return apiRequest<unknown[]>("/laboratory/orders");
 }
 
-/**
- * Fetch eligible active prescriptions for pharmacy
- */
-export async function fetchPrescriptions(): Promise<unknown[]> {
-  return apiRequest<unknown[]>("/pharmacy/prescriptions");
-}
 
 /**
  * Admin: list user accounts
@@ -258,3 +340,172 @@ export async function fetchAdminOverview(): Promise<{
     grantedConsents: number;
   }>("/admin/overview");
 }
+
+/**
+ * Fetch longitudinal patient timeline records
+ */
+export async function fetchTimelineRecords(params: {
+  patientId?: string;
+  resourceType?: string;
+  fromDate?: string;
+  toDate?: string;
+  search?: string;
+  sourceInstitution?: string;
+}): Promise<TimelineRecordItem[]> {
+  const query = new URLSearchParams();
+  if (params.patientId) query.set("patientId", params.patientId);
+  if (params.resourceType && params.resourceType !== "ALL") query.set("resourceType", params.resourceType);
+  if (params.fromDate) query.set("fromDate", params.fromDate);
+  if (params.toDate) query.set("toDate", params.toDate);
+  if (params.search) query.set("search", params.search);
+  if (params.sourceInstitution) query.set("sourceInstitution", params.sourceInstitution);
+
+  const qs = query.toString();
+  return apiRequest<TimelineRecordItem[]>(`/records/timeline${qs ? `?${qs}` : ""}`);
+}
+
+/**
+ * Discover linked ABDM care contexts for patient
+ */
+export async function fetchCareContexts(patientId: string): Promise<CareContextItem[]> {
+  return apiRequest<CareContextItem[]>(`/records/care-contexts?patientId=${encodeURIComponent(patientId)}`);
+}
+
+/**
+ * Initiate a scoped ABDM health data transfer from a participating institution
+ */
+export async function initiateAbdmTransfer(data: {
+  consentId: string;
+  patientId: string;
+  hipId: string;
+  transactionId?: string;
+  requestedHiTypes?: string[];
+  dateRangeFrom?: string;
+  dateRangeTo?: string;
+}): Promise<HealthTransferReport> {
+  return apiRequest<HealthTransferReport>("/records/transfer", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Check status of a transfer job
+ */
+export async function fetchTransferStatus(transferId: string): Promise<HealthTransferReport> {
+  return apiRequest<HealthTransferReport>(`/records/transfer/${encodeURIComponent(transferId)}`);
+}
+
+/**
+ * Retrieve authorized FHIR R4 Bundle
+ */
+export async function fetchFhirBundle(bundleId: string): Promise<Record<string, unknown>> {
+  return apiRequest<Record<string, unknown>>(`/records/fhir/${encodeURIComponent(bundleId)}`);
+}
+
+// ==========================================
+// LABORATORY API ENDPOINTS
+// ==========================================
+
+export async function fetchLaboratoryOrders(status?: string): Promise<LabOrderItem[]> {
+  const query = status && status !== "ALL" ? `?status=${encodeURIComponent(status)}` : "";
+  return apiRequest<LabOrderItem[]>(`/laboratory/orders${query}`);
+}
+
+export async function fetchLaboratoryOrder(id: string): Promise<LabOrderItem> {
+  return apiRequest<LabOrderItem>(`/laboratory/orders/${encodeURIComponent(id)}`);
+}
+
+export async function createLaboratoryOrder(data: {
+  patientId: string;
+  targetFacility: string;
+  testName: string;
+  testCode: string;
+  priority?: "ROUTINE" | "URGENT" | "STAT";
+  instructions?: string;
+}): Promise<LabOrderItem> {
+  return apiRequest<LabOrderItem>("/laboratory/orders", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function submitDiagnosticReport(
+  orderId: string,
+  data: {
+    title: string;
+    summary: string;
+    observations?: DiagnosticObservationItem[];
+    testResults?: Record<string, unknown>;
+  }
+): Promise<{ order: LabOrderItem; reportRecordId: string; fhirDiagnosticReport: Record<string, unknown> }> {
+  return apiRequest<{ order: LabOrderItem; reportRecordId: string; fhirDiagnosticReport: Record<string, unknown> }>(
+    `/laboratory/orders/${encodeURIComponent(orderId)}/report`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
+}
+
+export async function fetchLaboratorySubmittedReports(): Promise<Array<Record<string, unknown>>> {
+  return apiRequest<Array<Record<string, unknown>>>("/laboratory/reports");
+}
+
+// ==========================================
+// PHARMACY API ENDPOINTS
+// ==========================================
+
+export async function fetchPrescriptions(status?: string): Promise<PrescriptionItem[]> {
+  const query = status && status !== "ALL" ? `?status=${encodeURIComponent(status)}` : "";
+  return apiRequest<PrescriptionItem[]>(`/pharmacy/prescriptions${query}`);
+}
+
+export async function fetchPrescription(id: string): Promise<PrescriptionItem> {
+  return apiRequest<PrescriptionItem>(`/pharmacy/prescriptions/${encodeURIComponent(id)}`);
+}
+
+export async function createPrescription(data: {
+  patientId: string;
+  medications: Array<{
+    code?: string;
+    name: string;
+    dosage: string;
+    frequency: string;
+    durationDays: number;
+    route?: string;
+    quantity?: number;
+    instructions?: string;
+  }>;
+  maxRefills?: number;
+  validityDays?: number;
+  instructions?: string;
+}): Promise<PrescriptionItem> {
+  return apiRequest<PrescriptionItem>("/pharmacy/prescriptions", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function recordDispensation(
+  prescriptionId: string,
+  data: {
+    quantityToDispense?: number;
+    idempotencyKey?: string;
+    batchNumber?: string;
+    notes?: string;
+  }
+): Promise<{ prescription: PrescriptionItem; dispensingEvent: DispensingRecordItem; duplicate?: boolean }> {
+  return apiRequest<{ prescription: PrescriptionItem; dispensingEvent: DispensingRecordItem; duplicate?: boolean }>(
+    `/pharmacy/prescriptions/${encodeURIComponent(prescriptionId)}/dispense`,
+    {
+      method: "POST",
+      body: JSON.stringify(data),
+    }
+  );
+}
+
+export async function fetchDispensingHistory(): Promise<DispensingRecordItem[]> {
+  return apiRequest<DispensingRecordItem[]>("/pharmacy/dispenses");
+}
+

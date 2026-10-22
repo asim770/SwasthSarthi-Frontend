@@ -75,3 +75,202 @@ export interface MockOtpResponse {
   deliveryChannel: string;
   note: string;
 }
+
+export interface ConsentDecision {
+  action: string;
+  actorId: string;
+  actorRole: string;
+  actorName: string;
+  timestamp: string;
+  note?: string;
+  approvedHiTypes?: string[];
+}
+
+export interface ConsentItem {
+  _id: string;
+  consentId: string;
+  patientId: {
+    _id?: string;
+    name?: string;
+    abhaId?: string;
+    abhaAddress?: string;
+    gender?: string;
+    dateOfBirth?: string;
+  };
+  requesterDoctorId: {
+    _id?: string;
+    name?: string;
+    abhaId?: string;
+    specialization?: string;
+    facility?: string;
+  };
+  requesterFacility: string;
+  purpose: string;
+  hiTypes: string[];
+  approvedHiTypes: string[];
+  dateRangeFrom: string;
+  dateRangeTo: string;
+  expiresAt: string;
+  status: "PENDING" | "APPROVED" | "DENIED" | "REVOKED" | "EXPIRED" | "REQUESTED" | "GRANTED";
+  version: number;
+  decisionHistory?: ConsentDecision[];
+  grantedAt?: string;
+  revokedAt?: string;
+  deniedAt?: string;
+  signature?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface DiscoverablePatient {
+  id: string;
+  name: string;
+  abhaId: string;
+  abhaAddress: string;
+  gender?: string;
+  dateOfBirth?: string;
+}
+
+export interface TimelineRecordItem {
+  id: string;
+  recordId: string;
+  title: string;
+  resourceType: string;
+  category: string;
+  date: string;
+  status: string;
+  summary: string;
+  providerFacility: string;
+  doctorName: string;
+  sourceInstitution: string;
+  careContextId: string;
+  bundleId: string;
+  isMockData: boolean;
+  origin: "vault" | "abdm_transfer";
+  rawResourceId?: string;
+  details?: Record<string, unknown>;
+}
+
+export interface CareContextItem {
+  careContextId: string;
+  patientAbhaAddress: string;
+  institutionId: string;
+  institutionName: string;
+  institutionType: string;
+  description: string;
+  resourceCount: number;
+  availableHiTypes: string[];
+  earliestDate: string;
+  latestDate: string;
+  isMockData: true;
+}
+
+export interface HealthTransferReport {
+  transferId: string;
+  transactionId: string;
+  consentId: string;
+  status: "REQUESTED" | "PROCESSING" | "TRANSFERRED" | "FAILED";
+  hipId: string;
+  hipName: string;
+  requestedHiTypes: string[];
+  recordCount: number;
+  bundleId?: string;
+  retryCount: number;
+  lastAttemptAt: string;
+  completedAt?: string;
+  failureReason?: string;
+  expiresAt: string;
+  isMockInteraction: true;
+}
+
+export interface LabOrderItem {
+  _id: string;
+  orderId: string;
+  patientId: string;
+  patientName: string;
+  patientAbha: string;
+  doctorId: string;
+  doctorName: string;
+  targetFacility: string;
+  testName: string;
+  testCode: string;
+  priority: "ROUTINE" | "URGENT" | "STAT";
+  status: "ORDERED" | "IN_PROGRESS" | "COMPLETED" | "CANCELLED";
+  instructions?: string;
+  orderedAt: string;
+  completedAt?: string;
+  reportRecordId?: string;
+  fhirResource?: Record<string, unknown>;
+}
+
+export interface DiagnosticObservationItem {
+  code: string;
+  name: string;
+  value: number | string;
+  unit?: string;
+  referenceRange?: string;
+  interpretation?: string;
+}
+
+export interface PrescriptionMedicationItem {
+  code?: string;
+  name: string;
+  dosage: string;
+  frequency: string;
+  durationDays: number;
+  route?: string;
+  quantity: number;
+  remainingQuantity: number;
+  instructions?: string;
+}
+
+export interface DispensationEventItem {
+  dispenseId?: string;
+  idempotencyKey?: string;
+  dispensedAt: string;
+  pharmacyFacility: string;
+  pharmacistId: string;
+  pharmacistName?: string;
+  quantityDispensed: number;
+  remainingQuantityAfter?: number;
+  notes?: string;
+}
+
+export interface PrescriptionItem {
+  _id: string;
+  prescriptionId: string;
+  patientId: string;
+  patientName: string;
+  doctorId: string;
+  doctorName: string;
+  facility: string;
+  medications: PrescriptionMedicationItem[];
+  status: "ACTIVE" | "PARTIALLY_DISPENSED" | "DISPENSED" | "EXPIRED" | "CANCELLED";
+  totalQuantity: number;
+  dispensedQuantity: number;
+  remainingQuantity: number;
+  maxRefills: number;
+  remainingRefills: number;
+  prescribedAt: string;
+  expiresAt: string;
+  dispensedEvents: DispensationEventItem[];
+  fhirResource?: Record<string, unknown>;
+}
+
+export interface DispensingRecordItem {
+  _id: string;
+  dispenseId: string;
+  idempotencyKey: string;
+  prescriptionId: string;
+  patientName: string;
+  patientAbha: string;
+  pharmacistName: string;
+  pharmacyFacility: string;
+  medicationName: string;
+  quantityDispensed: number;
+  remainingQuantityAfter: number;
+  batchNumber?: string;
+  notes?: string;
+  dispensedAt: string;
+  status: string;
+}
