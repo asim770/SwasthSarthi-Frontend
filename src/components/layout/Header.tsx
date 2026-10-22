@@ -9,9 +9,9 @@ import {
   Shield,
   Settings,
   LogOut,
-  ExternalLink,
 } from "lucide-react";
 import type { HealthCheckData } from "../../types/api";
+import { useAuth } from "../../context/AuthContext";
 
 interface HeaderProps {
   currentRouteTitle: string;
@@ -20,6 +20,7 @@ interface HeaderProps {
   onOpenHealthModal: () => void;
   searchQuery: string;
   onSearchChange: (q: string) => void;
+  onOpenLogin: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -29,12 +30,41 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenHealthModal,
   searchQuery,
   onSearchChange,
+  onOpenLogin,
 }) => {
+  const { user, isAuthenticated, logout } = useAuth();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
   const [isProfileOpen, setIsProfileOpen] = useState(false);
 
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
+
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .filter((part) => !part.startsWith("Dr.") && !part.startsWith("Dr"))
+      .concat(name.split(" ")[0])
+      .filter(Boolean)
+      .map((p) => p[0].toUpperCase())
+      .slice(0, 2)
+      .join("");
+  };
+
+  const getRoleLabel = (role?: string) => {
+    switch (role) {
+      case "doctor":
+        return "Doctor (HPR)";
+      case "laboratory":
+        return "Diagnostic Lab (HFR)";
+      case "pharmacy":
+        return "Pharmacist (HFR)";
+      case "admin":
+        return "Administrator";
+      default:
+        return "ABHA Patient";
+    }
+  };
 
   // Close dropdowns on outside click
   useEffect(() => {
@@ -189,95 +219,104 @@ export const Header: React.FC<HeaderProps> = ({
           )}
         </div>
 
-        {/* User Profile Menu */}
-        <div className="relative" ref={profileRef}>
+        {/* User Profile Menu or Sign In Button */}
+        {!isAuthenticated ? (
           <button
-            onClick={() => setIsProfileOpen((prev) => !prev)}
-            className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-lg hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200"
-            aria-label="User account menu"
+            onClick={onOpenLogin}
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-700 text-white hover:bg-teal-800 transition-colors shadow-2xs cursor-pointer"
           >
-            <div className="w-7 h-7 rounded-full bg-teal-700 text-white font-bold text-xs flex items-center justify-center">
-              RV
-            </div>
-            <div className="hidden md:flex flex-col text-left">
-              <span className="text-xs font-semibold text-slate-900 leading-tight">
-                Rahul Verma
-              </span>
-              <span className="text-[10px] text-slate-400 leading-none">ABHA Patient</span>
-            </div>
+            <Shield className="w-3.5 h-3.5 text-teal-200" />
+            <span>Sign In with ABHA — Demo</span>
           </button>
+        ) : (
+          <div className="relative" ref={profileRef}>
+            <button
+              onClick={() => setIsProfileOpen((prev) => !prev)}
+              className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-lg hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200 cursor-pointer"
+              aria-label="User account menu"
+            >
+              <div className="w-7 h-7 rounded-full bg-teal-700 text-white font-bold text-xs flex items-center justify-center">
+                {getInitials(user?.name)}
+              </div>
+              <div className="hidden md:flex flex-col text-left">
+                <span className="text-xs font-semibold text-slate-900 leading-tight">
+                  {user?.name}
+                </span>
+                <span className="text-[10px] text-slate-400 leading-none">
+                  {getRoleLabel(user?.role)}
+                </span>
+              </div>
+            </button>
 
-          {isProfileOpen && (
-            <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
-              <div className="px-4 py-3 border-b border-slate-100">
-                <div className="flex items-center gap-1.5 mb-1">
-                  <span className="text-sm font-semibold text-slate-900">Rahul Verma</span>
-                  <CheckCircle className="w-3.5 h-3.5 text-teal-600" />
+            {isProfileOpen && (
+              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
+                <div className="px-4 py-3 border-b border-slate-100">
+                  <div className="flex items-center gap-1.5 mb-1">
+                    <span className="text-sm font-semibold text-slate-900">{user?.name}</span>
+                    <CheckCircle className="w-3.5 h-3.5 text-teal-600" />
+                  </div>
+                  <p className="text-xs text-slate-500 font-mono">
+                    {user?.abhaAddress || user?.abhaId}
+                  </p>
+                  {user?.facility && (
+                    <p className="text-[11px] text-slate-400 mt-0.5 truncate">
+                      {user.facility}
+                    </p>
+                  )}
+                  <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-[10px] text-teal-800 font-medium">
+                    <Shield className="w-2.5 h-2.5" />
+                    <span>Server-Managed Session ({getRoleLabel(user?.role)})</span>
+                  </div>
                 </div>
-                <p className="text-xs text-slate-500 font-mono">rahul.verma@sbx</p>
-                <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-[10px] text-teal-800 font-medium">
-                  <Shield className="w-2.5 h-2.5" />
-                  <span>ABDM Verified ABHA</span>
+
+                <div className="py-1">
+                  <button
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      onOpenHealthModal();
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
+                  >
+                    <AlertTriangle className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Gateway Diagnostics</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                      onOpenLogin();
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
+                  >
+                    <User className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Switch Demo Persona</span>
+                  </button>
+                  <button
+                    onClick={() => {
+                      setIsProfileOpen(false);
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
+                  >
+                    <Settings className="w-3.5 h-3.5 text-slate-400" />
+                    <span>Preferences</span>
+                  </button>
+                </div>
+
+                <div className="pt-1 border-t border-slate-100">
+                  <button
+                    onClick={async () => {
+                      setIsProfileOpen(false);
+                      await logout();
+                    }}
+                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors text-left font-medium cursor-pointer"
+                  >
+                    <LogOut className="w-3.5 h-3.5 text-red-500" />
+                    <span>Sign Out</span>
+                  </button>
                 </div>
               </div>
-
-              <div className="py-1">
-                <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    alert("Profile Settings view");
-                  }}
-                  className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left"
-                >
-                  <User className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Personal Health Profile</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    onOpenHealthModal();
-                  }}
-                  className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left"
-                >
-                  <AlertTriangle className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Gateway Diagnostics</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    alert("ABDM Portal integration link");
-                  }}
-                  className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left"
-                >
-                  <ExternalLink className="w-3.5 h-3.5 text-slate-400" />
-                  <span>ABHA Sandbox Console</span>
-                </button>
-                <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                  }}
-                  className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left"
-                >
-                  <Settings className="w-3.5 h-3.5 text-slate-400" />
-                  <span>Preferences</span>
-                </button>
-              </div>
-
-              <div className="pt-1 border-t border-slate-100">
-                <button
-                  onClick={() => {
-                    setIsProfileOpen(false);
-                    alert("Sign out demonstration");
-                  }}
-                  className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors text-left font-medium"
-                >
-                  <LogOut className="w-3.5 h-3.5 text-red-500" />
-                  <span>Sign Out</span>
-                </button>
-              </div>
-            </div>
-          )}
-        </div>
+            )}
+          </div>
+        )}
       </div>
     </header>
   );

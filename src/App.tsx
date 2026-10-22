@@ -8,6 +8,8 @@ import { RecordDetailsModal } from "./components/dashboard/RecordDetailsModal";
 import { UploadRecordModal } from "./components/dashboard/UploadRecordModal";
 import { ConsentDetailsModal } from "./components/dashboard/ConsentDetailsModal";
 import { HealthDiagnosticsModal } from "./components/dashboard/HealthDiagnosticsModal";
+import { LoginModal } from "./components/auth/LoginModal";
+import { useAuth } from "./context/AuthContext";
 import { checkSystemHealth } from "./api/client";
 import type { HealthCheckData } from "./types/api";
 import {
@@ -18,11 +20,18 @@ import {
 } from "./data/syntheticData";
 
 export default function App() {
+  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+
   // Navigation & Shell State
   const [currentRoute, setCurrentRoute] = useState<NavigationRoute>("dashboard");
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
   const [searchQuery, setSearchQuery] = useState<string>("");
+
+  // Auth Modal State
+  const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(() => {
+    return typeof window !== "undefined" && window.location.pathname === "/login";
+  });
 
   // Telemetry & Health State
   const [healthData, setHealthData] = useState<HealthCheckData | null>(null);
@@ -38,6 +47,44 @@ export default function App() {
   const [selectedRecord, setSelectedRecord] = useState<SyntheticHealthRecord | null>(null);
   const [selectedConsent, setSelectedConsent] = useState<SyntheticConsent | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
+
+  // Handle URL changes for /login
+  useEffect(() => {
+    const handlePopState = () => {
+      if (window.location.pathname === "/login") {
+        setIsLoginModalOpen(true);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, []);
+
+  const handleOpenLogin = useCallback(() => {
+    setIsLoginModalOpen(true);
+    if (window.location.pathname !== "/login") {
+      window.history.pushState({}, "", "/login");
+    }
+  }, []);
+
+  const handleCloseLogin = useCallback(() => {
+    setIsLoginModalOpen(false);
+    if (window.location.pathname === "/login") {
+      window.history.pushState({}, "", "/");
+    }
+  }, []);
+
+  // Redirect to role landing page on successful authentication
+  const handleSuccessfulLogin = useCallback((role?: string) => {
+    setIsLoginModalOpen(false);
+    if (window.location.pathname === "/login") {
+      window.history.pushState({}, "", "/");
+    }
+    if (role === "doctor") setCurrentRoute("records");
+    else if (role === "laboratory") setCurrentRoute("labs");
+    else if (role === "pharmacy") setCurrentRoute("prescriptions");
+    else if (role === "admin") setCurrentRoute("access");
+    else setCurrentRoute("dashboard");
+  }, []);
 
   // Fetch Gateway health status
   const probeHealth = useCallback(async () => {
@@ -111,6 +158,7 @@ export default function App() {
         onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
         isMobileOpen={isMobileOpen}
         onCloseMobile={() => setIsMobileOpen(false)}
+        onOpenLogin={handleOpenLogin}
       />
 
       {/* Main Content Area */}
@@ -123,11 +171,51 @@ export default function App() {
           onOpenHealthModal={() => setIsHealthModalOpen(true)}
           searchQuery={searchQuery}
           onSearchChange={setSearchQuery}
+          onOpenLogin={handleOpenLogin}
         />
 
         {/* Scrollable Page Body */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto w-full">
+            {/* Guest Sandbox or Role Persona Notice */}
+            {!authLoading && !isAuthenticated && (
+              <div className="mb-6 p-3.5 bg-teal-50/70 border border-teal-200/80 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-teal-900">
+                <div className="flex items-center gap-2.5">
+                  <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse shrink-0" />
+                  <span>
+                    <strong>Academic ABHA Sandbox:</strong> Currently browsing in guest mode. Sign in to
+                    demonstrate Patient, Doctor, Lab, Pharmacy, or Admin server-managed sessions.
+                  </span>
+                </div>
+                <button
+                  onClick={handleOpenLogin}
+                  className="px-3 py-1.5 bg-teal-700 text-white rounded-lg font-semibold hover:bg-teal-800 transition-colors shrink-0 shadow-2xs cursor-pointer"
+                >
+                  Continue with ABHA — Demo
+                </button>
+              </div>
+            )}
+
+            {isAuthenticated && user && user.role !== "patient" && (
+              <div className="mb-6 p-3.5 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-sm">
+                <div className="flex items-center gap-2.5">
+                  <span className="px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-bold uppercase tracking-wider">
+                    {user.role} Workspace
+                  </span>
+                  <span>
+                    Authenticated as <strong>{user.name}</strong> •{" "}
+                    <span className="font-mono text-slate-300">{user.facility || user.abhaAddress}</span>
+                  </span>
+                </div>
+                <button
+                  onClick={handleOpenLogin}
+                  className="text-xs text-teal-300 hover:text-white underline cursor-pointer"
+                >
+                  Switch Demo Persona
+                </button>
+              </div>
+            )}
+
             {currentRoute === "dashboard" ? (
               <DashboardView
                 searchQuery={searchQuery}
@@ -149,6 +237,12 @@ export default function App() {
       </div>
 
       {/* Modals & Dialogs */}
+      <LoginModal
+        isOpen={isLoginModalOpen}
+        onClose={handleCloseLogin}
+        onSuccessfulLogin={handleSuccessfulLogin}
+      />
+
       <RecordDetailsModal
         record={selectedRecord}
         onClose={() => setSelectedRecord(null)}

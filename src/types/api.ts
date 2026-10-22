@@ -31,3 +31,47 @@ export interface HealthCheckData {
     };
   };
 }
+
+export type UserRole = "patient" | "doctor" | "laboratory" | "pharmacy" | "admin";
+
+export interface AuthenticatedUser {
+  id: string;
+  abhaId: string;
+  abhaAddress: string;
+  name: string;
+  role: UserRole;
+  phone: string;
+  facility?: string;
+  specialization?: string;
+  isActive: boolean;
+  email?: string;
+  gender?: string;
+  dateOfBirth?: string;
+}
+
+export interface AuthChallengeResponse {
+  challengeId: string;
+  maskedIdentifier: string;
+  role?: UserRole;
+  name?: string;
+  expiresAt: string;
+  resendAvailableInSeconds: number;
+  demoMode: boolean;
+  note: string;
+}
+
+export interface AuthVerifyResponse {
+  user: AuthenticatedUser;
+  csrfToken: string;
+  message: string;
+}
+
+export interface MockOtpResponse {
+  challengeId: string;
+  demoOtp: string;
+  expiresAt: string;
+  attemptsRemaining: number;
+  environment: string;
+  deliveryChannel: string;
+  note: string;
+}

@@ -8,6 +8,7 @@ import {
   LogOut,
 } from "lucide-react";
 import { NAV_ITEMS, type NavigationRoute } from "./navigation";
+import { useAuth } from "../../context/AuthContext";
 
 export interface SidebarProps {
   currentRoute: NavigationRoute;
@@ -16,6 +17,7 @@ export interface SidebarProps {
   onToggleCollapse: () => void;
   isMobileOpen: boolean;
   onCloseMobile: () => void;
+  onOpenLogin?: () => void;
 }
 
 export const Sidebar: React.FC<SidebarProps> = ({
@@ -25,7 +27,21 @@ export const Sidebar: React.FC<SidebarProps> = ({
   onToggleCollapse,
   isMobileOpen,
   onCloseMobile,
+  onOpenLogin,
 }) => {
+  const { user, isAuthenticated, logout } = useAuth();
+
+  const getInitials = (name?: string) => {
+    if (!name) return "U";
+    return name
+      .split(" ")
+      .filter((part) => !part.startsWith("Dr.") && !part.startsWith("Dr"))
+      .concat(name.split(" ")[0])
+      .filter(Boolean)
+      .map((p) => p[0].toUpperCase())
+      .slice(0, 2)
+      .join("");
+  };
   const sidebarContent = (
     <div className="flex flex-col h-full bg-white border-r border-slate-200 select-none">
       {/* Brand Header */}
@@ -107,42 +123,67 @@ export const Sidebar: React.FC<SidebarProps> = ({
 
       {/* Profile Section & Collapse Toggle */}
       <div className="p-3 border-t border-slate-100 bg-slate-50/60 shrink-0">
-        <div
-          className={`flex items-center gap-3 p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs ${
-            isCollapsed ? "justify-center" : ""
-          }`}
-        >
-          <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-800 font-bold text-xs flex items-center justify-center shrink-0 border border-teal-200">
-            RV
-          </div>
-          {!isCollapsed && (
-            <div className="flex-1 min-w-0">
-              <div className="flex items-center gap-1.5">
-                <span className="text-xs font-semibold text-slate-900 truncate">
-                  Rahul Verma
-                </span>
-                <CheckCircle2 className="w-3 h-3 text-teal-600 shrink-0" />
-              </div>
-              <p className="text-[10px] text-slate-400 truncate font-mono">
-                ABHA: 32-8492-1920-4491
-              </p>
+        {!isAuthenticated ? (
+          <div
+            className={`flex items-center gap-2 p-2 rounded-lg bg-white border border-slate-200 shadow-2xs ${
+              isCollapsed ? "justify-center" : ""
+            }`}
+          >
+            <div className="w-8 h-8 rounded-full bg-slate-100 text-slate-600 font-bold text-xs flex items-center justify-center shrink-0">
+              ?
             </div>
-          )}
-          {!isCollapsed && (
-            <button
-              title="Sign Out"
-              className="text-slate-400 hover:text-slate-600 p-1 rounded hover:bg-slate-100"
-              onClick={() => alert("Sign out demonstration")}
-            >
-              <LogOut className="w-3.5 h-3.5" />
-            </button>
-          )}
-        </div>
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <span className="text-xs font-semibold text-slate-800 block truncate">
+                  Guest Session
+                </span>
+                <button
+                  onClick={onOpenLogin}
+                  className="text-[11px] text-teal-700 font-semibold hover:underline cursor-pointer"
+                >
+                  Sign In with ABHA
+                </button>
+              </div>
+            )}
+          </div>
+        ) : (
+          <div
+            className={`flex items-center gap-3 p-2 rounded-lg bg-white border border-slate-200/80 shadow-2xs ${
+              isCollapsed ? "justify-center" : ""
+            }`}
+          >
+            <div className="w-8 h-8 rounded-full bg-teal-100 text-teal-800 font-bold text-xs flex items-center justify-center shrink-0 border border-teal-200">
+              {getInitials(user?.name)}
+            </div>
+            {!isCollapsed && (
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-1.5">
+                  <span className="text-xs font-semibold text-slate-900 truncate">
+                    {user?.name}
+                  </span>
+                  <CheckCircle2 className="w-3 h-3 text-teal-600 shrink-0" />
+                </div>
+                <p className="text-[10px] text-slate-400 truncate font-mono">
+                  {user?.abhaAddress || user?.abhaId}
+                </p>
+              </div>
+            )}
+            {!isCollapsed && (
+              <button
+                title="Sign Out"
+                className="text-slate-400 hover:text-red-600 p-1 rounded hover:bg-slate-100 cursor-pointer transition-colors"
+                onClick={() => logout()}
+              >
+                <LogOut className="w-3.5 h-3.5" />
+              </button>
+            )}
+          </div>
+        )}
 
         {/* Desktop Collapse Button */}
         <button
           onClick={onToggleCollapse}
-          className="hidden lg:flex items-center justify-center w-full mt-2 py-1.5 text-xs text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors"
+          className="hidden lg:flex items-center justify-center w-full mt-2 py-1.5 text-xs text-slate-400 hover:text-slate-600 hover:bg-slate-100 rounded-md transition-colors cursor-pointer"
           title={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
         >
           {isCollapsed ? (
