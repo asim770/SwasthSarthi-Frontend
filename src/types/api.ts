@@ -274,3 +274,110 @@ export interface DispensingRecordItem {
   dispensedAt: string;
   status: string;
 }
+
+export type FacilityType = "HOSPITAL" | "LABORATORY" | "PHARMACY" | "CLINIC";
+export type FacilityStatus = "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
+
+export interface FacilityChangeHistoryItem {
+  fromStatus: FacilityStatus;
+  toStatus: FacilityStatus;
+  changedBy: string;
+  changedByName: string;
+  changedAt: string;
+  reason?: string;
+}
+
+export interface FacilityItem {
+  _id: string;
+  facilityId: string;
+  name: string;
+  type: FacilityType;
+  status: FacilityStatus;
+  contactPhone?: string;
+  contactEmail?: string;
+  address?: {
+    line?: string;
+    city?: string;
+    state?: string;
+    pincode?: string;
+  };
+  demoHfrId?: string;
+  registeredBy: string;
+  registeredByName: string;
+  verifiedBy?: string;
+  verifiedByName?: string;
+  verifiedAt?: string;
+  statusReason?: string;
+  changeHistory: FacilityChangeHistoryItem[];
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface PractitionerVerificationItem {
+  _id: string;
+  name: string;
+  role: UserRole;
+  abhaId: string;
+  abhaAddress: string;
+  facility?: string;
+  specialization?: string;
+  hprId?: string;
+  hfrId?: string;
+  verificationStatus: FacilityStatus;
+  verifiedAt?: string;
+  verifiedByName?: string;
+  statusReason?: string;
+  isActive: boolean;
+  createdAt: string;
+}
+
+export type NotificationCategory =
+  | "CONSENT"
+  | "CLINICAL_ACCESS"
+  | "LAB_REPORT"
+  | "PHARMACY_DISPENSE"
+  | "ONBOARDING"
+  | "SECURITY"
+  | "SYSTEM";
+
+export interface NotificationItem {
+  _id: string;
+  notificationId: string;
+  recipientId: string;
+  recipientAbha: string;
+  recipientRole?: string;
+  category: NotificationCategory;
+  title: string;
+  message: string;
+  relatedResourceId?: string;
+  relatedResourceType?: string;
+  isRead: boolean;
+  readAt?: string;
+  deliveryStatus: "PENDING" | "SENT" | "DELIVERED" | "FAILED";
+  createdAt: string;
+}
+
+export interface AuditChainVerificationReport {
+  valid: boolean;
+  totalVerified: number;
+  headSequence?: number;
+  lastEventHash?: string;
+  error?: string;
+  timestamp: string;
+  integrityStatus: "INTACT" | "TAMPERED" | "EMPTY";
+}
+
+export interface PatientAccessEventItem {
+  eventId: string;
+  action: string;
+  actionLabel: string;
+  actorRole?: string;
+  actorName?: string;
+  facility?: string;
+  targetResourceType: string;
+  targetResourceId?: string;
+  outcome: "ALLOWED" | "DENIED" | "FAILED";
+  denialReason?: string;
+  timestamp: string;
+}
+

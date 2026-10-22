@@ -509,3 +509,142 @@ export async function fetchDispensingHistory(): Promise<DispensingRecordItem[]> 
   return apiRequest<DispensingRecordItem[]>("/pharmacy/dispenses");
 }
 
+// ==========================================
+// ADMIN ONBOARDING & AUDIT API ENDPOINTS
+// ==========================================
+
+import type {
+  FacilityItem,
+  FacilityType,
+  PractitionerVerificationItem,
+  NotificationItem,
+  AuditChainVerificationReport,
+  PatientAccessEventItem,
+} from "../types/api";
+
+export async function fetchInstitutions(params?: {
+  type?: string;
+  status?: string;
+  search?: string;
+}): Promise<FacilityItem[]> {
+  const query = new URLSearchParams();
+  if (params?.type && params.type !== "ALL") query.append("type", params.type);
+  if (params?.status && params.status !== "ALL") query.append("status", params.status);
+  if (params?.search) query.append("search", params.search);
+  const qStr = query.toString();
+  return apiRequest<FacilityItem[]>(`/admin/institutions${qStr ? `?${qStr}` : ""}`);
+}
+
+export async function registerInstitution(data: {
+  name: string;
+  type: FacilityType;
+  contactPhone?: string;
+  contactEmail?: string;
+  address?: {
+    line?: string;
+    city?: string;
+    state?: string;
+    pincode?: string;
+  };
+  demoHfrId?: string;
+}): Promise<FacilityItem> {
+  return apiRequest<FacilityItem>("/admin/institutions", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function reviewInstitution(
+  id: string,
+  data: {
+    decision: "APPROVE" | "REJECT" | "SUSPEND";
+    reason?: string;
+  }
+): Promise<FacilityItem> {
+  return apiRequest<FacilityItem>(`/admin/institutions/${encodeURIComponent(id)}/review`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function fetchPractitionerVerifications(params?: {
+  role?: string;
+  status?: string;
+  search?: string;
+}): Promise<PractitionerVerificationItem[]> {
+  const query = new URLSearchParams();
+  if (params?.role && params.role !== "ALL") query.append("role", params.role);
+  if (params?.status && params.status !== "ALL") query.append("status", params.status);
+  if (params?.search) query.append("search", params.search);
+  const qStr = query.toString();
+  return apiRequest<PractitionerVerificationItem[]>(`/admin/practitioners${qStr ? `?${qStr}` : ""}`);
+}
+
+export async function reviewPractitioner(
+  id: string,
+  data: {
+    decision: "APPROVE" | "REJECT" | "SUSPEND";
+    reason?: string;
+  }
+): Promise<PractitionerVerificationItem> {
+  return apiRequest<PractitionerVerificationItem>(`/admin/practitioners/${encodeURIComponent(id)}/review`, {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+export async function verifyAuditChain(
+  fromSequence?: number,
+  toSequence?: number
+): Promise<AuditChainVerificationReport> {
+  const query = new URLSearchParams();
+  if (fromSequence) query.append("from", String(fromSequence));
+  if (toSequence) query.append("to", String(toSequence));
+  const qStr = query.toString();
+  return apiRequest<AuditChainVerificationReport>(`/admin/audit/verify${qStr ? `?${qStr}` : ""}`);
+}
+
+// ==========================================
+// PATIENT ACCESS HISTORY API
+// ==========================================
+
+export async function fetchPatientAccessHistory(): Promise<PatientAccessEventItem[]> {
+  return apiRequest<PatientAccessEventItem[]>("/patients/access-history");
+}
+
+// ==========================================
+// NOTIFICATIONS API ENDPOINTS
+// ==========================================
+
+export async function fetchNotifications(params?: {
+  page?: number;
+  limit?: number;
+  unreadOnly?: boolean;
+}): Promise<{ notifications: NotificationItem[]; total: number; unreadCount: number }> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append("page", String(params.page));
+  if (params?.limit) query.append("limit", String(params.limit));
+  if (params?.unreadOnly) query.append("unreadOnly", "true");
+  const qStr = query.toString();
+  return apiRequest<{ notifications: NotificationItem[]; total: number; unreadCount: number }>(
+    `/notifications${qStr ? `?${qStr}` : ""}`
+  );
+}
+
+export async function fetchUnreadNotificationCount(): Promise<{ unreadCount: number }> {
+  return apiRequest<{ unreadCount: number }>("/notifications/unread-count");
+}
+
+export async function markNotificationRead(id: string): Promise<NotificationItem> {
+  return apiRequest<NotificationItem>(`/notifications/${encodeURIComponent(id)}/read`, {
+    method: "PATCH",
+  });
+}
+
+export async function markAllNotificationsRead(): Promise<{ modifiedCount: number }> {
+  return apiRequest<{ modifiedCount: number }>("/notifications/mark-all-read", {
+    method: "POST",
+  });
+}
+
+

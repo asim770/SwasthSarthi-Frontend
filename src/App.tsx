@@ -8,6 +8,9 @@ import { ConsentManagementView } from "./components/consents/ConsentManagementVi
 import { PatientTimelineView } from "./components/records/PatientTimelineView";
 import { LaboratoryDashboardView } from "./components/laboratory/LaboratoryDashboardView";
 import { PharmacyDashboardView } from "./components/pharmacy/PharmacyDashboardView";
+import { PatientAccessHistoryView } from "./components/access/PatientAccessHistoryView";
+import { NotificationListView } from "./components/notifications/NotificationListView";
+import { AdminManagementView } from "./components/admin/AdminManagementView";
 import { RecordDetailsModal } from "./components/dashboard/RecordDetailsModal";
 import { UploadRecordModal } from "./components/dashboard/UploadRecordModal";
 import { ConsentDetailsModal } from "./components/dashboard/ConsentDetailsModal";
@@ -238,6 +241,12 @@ export default function App() {
               <LaboratoryDashboardView />
             ) : currentRoute === "prescriptions" ? (
               <PharmacyDashboardView />
+            ) : currentRoute === "access" ? (
+              <PatientAccessHistoryView />
+            ) : currentRoute === "notifications" ? (
+              <NotificationListView />
+            ) : currentRoute === "settings" && user?.role === "admin" ? (
+              <AdminManagementView />
             ) : (
               <PlaceholderView
                 route={currentRoute}
