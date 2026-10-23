@@ -1,13 +1,9 @@
 import React from "react";
 import {
-  FileText,
-  ShieldCheck,
-  Building2,
-  Activity,
-  ArrowRight,
   ChevronRight,
   Clock,
   Sparkles,
+  ArrowRight,
 } from "lucide-react";
 import { GlassPanel } from "../ui/GlassPanel";
 import { useAuth } from "../../context/AuthContext";
@@ -28,7 +24,6 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
-  onOpenUpload,
   onSelectRecord,
   onSelectConsent,
   onNavigateRoute,
@@ -69,7 +64,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     }
   };
 
-  // Primary action customized per role
+  // Primary single action customized per role
   const getPrimaryAction = () => {
     if (role === "doctor") {
       return {
@@ -79,7 +74,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     }
     if (role === "laboratory") {
       return {
-        label: "View Lab Orders",
+        label: "Open Lab Orders",
         action: () => onNavigateRoute("labs"),
       };
     }
@@ -91,7 +86,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     }
     if (role === "admin") {
       return {
-        label: "Verify Audit Chain",
+        label: "Verify Audit Trail",
         action: () => onNavigateRoute("access"),
       };
     }
@@ -109,9 +104,111 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     };
   };
 
+  // Exactly 3 role-tailored key metrics
+  const getMetrics = () => {
+    if (role === "doctor") {
+      return [
+        {
+          label: "Care Contexts",
+          value: records.length,
+          supportingText: "Encounter & diagnostic records",
+        },
+        {
+          label: "Active Consents",
+          value: consents.filter((c) => c.status === "GRANTED").length,
+          supportingText: "Authorized patient scopes",
+        },
+        {
+          label: "Pending Requests",
+          value: consents.filter((c) => c.status === "PENDING").length,
+          supportingText: "Awaiting patient approval",
+        },
+      ];
+    }
+    if (role === "laboratory") {
+      return [
+        {
+          label: "Diagnostic Reports",
+          value: records.filter((r) => r.resourceType === "DiagnosticReport").length,
+          supportingText: "FHIR R4 diagnostic bundles",
+        },
+        {
+          label: "Pending Orders",
+          value: 1,
+          supportingText: "Awaiting specimen intake",
+        },
+        {
+          label: "Network Facilities",
+          value: 3,
+          supportingText: "Connected diagnostic network",
+        },
+      ];
+    }
+    if (role === "pharmacy") {
+      return [
+        {
+          label: "Prescriptions",
+          value: records.filter((r) => r.resourceType === "MedicationRequest").length || 2,
+          supportingText: "Authorized e-prescriptions",
+        },
+        {
+          label: "Dispensed Medications",
+          value: 1,
+          supportingText: "Verified safe dispensations",
+        },
+        {
+          label: "Pending Refills",
+          value: 0,
+          supportingText: "All orders up to date",
+        },
+      ];
+    }
+    if (role === "admin") {
+      return [
+        {
+          label: "Registered Facilities",
+          value: 3,
+          supportingText: "HFR registry verified",
+        },
+        {
+          label: "Verified Practitioners",
+          value: 2,
+          supportingText: "HPR credentials verified",
+        },
+        {
+          label: "Audit Chain Integrity",
+          value: "Verified",
+          supportingText: "SHA-256 hash chain intact",
+        },
+      ];
+    }
+    // Patient / Guest default
+    const pendingCount = consents.filter((c) => c.status === "PENDING").length;
+    return [
+      {
+        label: "Health Records",
+        value: records.length,
+        supportingText: "Longitudinal clinical entries",
+      },
+      {
+        label: "Active Consents",
+        value: consents.filter((c) => c.status === "GRANTED").length,
+        supportingText: "Approved ABDM permissions",
+      },
+      {
+        label: "Pending Consent Requests",
+        value: pendingCount,
+        supportingText: pendingCount > 0 ? "Requires review" : "No pending requests",
+      },
+    ];
+  };
+
   const primaryAction = getPrimaryAction();
+  const metrics = getMetrics();
   const recentRecords = records.slice(0, 3);
   const recentConsents = consents.slice(0, 2);
+  const activeConsentsCount = consents.filter((c) => c.status === "GRANTED").length;
+  const pendingConsentsCount = consents.filter((c) => c.status === "PENDING").length;
 
   return (
     <div className="space-y-6">
@@ -119,41 +216,36 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       <GlassPanel className="p-5 sm:p-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
           <div className="space-y-1">
-            <div className="flex items-center gap-2">
-              <span className="text-[11px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-800 border border-teal-500/20">
-                {role === "doctor"
-                  ? "Practitioner Workspace"
-                  : role === "laboratory"
-                  ? "Diagnostic Laboratory"
-                  : role === "pharmacy"
-                  ? "Pharmacy Hub"
-                  : role === "admin"
-                  ? "Administrative Authority"
-                  : "ABHA Patient Profile"}
-              </span>
-              <span className="text-xs text-slate-400 font-mono hidden md:inline">
-                {user?.facility || SYNTHETIC_PATIENT.abhaId}
-              </span>
-            </div>
+            <span className="text-[11px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-800 border border-teal-500/20 inline-block">
+              {role === "doctor"
+                ? "Doctor Workspace"
+                : role === "laboratory"
+                ? "Diagnostic Laboratory"
+                : role === "pharmacy"
+                ? "Pharmacy Hub"
+                : role === "admin"
+                ? "Administrative Authority"
+                : "Patient Workspace"}
+            </span>
 
-            <h2 className="text-lg sm:text-xl font-semibold text-slate-900 tracking-tight">
+            <h2 className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
               Welcome back, {displayName}
             </h2>
 
             <p className="text-xs sm:text-sm text-slate-500 max-w-xl leading-relaxed">
               {role === "doctor"
-                ? "Review authorized clinical records and author synthetic lab orders."
+                ? "Access authorized clinical records and review patient care contexts."
                 : role === "laboratory"
-                ? "Inspect incoming diagnostic orders and submit HL7 FHIR reports."
+                ? "Inspect diagnostic orders and submit HL7 FHIR laboratory reports."
                 : role === "pharmacy"
-                ? "View valid prescriptions and track medication dispensation."
+                ? "View active prescriptions and record safe medication fulfillment."
                 : role === "admin"
-                ? "Manage institution verification and monitor cryptographic audit integrity."
-                : "Your longitudinal medical records and ABDM consent permissions are active."}
+                ? "Monitor cryptographic audit integrity and manage verified institutions."
+                : "Manage your longitudinal health records and electronic consent permissions."}
             </p>
           </div>
 
-          <div className="flex items-center gap-2 shrink-0">
+          <div className="shrink-0">
             <button
               onClick={primaryAction.action}
               className="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white rounded-xl text-xs font-medium transition-all shadow-2xs hover:shadow-xs flex items-center gap-1.5 cursor-pointer"
@@ -161,72 +253,29 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <span>{primaryAction.label}</span>
               <ArrowRight className="w-3.5 h-3.5" />
             </button>
-            {role === "patient" && (
-              <button
-                onClick={onOpenUpload}
-                className="px-3 py-2 bg-white/70 hover:bg-white text-slate-700 border border-slate-200/60 rounded-xl text-xs font-medium transition-all shadow-2xs cursor-pointer"
-                title="Add clinical record"
-              >
-                Add Record
-              </button>
-            )}
           </div>
         </div>
       </GlassPanel>
 
-      {/* B. Simplified Metric Cards (Max 4 Compact Cards) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium text-slate-500">Health Records</span>
-            <FileText className="w-4 h-4 text-teal-700/70" />
-          </div>
-          <div className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
-            {records.length}
-          </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">Longitudinal entries</p>
-        </GlassPanel>
-
-        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium text-slate-500">Active Consents</span>
-            <ShieldCheck className="w-4 h-4 text-emerald-600/70" />
-          </div>
-          <div className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
-            {consents.filter((c) => c.status === "GRANTED").length}
-          </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">
-            {consents.some((c) => c.status === "PENDING")
-              ? "1 pending request"
-              : "All permissions verified"}
-          </p>
-        </GlassPanel>
-
-        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium text-slate-500">Linked Facilities</span>
-            <Building2 className="w-4 h-4 text-cyan-600/70" />
-          </div>
-          <div className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
-            3
-          </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">ABDM Network</p>
-        </GlassPanel>
-
-        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
-          <div className="flex items-center justify-between text-slate-400 mb-2">
-            <span className="text-xs font-medium text-slate-500">System Gateway</span>
-            <Activity className="w-4 h-4 text-teal-600" />
-          </div>
-          <div className="text-xl sm:text-2xl font-semibold text-emerald-700 tracking-tight flex items-center gap-1.5">
-            <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" />
-            <span>Live</span>
-          </div>
-          <p className="text-[11px] text-slate-400 mt-0.5">FHIR R4 Compliant</p>
-        </GlassPanel>
+      {/* B. Reduced Metric Cards (Exactly 3 Key Metrics) */}
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3.5 sm:gap-4">
+        {metrics.map((metric, idx) => (
+          <GlassPanel
+            key={idx}
+            className="p-4 sm:p-5 transition-all duration-150 hover:bg-white/85"
+          >
+            <div className="text-xs font-medium text-slate-500 mb-1.5">
+              {metric.label}
+            </div>
+            <div className="text-2xl sm:text-3xl font-semibold text-slate-900 tracking-tight">
+              {metric.value}
+            </div>
+            <p className="text-[11px] text-slate-400 mt-1">{metric.supportingText}</p>
+          </GlassPanel>
+        ))}
       </div>
 
-      {/* C & D. Progressive Disclosure: Recent Records (2/3) & Consent Summary (1/3) */}
+      {/* C & D. Progressive Disclosure: Recent Records & Consent Summary */}
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
         {/* Recent Records (Max 3 items) */}
         <GlassPanel className="lg:col-span-2 p-5 flex flex-col justify-between">
@@ -303,10 +352,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/50">
               <div>
                 <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
-                  Consent Permissions
+                  Consent Summary
                 </h3>
                 <p className="text-[11px] text-slate-400">
-                  Electronic ABDM Artefacts
+                  {activeConsentsCount} active • {pendingConsentsCount} pending
                 </p>
               </div>
 

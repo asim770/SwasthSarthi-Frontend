@@ -1,7 +1,6 @@
 import { useState, useEffect, useCallback } from "react";
-import { Sidebar } from "./components/layout/Sidebar";
-import { NAV_ITEMS, type NavigationRoute } from "./components/layout/navigation";
-import { Header } from "./components/layout/Header";
+import { GlassNavbar } from "./components/layout/GlassNavbar";
+import { type NavigationRoute } from "./components/layout/navigation";
 import { DashboardView } from "./components/dashboard/DashboardView";
 import { PlaceholderView } from "./components/views/PlaceholderView";
 import { ConsentManagementView } from "./components/consents/ConsentManagementView";
@@ -27,12 +26,10 @@ import {
 } from "./data/syntheticData";
 
 export default function App() {
-  const { user, isAuthenticated, isLoading: authLoading } = useAuth();
+  const { user } = useAuth();
 
-  // Navigation & Shell State
+  // Navigation State
   const [currentRoute, setCurrentRoute] = useState<NavigationRoute>("dashboard");
-  const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
-  const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
 
   // Auth Modal State
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(() => {
@@ -151,108 +148,51 @@ export default function App() {
     );
   };
 
-  const currentRouteMeta = NAV_ITEMS.find((item) => item.id === currentRoute);
-  const currentRouteTitle = currentRouteMeta ? currentRouteMeta.label : "Dashboard";
-
   return (
-    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-slate-100/60 to-slate-200/30 overflow-hidden font-sans text-slate-900">
-      {/* Sidebar Navigation */}
-      <Sidebar
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100/60 to-slate-200/30 flex flex-col font-sans text-slate-900">
+      {/* 1. Horizontal Glass Top Navbar (Replaces permanent vertical sidebar) */}
+      <GlassNavbar
         currentRoute={currentRoute}
         onNavigate={setCurrentRoute}
-        isCollapsed={isCollapsed}
-        onToggleCollapse={() => setIsCollapsed((prev) => !prev)}
-        isMobileOpen={isMobileOpen}
-        onCloseMobile={() => setIsMobileOpen(false)}
+        healthData={healthData}
+        onOpenHealthModal={() => setIsHealthModalOpen(true)}
         onOpenLogin={handleOpenLogin}
       />
 
-      {/* Main Content Area */}
-      <div className="flex flex-col flex-1 min-w-0 h-screen overflow-hidden">
-        {/* Top Header */}
-        <Header
-          currentRouteTitle={currentRouteTitle}
-          onOpenMobileNav={() => setIsMobileOpen(true)}
-          healthData={healthData}
-          onOpenHealthModal={() => setIsHealthModalOpen(true)}
-          onOpenLogin={handleOpenLogin}
-          onNavigateNotifications={() => setCurrentRoute("notifications")}
-        />
-
-        {/* Scrollable Page Body */}
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
-          <div className="max-w-7xl mx-auto w-full">
-            {/* Compact Contextual Session / Workspace Indicator */}
-            {!authLoading && !isAuthenticated && (
-              <div className="mb-4 px-3.5 py-2 glass-panel rounded-xl flex items-center justify-between gap-3 text-xs text-slate-700 shadow-2xs">
-                <div className="flex items-center gap-2">
-                  <span className="w-1.5 h-1.5 rounded-full bg-teal-600 animate-pulse shrink-0" />
-                  <span className="text-slate-600">
-                    <strong>Demo Sandbox:</strong> Browsing as guest. Sign in to simulate Doctor, Lab, Pharmacy, or Admin roles.
-                  </span>
-                </div>
-                <button
-                  onClick={handleOpenLogin}
-                  className="px-2.5 py-1 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-xs font-medium transition-colors shrink-0 shadow-2xs cursor-pointer"
-                >
-                  Sign In
-                </button>
-              </div>
-            )}
-
-            {isAuthenticated && user && user.role !== "patient" && (
-              <div className="mb-4 px-3.5 py-2 glass-panel rounded-xl flex items-center justify-between gap-3 text-xs text-slate-700 shadow-2xs">
-                <div className="flex items-center gap-2 truncate">
-                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
-                  <span className="px-2 py-0.5 rounded-md bg-teal-500/10 text-teal-800 border border-teal-500/20 text-[10px] font-semibold uppercase tracking-wider shrink-0">
-                    {user.role}
-                  </span>
-                  <span className="truncate text-slate-600">
-                    <strong>{user.name}</strong> •{" "}
-                    <span className="font-mono text-slate-500 text-[11px]">{user.facility || user.abhaAddress}</span>
-                  </span>
-                </div>
-                <button
-                  onClick={handleOpenLogin}
-                  className="text-xs text-teal-700 hover:text-teal-900 font-medium shrink-0 cursor-pointer"
-                >
-                  Switch Persona
-                </button>
-              </div>
-            )}
-
-            {currentRoute === "dashboard" ? (
-              <DashboardView
-                onOpenUpload={() => setIsUploadModalOpen(true)}
-                onSelectRecord={setSelectedRecord}
-                onSelectConsent={setSelectedConsent}
-                onNavigateRoute={setCurrentRoute}
-                records={records}
-                consents={consents}
-              />
-            ) : currentRoute === "consents" ? (
-              <ConsentManagementView />
-            ) : currentRoute === "records" ? (
-              <PatientTimelineView />
-            ) : currentRoute === "labs" ? (
-              <LaboratoryDashboardView />
-            ) : currentRoute === "prescriptions" ? (
-              <PharmacyDashboardView />
-            ) : currentRoute === "access" ? (
-              <PatientAccessHistoryView />
-            ) : currentRoute === "notifications" ? (
-              <NotificationListView />
-            ) : currentRoute === "settings" && user?.role === "admin" ? (
-              <AdminManagementView />
-            ) : (
-              <PlaceholderView
-                route={currentRoute}
-                onBackToDashboard={() => setCurrentRoute("dashboard")}
-              />
-            )}
-          </div>
-        </main>
-      </div>
+      {/* 2. Main Page Content (Balanced single-column container) */}
+      <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
+        <div className="max-w-6xl mx-auto w-full">
+          {currentRoute === "dashboard" ? (
+            <DashboardView
+              onOpenUpload={() => setIsUploadModalOpen(true)}
+              onSelectRecord={setSelectedRecord}
+              onSelectConsent={setSelectedConsent}
+              onNavigateRoute={setCurrentRoute}
+              records={records}
+              consents={consents}
+            />
+          ) : currentRoute === "consents" ? (
+            <ConsentManagementView />
+          ) : currentRoute === "records" ? (
+            <PatientTimelineView />
+          ) : currentRoute === "labs" ? (
+            <LaboratoryDashboardView />
+          ) : currentRoute === "prescriptions" ? (
+            <PharmacyDashboardView />
+          ) : currentRoute === "access" ? (
+            <PatientAccessHistoryView />
+          ) : currentRoute === "notifications" ? (
+            <NotificationListView />
+          ) : currentRoute === "settings" && user?.role === "admin" ? (
+            <AdminManagementView />
+          ) : (
+            <PlaceholderView
+              route={currentRoute}
+              onBackToDashboard={() => setCurrentRoute("dashboard")}
+            />
+          )}
+        </div>
+      </main>
 
       {/* Modals & Dialogs */}
       <LoginModal
