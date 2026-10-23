@@ -2,18 +2,41 @@
 
 @layer base {
   :root {
+    --app-bg: #f5f8fc;
+    --glass-bg: rgba(255, 255, 255, 0.58);
+    --glass-bg-strong: rgba(255, 255, 255, 0.78);
+    --glass-border: rgba(255, 255, 255, 0.78);
+    --glass-highlight: rgba(255, 255, 255, 0.92);
+    --text-primary: #172033;
+    --text-secondary: #64748b;
+    --text-muted: #94a3b8;
+    --accent: #0d9488;
+    --accent-soft: rgba(13, 148, 136, 0.09);
+    --shadow-soft: 0 8px 28px rgba(15, 23, 42, 0.06);
+
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif;
     --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: #f8fafc;
-    color: #0f172a;
+    background-color: var(--app-bg);
+    color: var(--text-primary);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
   }
+}
+
+/* Light Cool-Grey Background with subtle white and pale-teal ambient gradients */
+.app-light-bg {
+  background-color: var(--app-bg);
+  background-image:
+    radial-gradient(at 0% 0%, rgba(13, 148, 136, 0.06) 0px, transparent 50%),
+    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.05) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(20, 184, 166, 0.04) 0px, transparent 50%),
+    radial-gradient(at 100% 100%, rgba(241, 245, 249, 0.8) 0px, transparent 50%);
+  background-attachment: fixed;
 }
 
 /* Apple-Inspired Glassmorphic Surfaces */
@@ -72,19 +95,25 @@
   width: 5px;
   height: 5px;
 }
+
 ::-webkit-scrollbar-track {
   background: transparent;
 }
+
 ::-webkit-scrollbar-thumb {
   background: rgba(203, 213, 225, 0.6);
   border-radius: 9999px;
 }
+
 ::-webkit-scrollbar-thumb:hover {
   background: rgba(148, 163, 184, 0.8);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;

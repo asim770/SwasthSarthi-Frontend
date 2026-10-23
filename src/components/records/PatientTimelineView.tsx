@@ -381,7 +381,7 @@ export const PatientTimelineView: React.FC = () => {
             </div>
 
             {/* Date Range Pickers */}
-            <div className="flex items-center gap-2 text-xs">
+            <div className="flex flex-wrap items-center gap-2 text-xs">
               <div className="flex items-center gap-1.5 bg-slate-50 border border-slate-200 rounded-lg px-2.5 py-1.5">
                 <Calendar className="w-3.5 h-3.5 text-slate-400" />
                 <input

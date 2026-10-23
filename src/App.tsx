@@ -149,7 +149,7 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-slate-100/60 to-slate-200/30 flex flex-col font-sans text-slate-900">
+    <div className="min-h-screen app-light-bg flex flex-col font-sans text-[var(--text-primary,#172033)]">
       {/* 1. Horizontal Glass Top Navbar (Replaces permanent vertical sidebar) */}
       <GlassNavbar
         currentRoute={currentRoute}
