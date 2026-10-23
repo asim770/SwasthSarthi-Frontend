@@ -2,12 +2,10 @@ import React, { useState, useRef, useEffect } from "react";
 import {
   Menu,
   Bell,
-  Search,
   CheckCircle,
   AlertTriangle,
   User,
   Shield,
-  Settings,
   LogOut,
 } from "lucide-react";
 import type { HealthCheckData } from "../../types/api";
@@ -18,9 +16,8 @@ interface HeaderProps {
   onOpenMobileNav: () => void;
   healthData: HealthCheckData | null;
   onOpenHealthModal: () => void;
-  searchQuery: string;
-  onSearchChange: (q: string) => void;
   onOpenLogin: () => void;
+  onNavigateNotifications?: () => void;
 }
 
 export const Header: React.FC<HeaderProps> = ({
@@ -28,9 +25,8 @@ export const Header: React.FC<HeaderProps> = ({
   onOpenMobileNav,
   healthData,
   onOpenHealthModal,
-  searchQuery,
-  onSearchChange,
   onOpenLogin,
+  onNavigateNotifications,
 }) => {
   const { user, isAuthenticated, logout } = useAuth();
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -54,15 +50,15 @@ export const Header: React.FC<HeaderProps> = ({
   const getRoleLabel = (role?: string) => {
     switch (role) {
       case "doctor":
-        return "Doctor (HPR)";
+        return "Doctor · HPR";
       case "laboratory":
-        return "Diagnostic Lab (HFR)";
+        return "Diagnostic Lab · HFR";
       case "pharmacy":
-        return "Pharmacist (HFR)";
+        return "Pharmacy · HFR";
       case "admin":
         return "Administrator";
       default:
-        return "ABHA Patient";
+        return "Patient · ABHA";
     }
   };
 
@@ -80,165 +76,153 @@ export const Header: React.FC<HeaderProps> = ({
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const notifications = [
+  const sampleNotifications = [
     {
       id: 1,
       title: "Consent Request Granted",
-      desc: "Apollo Hospital accessed Encounter #ENC-2026-091",
-      time: "10 mins ago",
+      desc: "Apollo Hospital accessed diagnostic records",
+      time: "10m ago",
       unread: true,
     },
     {
       id: 2,
-      title: "Lab Report Uploaded",
-      desc: "Lipid Profile DiagnosticReport verified by Dr. Raman",
-      time: "2 hours ago",
+      title: "New Diagnostic Report",
+      desc: "Comprehensive Metabolic Panel verified",
+      time: "2h ago",
       unread: true,
     },
     {
       id: 3,
       title: "ABDM Care Context Linked",
-      desc: "Max Healthcare linked 3 FHIR resources to your ABHA",
-      time: "Yesterday",
+      desc: "Max Healthcare linked 3 FHIR resources",
+      time: "1d ago",
       unread: false,
     },
   ];
 
   return (
-    <header className="h-16 bg-white border-b border-slate-200 px-4 md:px-6 flex items-center justify-between sticky top-0 z-20 shadow-2xs">
-      {/* Left Section: Mobile Toggle & Page Title */}
-      <div className="flex items-center gap-3 md:gap-4">
+    <header className="h-14 glass-header px-4 sm:px-6 flex items-center justify-between sticky top-0 z-20">
+      {/* Left Section: Mobile Menu Button & Breadcrumb / Page Title */}
+      <div className="flex items-center gap-3">
         <button
           onClick={onOpenMobileNav}
-          className="lg:hidden p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg"
-          aria-label="Open mobile navigation"
+          className="lg:hidden p-1.5 text-slate-500 hover:text-slate-800 hover:bg-slate-100/60 rounded-lg transition-colors cursor-pointer"
+          aria-label="Open mobile navigation drawer"
         >
           <Menu className="w-5 h-5" />
         </button>
 
-        <div>
-          <nav className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 font-medium">
+        <div className="flex items-center gap-2">
+          <nav className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 font-normal">
             <span>SwasthSaarthi</span>
-            <span>/</span>
-            <span className="text-slate-600 font-semibold">{currentRouteTitle}</span>
+            <span className="text-slate-300">/</span>
           </nav>
-          <h1 className="text-base md:text-lg font-bold text-slate-900 tracking-tight leading-tight">
+          <h1 className="text-sm sm:text-base font-semibold text-slate-900 tracking-tight">
             {currentRouteTitle}
           </h1>
         </div>
       </div>
 
-      {/* Center / Search Section (Defined Purpose: Quick filter records by title or ID) */}
-      <div className="hidden md:flex items-center flex-1 max-w-md mx-6">
-        <div className="relative w-full">
-          <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2 pointer-events-none" />
-          <input
-            type="text"
-            placeholder="Search records, diagnoses, or care contexts..."
-            value={searchQuery}
-            onChange={(e) => onSearchChange(e.target.value)}
-            className="w-full pl-9 pr-4 py-1.5 text-xs bg-slate-50 border border-slate-200 rounded-lg text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 transition-all"
-          />
-          {searchQuery && (
-            <button
-              onClick={() => onSearchChange("")}
-              className="absolute right-2.5 top-1/2 -translate-y-1/2 text-xs text-slate-400 hover:text-slate-600"
-            >
-              Clear
-            </button>
-          )}
-        </div>
-      </div>
-
-      {/* Right Section: System Health Badge, Notifications, User Menu */}
-      <div className="flex items-center gap-2.5 md:gap-3.5">
-        {/* API Gateway Status Indicator */}
+      {/* Right Section: System Indicator, Notifications, User Menu */}
+      <div className="flex items-center gap-2 sm:gap-3">
+        {/* System Health Status Indicator */}
         <button
           onClick={onOpenHealthModal}
-          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-colors bg-white hover:bg-slate-50 border-slate-200 text-slate-700"
-          title="Click to view detailed system health diagnostics"
+          className="flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-medium border transition-all duration-150 bg-white/70 hover:bg-white border-slate-200/60 text-slate-600 hover:text-slate-900 cursor-pointer shadow-2xs"
+          title="Click to view API and Gateway diagnostics"
         >
           <span
-            className={`w-2 h-2 rounded-full ${
+            className={`w-1.5 h-1.5 rounded-full ${
               healthData?.status === "healthy"
-                ? "bg-emerald-500 ring-2 ring-emerald-100"
+                ? "bg-emerald-500 ring-2 ring-emerald-500/20"
                 : healthData
-                ? "bg-amber-500 ring-2 ring-amber-100"
+                ? "bg-amber-500 ring-2 ring-amber-500/20"
                 : "bg-slate-300"
             }`}
           />
-          <span className="hidden sm:inline">
-            {healthData ? (healthData.status === "healthy" ? "API Live" : "API Degraded") : "Checking API..."}
+          <span className="text-[11px] font-medium hidden sm:inline">
+            {healthData
+              ? healthData.status === "healthy"
+                ? "API Live"
+                : "Degraded"
+              : "Connecting..."}
           </span>
         </button>
 
-        {/* Notifications Popover */}
+        {/* Notifications Icon with Subtle Unread Dot */}
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setIsNotificationsOpen((prev) => !prev)}
-            className="relative p-2 text-slate-500 hover:text-slate-800 hover:bg-slate-100 rounded-lg transition-colors"
-            aria-label="View notifications"
+            className="relative p-1.5 text-slate-500 hover:text-slate-800 hover:bg-white/80 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-slate-200/60"
+            aria-label="Notifications"
+            title="View Notifications"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-teal-600 rounded-full ring-2 ring-white" />
+            <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-teal-600 rounded-full" />
           </button>
 
           {isNotificationsOpen && (
-            <div className="absolute right-0 mt-2 w-80 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
-              <div className="px-4 py-2 border-b border-slate-100 flex items-center justify-between">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 glass-panel rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="px-3.5 py-2 border-b border-slate-200/50 flex items-center justify-between">
                 <span className="text-xs font-semibold text-slate-900">Notifications</span>
-                <span className="text-[10px] font-semibold text-teal-700 bg-teal-50 px-1.5 py-0.5 rounded">
-                  2 Unread
+                <span className="text-[10px] font-medium text-teal-800 bg-teal-50 border border-teal-100 px-1.5 py-0.5 rounded-md">
+                  In-App Dispatch
                 </span>
               </div>
-              <div className="max-h-72 overflow-y-auto divide-y divide-slate-100">
-                {notifications.map((n) => (
+
+              <div className="max-h-64 overflow-y-auto divide-y divide-slate-100/60">
+                {sampleNotifications.map((n) => (
                   <div
                     key={n.id}
-                    className={`p-3 text-left hover:bg-slate-50 transition-colors ${
-                      n.unread ? "bg-teal-50/30" : ""
+                    className={`p-3 text-left hover:bg-white/50 transition-colors ${
+                      n.unread ? "bg-teal-50/20 font-medium" : ""
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
                       <span className="text-xs font-semibold text-slate-800">{n.title}</span>
                       <span className="text-[10px] text-slate-400">{n.time}</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-2">{n.desc}</p>
+                    <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{n.desc}</p>
                   </div>
                 ))}
               </div>
-              <div className="px-4 pt-2 pb-1 border-t border-slate-100 text-center">
+
+              <div className="px-3 pt-2 pb-1 border-t border-slate-200/50 text-center">
                 <button
-                  className="text-xs text-teal-700 font-semibold hover:text-teal-900"
-                  onClick={() => setIsNotificationsOpen(false)}
+                  className="text-xs text-teal-700 font-medium hover:text-teal-900 cursor-pointer"
+                  onClick={() => {
+                    setIsNotificationsOpen(false);
+                    if (onNavigateNotifications) onNavigateNotifications();
+                  }}
                 >
-                  View All Notifications
+                  Open Notification Inbox →
                 </button>
               </div>
             </div>
           )}
         </div>
 
-        {/* User Profile Menu or Sign In Button */}
+        {/* User Account / Profile */}
         {!isAuthenticated ? (
           <button
             onClick={onOpenLogin}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-xs font-semibold bg-teal-700 text-white hover:bg-teal-800 transition-colors shadow-2xs cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-teal-700 text-white hover:bg-teal-800 transition-colors shadow-2xs cursor-pointer"
           >
             <Shield className="w-3.5 h-3.5 text-teal-200" />
-            <span>Sign In with ABHA — Demo</span>
+            <span className="hidden sm:inline">Sign In with ABHA</span>
+            <span className="sm:hidden">Sign In</span>
           </button>
         ) : (
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setIsProfileOpen((prev) => !prev)}
-              className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-lg hover:bg-slate-100 transition-colors border border-transparent hover:border-slate-200 cursor-pointer"
+              className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-xl hover:bg-white/80 transition-colors border border-transparent hover:border-slate-200/60 cursor-pointer"
               aria-label="User account menu"
             >
-              <div className="w-7 h-7 rounded-full bg-teal-700 text-white font-bold text-xs flex items-center justify-center">
+              <div className="w-7 h-7 rounded-lg bg-teal-700 text-white font-semibold text-xs flex items-center justify-center shrink-0">
                 {getInitials(user?.name)}
               </div>
-              <div className="hidden md:flex flex-col text-left">
+              <div className="hidden sm:flex flex-col text-left">
                 <span className="text-xs font-semibold text-slate-900 leading-tight">
                   {user?.name}
                 </span>
@@ -249,43 +233,29 @@ export const Header: React.FC<HeaderProps> = ({
             </button>
 
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-64 bg-white rounded-xl shadow-lg border border-slate-200 py-2 z-50">
-                <div className="px-4 py-3 border-b border-slate-100">
-                  <div className="flex items-center gap-1.5 mb-1">
-                    <span className="text-sm font-semibold text-slate-900">{user?.name}</span>
-                    <CheckCircle className="w-3.5 h-3.5 text-teal-600" />
+              <div className="absolute right-0 mt-2 w-60 glass-panel rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-3.5 py-2.5 border-b border-slate-200/50">
+                  <div className="flex items-center gap-1.5 mb-0.5">
+                    <span className="text-xs font-semibold text-slate-900 truncate">
+                      {user?.name}
+                    </span>
+                    <CheckCircle className="w-3 h-3 text-teal-600 shrink-0" />
                   </div>
-                  <p className="text-xs text-slate-500 font-mono">
+                  <p className="text-[11px] text-slate-400 font-mono truncate">
                     {user?.abhaAddress || user?.abhaId}
                   </p>
-                  {user?.facility && (
-                    <p className="text-[11px] text-slate-400 mt-0.5 truncate">
-                      {user.facility}
-                    </p>
-                  )}
-                  <div className="mt-2 inline-flex items-center gap-1 px-2 py-0.5 rounded-full bg-teal-50 border border-teal-200 text-[10px] text-teal-800 font-medium">
-                    <Shield className="w-2.5 h-2.5" />
-                    <span>Server-Managed Session ({getRoleLabel(user?.role)})</span>
-                  </div>
+                  <p className="text-[10px] text-teal-700 font-medium mt-1">
+                    {getRoleLabel(user?.role)}
+                  </p>
                 </div>
 
                 <div className="py-1">
                   <button
                     onClick={() => {
                       setIsProfileOpen(false);
-                      onOpenHealthModal();
-                    }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
-                  >
-                    <AlertTriangle className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Gateway Diagnostics</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsProfileOpen(false);
                       onOpenLogin();
                     }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs text-slate-700 hover:bg-white/60 transition-colors text-left cursor-pointer"
                   >
                     <User className="w-3.5 h-3.5 text-slate-400" />
                     <span>Switch Demo Persona</span>
@@ -293,23 +263,24 @@ export const Header: React.FC<HeaderProps> = ({
                   <button
                     onClick={() => {
                       setIsProfileOpen(false);
+                      onOpenHealthModal();
                     }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-slate-700 hover:bg-slate-50 transition-colors text-left cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs text-slate-700 hover:bg-white/60 transition-colors text-left cursor-pointer"
                   >
-                    <Settings className="w-3.5 h-3.5 text-slate-400" />
-                    <span>Preferences</span>
+                    <AlertTriangle className="w-3.5 h-3.5 text-slate-400" />
+                    <span>System Diagnostics</span>
                   </button>
                 </div>
 
-                <div className="pt-1 border-t border-slate-100">
+                <div className="pt-1 border-t border-slate-200/50">
                   <button
                     onClick={async () => {
                       setIsProfileOpen(false);
                       await logout();
                     }}
-                    className="w-full flex items-center gap-2.5 px-4 py-2 text-xs text-red-600 hover:bg-red-50 transition-colors text-left font-medium cursor-pointer"
+                    className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs text-rose-600 hover:bg-rose-50/50 transition-colors text-left font-medium cursor-pointer"
                   >
-                    <LogOut className="w-3.5 h-3.5 text-red-500" />
+                    <LogOut className="w-3.5 h-3.5 text-rose-500" />
                     <span>Sign Out</span>
                   </button>
                 </div>

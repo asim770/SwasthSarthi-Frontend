@@ -33,7 +33,6 @@ export default function App() {
   const [currentRoute, setCurrentRoute] = useState<NavigationRoute>("dashboard");
   const [isCollapsed, setIsCollapsed] = useState<boolean>(false);
   const [isMobileOpen, setIsMobileOpen] = useState<boolean>(false);
-  const [searchQuery, setSearchQuery] = useState<string>("");
 
   // Auth Modal State
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(() => {
@@ -156,7 +155,7 @@ export default function App() {
   const currentRouteTitle = currentRouteMeta ? currentRouteMeta.label : "Dashboard";
 
   return (
-    <div className="flex h-screen bg-slate-50 overflow-hidden font-sans text-slate-900">
+    <div className="flex h-screen bg-gradient-to-br from-slate-50 via-slate-100/60 to-slate-200/30 overflow-hidden font-sans text-slate-900">
       {/* Sidebar Navigation */}
       <Sidebar
         currentRoute={currentRoute}
@@ -176,56 +175,54 @@ export default function App() {
           onOpenMobileNav={() => setIsMobileOpen(true)}
           healthData={healthData}
           onOpenHealthModal={() => setIsHealthModalOpen(true)}
-          searchQuery={searchQuery}
-          onSearchChange={setSearchQuery}
           onOpenLogin={handleOpenLogin}
+          onNavigateNotifications={() => setCurrentRoute("notifications")}
         />
 
         {/* Scrollable Page Body */}
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 lg:p-8">
           <div className="max-w-7xl mx-auto w-full">
-            {/* Guest Sandbox or Role Persona Notice */}
+            {/* Compact Contextual Session / Workspace Indicator */}
             {!authLoading && !isAuthenticated && (
-              <div className="mb-6 p-3.5 bg-teal-50/70 border border-teal-200/80 rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-teal-900">
-                <div className="flex items-center gap-2.5">
-                  <span className="w-2 h-2 rounded-full bg-teal-600 animate-pulse shrink-0" />
-                  <span>
-                    <strong>Academic ABHA Sandbox:</strong> Currently browsing in guest mode. Sign in to
-                    demonstrate Patient, Doctor, Lab, Pharmacy, or Admin server-managed sessions.
+              <div className="mb-4 px-3.5 py-2 glass-panel rounded-xl flex items-center justify-between gap-3 text-xs text-slate-700 shadow-2xs">
+                <div className="flex items-center gap-2">
+                  <span className="w-1.5 h-1.5 rounded-full bg-teal-600 animate-pulse shrink-0" />
+                  <span className="text-slate-600">
+                    <strong>Demo Sandbox:</strong> Browsing as guest. Sign in to simulate Doctor, Lab, Pharmacy, or Admin roles.
                   </span>
                 </div>
                 <button
                   onClick={handleOpenLogin}
-                  className="px-3 py-1.5 bg-teal-700 text-white rounded-lg font-semibold hover:bg-teal-800 transition-colors shrink-0 shadow-2xs cursor-pointer"
+                  className="px-2.5 py-1 bg-teal-700 hover:bg-teal-800 text-white rounded-lg text-xs font-medium transition-colors shrink-0 shadow-2xs cursor-pointer"
                 >
-                  Continue with ABHA — Demo
+                  Sign In
                 </button>
               </div>
             )}
 
             {isAuthenticated && user && user.role !== "patient" && (
-              <div className="mb-6 p-3.5 bg-slate-900 text-white rounded-xl flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs shadow-sm">
-                <div className="flex items-center gap-2.5">
-                  <span className="px-2 py-0.5 rounded bg-teal-500/20 text-teal-300 border border-teal-500/30 text-[10px] font-bold uppercase tracking-wider">
-                    {user.role} Workspace
+              <div className="mb-4 px-3.5 py-2 glass-panel rounded-xl flex items-center justify-between gap-3 text-xs text-slate-700 shadow-2xs">
+                <div className="flex items-center gap-2 truncate">
+                  <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 shrink-0" />
+                  <span className="px-2 py-0.5 rounded-md bg-teal-500/10 text-teal-800 border border-teal-500/20 text-[10px] font-semibold uppercase tracking-wider shrink-0">
+                    {user.role}
                   </span>
-                  <span>
-                    Authenticated as <strong>{user.name}</strong> •{" "}
-                    <span className="font-mono text-slate-300">{user.facility || user.abhaAddress}</span>
+                  <span className="truncate text-slate-600">
+                    <strong>{user.name}</strong> •{" "}
+                    <span className="font-mono text-slate-500 text-[11px]">{user.facility || user.abhaAddress}</span>
                   </span>
                 </div>
                 <button
                   onClick={handleOpenLogin}
-                  className="text-xs text-teal-300 hover:text-white underline cursor-pointer"
+                  className="text-xs text-teal-700 hover:text-teal-900 font-medium shrink-0 cursor-pointer"
                 >
-                  Switch Demo Persona
+                  Switch Persona
                 </button>
               </div>
             )}
 
             {currentRoute === "dashboard" ? (
               <DashboardView
-                searchQuery={searchQuery}
                 onOpenUpload={() => setIsUploadModalOpen(true)}
                 onSelectRecord={setSelectedRecord}
                 onSelectConsent={setSelectedConsent}

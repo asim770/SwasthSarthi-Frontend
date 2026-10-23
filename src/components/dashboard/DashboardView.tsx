@@ -1,38 +1,24 @@
-import React, { useState } from "react";
+import React from "react";
 import {
   FileText,
   ShieldCheck,
   Building2,
   Activity,
-  Plus,
-  Eye,
-  Download,
+  ArrowRight,
+  ChevronRight,
   Clock,
   Sparkles,
 } from "lucide-react";
-import { StatCard } from "../ui/StatCard";
-import { Badge } from "../ui/Badge";
-import { Button } from "../ui/Button";
-import { Card, CardHeader, CardTitle, CardDescription, CardContent } from "../ui/Card";
-import {
-  Table,
-  TableHeader,
-  TableBody,
-  TableRow,
-  TableHead,
-  TableCell,
-} from "../ui/Table";
-import { EmptyState } from "../ui/EmptyState";
+import { GlassPanel } from "../ui/GlassPanel";
+import { useAuth } from "../../context/AuthContext";
 import {
   SYNTHETIC_PATIENT,
   type SyntheticHealthRecord,
   type SyntheticConsent,
 } from "../../data/syntheticData";
-
 import type { NavigationRoute } from "../layout/navigation";
 
 interface DashboardViewProps {
-  searchQuery: string;
   onOpenUpload: () => void;
   onSelectRecord: (record: SyntheticHealthRecord) => void;
   onSelectConsent: (consent: SyntheticConsent) => void;
@@ -42,7 +28,6 @@ interface DashboardViewProps {
 }
 
 export const DashboardView: React.FC<DashboardViewProps> = ({
-  searchQuery,
   onOpenUpload,
   onSelectRecord,
   onSelectConsent,
@@ -50,387 +35,331 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   records,
   consents,
 }) => {
-  const [selectedResourceType, setSelectedResourceType] = useState<string>("ALL");
+  const { user } = useAuth();
 
-  // Filter records based on search query and resource type filter
-  const filteredRecords = records.filter((r) => {
-    const matchesSearch =
-      searchQuery === "" ||
-      r.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.provider.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.doctor.toLowerCase().includes(searchQuery.toLowerCase()) ||
-      r.id.toLowerCase().includes(searchQuery.toLowerCase());
+  const displayName = user?.name || SYNTHETIC_PATIENT.name;
+  const role = user?.role || "patient";
 
-    const matchesType =
-      selectedResourceType === "ALL" || r.resourceType === selectedResourceType;
-
-    return matchesSearch && matchesType;
-  });
-
-  const getRecordBadgeVariant = (type: string) => {
+  const getRecordTypeBadge = (type: string) => {
     switch (type) {
       case "DiagnosticReport":
-        return "info";
+        return "bg-cyan-500/10 text-cyan-800 border-cyan-500/20";
       case "Encounter":
-        return "teal";
+        return "bg-teal-500/10 text-teal-800 border-teal-500/20";
       case "Immunization":
-        return "success";
+        return "bg-emerald-500/10 text-emerald-800 border-emerald-500/20";
       case "MedicationRequest":
-        return "warning";
+        return "bg-amber-500/10 text-amber-800 border-amber-500/20";
       default:
-        return "neutral";
+        return "bg-slate-500/10 text-slate-800 border-slate-500/20";
     }
   };
 
-  const handleExportFhirBundle = () => {
-    const fhirBundle = {
-      resourceType: "Bundle",
-      id: "bundle-patient-longitudinal-record",
-      type: "collection",
-      timestamp: new Date().toISOString(),
-      entry: records.map((r) => ({
-        fullUrl: `urn:uuid:${r.id}`,
-        resource: {
-          resourceType: r.resourceType,
-          id: r.id,
-          status: r.status,
-          code: { text: r.title },
-          subject: { reference: `Patient/${SYNTHETIC_PATIENT.id}` },
-        },
-      })),
-    };
-
-    const blob = new Blob([JSON.stringify(fhirBundle, null, 2)], {
-      type: "application/json",
-    });
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement("a");
-    a.href = url;
-    a.download = `SwasthSaarthi-FHIR-R4-${SYNTHETIC_PATIENT.id}.json`;
-    a.click();
-    URL.revokeObjectURL(url);
+  const getConsentStatusBadge = (status: string) => {
+    switch (status) {
+      case "GRANTED":
+        return "bg-emerald-500/10 text-emerald-800 border-emerald-500/20";
+      case "PENDING":
+        return "bg-amber-500/10 text-amber-800 border-amber-500/20";
+      case "REVOKED":
+      case "EXPIRED":
+        return "bg-rose-500/10 text-rose-800 border-rose-500/20";
+      default:
+        return "bg-slate-500/10 text-slate-700 border-slate-500/20";
+    }
   };
+
+  // Primary action customized per role
+  const getPrimaryAction = () => {
+    if (role === "doctor") {
+      return {
+        label: "View Patient Records",
+        action: () => onNavigateRoute("records"),
+      };
+    }
+    if (role === "laboratory") {
+      return {
+        label: "View Lab Orders",
+        action: () => onNavigateRoute("labs"),
+      };
+    }
+    if (role === "pharmacy") {
+      return {
+        label: "Open Dispensation Hub",
+        action: () => onNavigateRoute("prescriptions"),
+      };
+    }
+    if (role === "admin") {
+      return {
+        label: "Verify Audit Chain",
+        action: () => onNavigateRoute("access"),
+      };
+    }
+    // Patient default
+    const pendingCount = consents.filter((c) => c.status === "PENDING").length;
+    if (pendingCount > 0) {
+      return {
+        label: `Review Consents (${pendingCount} Pending)`,
+        action: () => onNavigateRoute("consents"),
+      };
+    }
+    return {
+      label: "View Health Records",
+      action: () => onNavigateRoute("records"),
+    };
+  };
+
+  const primaryAction = getPrimaryAction();
+  const recentRecords = records.slice(0, 3);
+  const recentConsents = consents.slice(0, 2);
 
   return (
     <div className="space-y-6">
-      {/* Welcome Banner */}
-      <div className="bg-white border border-slate-200/90 rounded-2xl p-6 shadow-xs relative overflow-hidden">
-        <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-6 relative z-10">
-          <div>
-            <div className="flex items-center gap-2 mb-1.5 flex-wrap">
-              <Badge variant="teal" size="sm" dot>
-                ABDM Verified Patient
-              </Badge>
-              <span className="text-xs text-slate-400 font-mono">
-                ABHA: {SYNTHETIC_PATIENT.abhaId}
+      {/* A. Compact Welcome Section */}
+      <GlassPanel className="p-5 sm:p-6">
+        <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+          <div className="space-y-1">
+            <div className="flex items-center gap-2">
+              <span className="text-[11px] font-semibold tracking-wide uppercase px-2 py-0.5 rounded-full bg-teal-500/10 text-teal-800 border border-teal-500/20">
+                {role === "doctor"
+                  ? "Practitioner Workspace"
+                  : role === "laboratory"
+                  ? "Diagnostic Laboratory"
+                  : role === "pharmacy"
+                  ? "Pharmacy Hub"
+                  : role === "admin"
+                  ? "Administrative Authority"
+                  : "ABHA Patient Profile"}
               </span>
-              <span className="text-[11px] bg-slate-100 text-slate-600 px-2 py-0.5 rounded-full font-medium">
-                Demo Mode • Synthetic Data
+              <span className="text-xs text-slate-400 font-mono hidden md:inline">
+                {user?.facility || SYNTHETIC_PATIENT.abhaId}
               </span>
             </div>
 
-            <h2 className="text-xl md:text-2xl font-bold text-slate-900 tracking-tight">
-              Welcome, {SYNTHETIC_PATIENT.name}
+            <h2 className="text-lg sm:text-xl font-semibold text-slate-900 tracking-tight">
+              Welcome back, {displayName}
             </h2>
-            <p className="text-xs md:text-sm text-slate-500 mt-1 max-w-2xl leading-relaxed">
-              Your unified, longitudinal healthcare records are synchronized with Ayushman Bharat
-              Digital Mission (ABDM). All records adhere to the HL7 FHIR R4 standard.
+
+            <p className="text-xs sm:text-sm text-slate-500 max-w-xl leading-relaxed">
+              {role === "doctor"
+                ? "Review authorized clinical records and author synthetic lab orders."
+                : role === "laboratory"
+                ? "Inspect incoming diagnostic orders and submit HL7 FHIR reports."
+                : role === "pharmacy"
+                ? "View valid prescriptions and track medication dispensation."
+                : role === "admin"
+                ? "Manage institution verification and monitor cryptographic audit integrity."
+                : "Your longitudinal medical records and ABDM consent permissions are active."}
             </p>
           </div>
 
-          <div className="flex items-center gap-2.5 flex-wrap shrink-0">
-            <Button
-              variant="primary"
-              size="sm"
-              leftIcon={<Plus className="w-4 h-4" />}
-              onClick={onOpenUpload}
+          <div className="flex items-center gap-2 shrink-0">
+            <button
+              onClick={primaryAction.action}
+              className="px-4 py-2 bg-teal-700 hover:bg-teal-800 text-white rounded-xl text-xs font-medium transition-all shadow-2xs hover:shadow-xs flex items-center gap-1.5 cursor-pointer"
             >
-              Upload Health Record
-            </Button>
-            <Button
-              variant="secondary"
-              size="sm"
-              leftIcon={<ShieldCheck className="w-4 h-4" />}
-              onClick={() => onNavigateRoute("consents")}
-            >
-              Review Consents
-            </Button>
-            <Button
-              variant="outline"
-              size="sm"
-              leftIcon={<Download className="w-4 h-4" />}
-              onClick={handleExportFhirBundle}
-              title="Download FHIR R4 JSON collection"
-            >
-              Export FHIR R4
-            </Button>
+              <span>{primaryAction.label}</span>
+              <ArrowRight className="w-3.5 h-3.5" />
+            </button>
+            {role === "patient" && (
+              <button
+                onClick={onOpenUpload}
+                className="px-3 py-2 bg-white/70 hover:bg-white text-slate-700 border border-slate-200/60 rounded-xl text-xs font-medium transition-all shadow-2xs cursor-pointer"
+                title="Add clinical record"
+              >
+                Add Record
+              </button>
+            )}
           </div>
         </div>
+      </GlassPanel>
+
+      {/* B. Simplified Metric Cards (Max 4 Compact Cards) */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
+        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium text-slate-500">Health Records</span>
+            <FileText className="w-4 h-4 text-teal-700/70" />
+          </div>
+          <div className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
+            {records.length}
+          </div>
+          <p className="text-[11px] text-slate-400 mt-0.5">Longitudinal entries</p>
+        </GlassPanel>
+
+        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium text-slate-500">Active Consents</span>
+            <ShieldCheck className="w-4 h-4 text-emerald-600/70" />
+          </div>
+          <div className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
+            {consents.filter((c) => c.status === "GRANTED").length}
+          </div>
+          <p className="text-[11px] text-slate-400 mt-0.5">
+            {consents.some((c) => c.status === "PENDING")
+              ? "1 pending request"
+              : "All permissions verified"}
+          </p>
+        </GlassPanel>
+
+        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium text-slate-500">Linked Facilities</span>
+            <Building2 className="w-4 h-4 text-cyan-600/70" />
+          </div>
+          <div className="text-xl sm:text-2xl font-semibold text-slate-900 tracking-tight">
+            3
+          </div>
+          <p className="text-[11px] text-slate-400 mt-0.5">ABDM Network</p>
+        </GlassPanel>
+
+        <GlassPanel className="p-4 transition-all duration-150 hover:bg-white/85">
+          <div className="flex items-center justify-between text-slate-400 mb-2">
+            <span className="text-xs font-medium text-slate-500">System Gateway</span>
+            <Activity className="w-4 h-4 text-teal-600" />
+          </div>
+          <div className="text-xl sm:text-2xl font-semibold text-emerald-700 tracking-tight flex items-center gap-1.5">
+            <span className="w-2 h-2 rounded-full bg-emerald-500 ring-2 ring-emerald-500/20" />
+            <span>Live</span>
+          </div>
+          <p className="text-[11px] text-slate-400 mt-0.5">FHIR R4 Compliant</p>
+        </GlassPanel>
       </div>
 
-      {/* 4-Stat Metric Cards Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
-        <StatCard
-          title="Total FHIR Records"
-          value={records.length}
-          subtitle="Longitudinal clinical entries"
-          icon={<FileText className="w-4 h-4" />}
-          badge={<Badge variant="teal" size="sm">Indexed</Badge>}
-          trend={{ value: "+2 this month", isPositive: true }}
-        />
-
-        <StatCard
-          title="Active Consents"
-          value={consents.filter((c) => c.status === "GRANTED").length}
-          subtitle="1 pending hospital request"
-          icon={<ShieldCheck className="w-4 h-4" />}
-          badge={<Badge variant="success" size="sm">Secure</Badge>}
-          trend={{ value: "100% Patient Controlled", isPositive: true }}
-        />
-
-        <StatCard
-          title="Linked Facilities"
-          value={3}
-          subtitle="Max, Apollo &amp; Fortis"
-          icon={<Building2 className="w-4 h-4" />}
-          badge={<Badge variant="info" size="sm">HIP/HIU</Badge>}
-          trend={{ value: "ABDM Verified", isPositive: true }}
-        />
-
-        <StatCard
-          title="System Gateways"
-          value="Healthy"
-          subtitle="REST API &amp; MongoDB Active"
-          icon={<Activity className="w-4 h-4" />}
-          badge={<Badge variant="success" size="sm">Online</Badge>}
-          trend={{ value: "FHIR R4 Ready", isPositive: true }}
-        />
-      </div>
-
-      {/* Main Content Grid: Records Table (2/3) & Consents Preview (1/3) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        {/* Recent Health Records Section */}
-        <div className="lg:col-span-2 space-y-4">
-          <Card>
-            <CardHeader className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
+      {/* C & D. Progressive Disclosure: Recent Records (2/3) & Consent Summary (1/3) */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* Recent Records (Max 3 items) */}
+        <GlassPanel className="lg:col-span-2 p-5 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/50">
               <div>
-                <CardTitle>Recent Health Records</CardTitle>
-                <CardDescription>
-                  Diagnostic reports, clinical encounters, and immunization bundles
-                </CardDescription>
+                <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+                  Recent Health Records
+                </h3>
+                <p className="text-[11px] text-slate-400">
+                  Showing 3 most recent clinical documents
+                </p>
               </div>
 
-              {/* Resource Type Filter Pills */}
-              <div className="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0">
-                {["ALL", "DiagnosticReport", "Encounter", "Immunization"].map((type) => (
-                  <button
-                    key={type}
-                    onClick={() => setSelectedResourceType(type)}
-                    className={`text-xs px-2.5 py-1 rounded-full font-medium transition-colors shrink-0 ${
-                      selectedResourceType === type
-                        ? "bg-teal-700 text-white shadow-2xs"
-                        : "bg-slate-100 text-slate-600 hover:bg-slate-200"
-                    }`}
-                  >
-                    {type === "ALL" ? "All" : type}
-                  </button>
-                ))}
-              </div>
-            </CardHeader>
-
-            <CardContent className="p-0">
-              {filteredRecords.length === 0 ? (
-                <div className="p-6">
-                  <EmptyState
-                    title="No Records Found"
-                    description={
-                      searchQuery
-                        ? `No clinical records matching "${searchQuery}". Try clearing the search query.`
-                        : "No records found under this filter."
-                    }
-                    action={
-                      <Button
-                        variant="secondary"
-                        size="sm"
-                        onClick={() => setSelectedResourceType("ALL")}
-                      >
-                        Reset Filter
-                      </Button>
-                    }
-                  />
-                </div>
-              ) : (
-                <Table>
-                  <TableHeader>
-                    <TableRow>
-                      <TableHead>Record Title &amp; FHIR Type</TableHead>
-                      <TableHead className="hidden sm:table-cell">Healthcare Provider</TableHead>
-                      <TableHead className="hidden md:table-cell">Clinician</TableHead>
-                      <TableHead>Date</TableHead>
-                      <TableHead className="text-right">Action</TableHead>
-                    </TableRow>
-                  </TableHeader>
-                  <TableBody>
-                    {filteredRecords.map((record) => (
-                      <TableRow key={record.id}>
-                        <TableCell>
-                          <div className="flex flex-col">
-                            <span className="font-semibold text-slate-900 line-clamp-1">
-                              {record.title}
-                            </span>
-                            <div className="flex items-center gap-2 mt-1">
-                              <Badge variant={getRecordBadgeVariant(record.resourceType)} size="sm">
-                                {record.resourceType}
-                              </Badge>
-                              <span className="text-[11px] text-slate-400 font-mono hidden sm:inline">
-                                {record.id}
-                              </span>
-                            </div>
-                          </div>
-                        </TableCell>
-                        <TableCell className="hidden sm:table-cell">
-                          <span className="text-xs text-slate-700 font-medium block">
-                            {record.provider}
-                          </span>
-                        </TableCell>
-                        <TableCell className="hidden md:table-cell">
-                          <span className="text-xs text-slate-500">
-                            {record.doctor}
-                          </span>
-                        </TableCell>
-                        <TableCell>
-                          <span className="text-xs text-slate-500 whitespace-nowrap">
-                            {record.date}
-                          </span>
-                        </TableCell>
-                        <TableCell className="text-right">
-                          <Button
-                            variant="secondary"
-                            size="sm"
-                            leftIcon={<Eye className="w-3.5 h-3.5" />}
-                            onClick={() => onSelectRecord(record)}
-                          >
-                            Details
-                          </Button>
-                        </TableCell>
-                      </TableRow>
-                    ))}
-                  </TableBody>
-                </Table>
-              )}
-            </CardContent>
-          </Card>
-        </div>
-
-        {/* Right Sidebar: Active Consents & Care Contexts */}
-        <div className="space-y-6">
-          {/* Active Consent Management Card */}
-          <Card>
-            <CardHeader className="flex items-center justify-between">
-              <div>
-                <CardTitle>ABDM Consent Artefacts</CardTitle>
-                <CardDescription>
-                  Healthcare Information Users (HIU) with access permissions
-                </CardDescription>
-              </div>
-              <Button
-                variant="ghost"
-                size="sm"
-                onClick={() => onNavigateRoute("consents")}
+              <button
+                onClick={() => onNavigateRoute("records")}
+                className="text-xs text-teal-700 hover:text-teal-900 font-medium flex items-center gap-1 transition-colors cursor-pointer"
               >
-                View All
-              </Button>
-            </CardHeader>
+                <span>View all records</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
 
-            <CardContent className="space-y-3 p-4">
-              {consents.map((consent) => (
+            <div className="divide-y divide-slate-100/70">
+              {recentRecords.map((record) => (
+                <div
+                  key={record.id}
+                  className="py-3 flex items-center justify-between gap-3 group hover:bg-white/40 -mx-2 px-2 rounded-xl transition-colors"
+                >
+                  <div className="space-y-0.5 min-w-0">
+                    <div className="flex items-center gap-2 flex-wrap">
+                      <span className="text-xs font-medium text-slate-900 truncate">
+                        {record.title}
+                      </span>
+                      <span
+                        className={`text-[10px] font-medium px-2 py-0.2 rounded-full border ${getRecordTypeBadge(
+                          record.resourceType
+                        )}`}
+                      >
+                        {record.resourceType}
+                      </span>
+                    </div>
+
+                    <p className="text-[11px] text-slate-400 truncate">
+                      {record.provider} • <span className="font-mono">{record.date}</span>
+                    </p>
+                  </div>
+
+                  <button
+                    onClick={() => onSelectRecord(record)}
+                    className="px-2.5 py-1 text-xs text-slate-600 hover:text-teal-900 hover:bg-white/90 border border-slate-200/60 rounded-lg transition-all shrink-0 cursor-pointer shadow-2xs"
+                  >
+                    View
+                  </button>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="pt-3 mt-3 border-t border-slate-200/50 text-[11px] text-slate-400 flex items-center justify-between">
+            <span>Synchronized via ABDM Mock Adapter</span>
+            <button
+              onClick={() => onNavigateRoute("records")}
+              className="text-teal-700 hover:underline font-medium cursor-pointer"
+            >
+              Explore Longitudinal Timeline →
+            </button>
+          </div>
+        </GlassPanel>
+
+        {/* Consent Summary (Max 2 items) */}
+        <GlassPanel className="p-5 flex flex-col justify-between">
+          <div>
+            <div className="flex items-center justify-between pb-3 mb-3 border-b border-slate-200/50">
+              <div>
+                <h3 className="text-sm font-semibold text-slate-900 tracking-tight">
+                  Consent Permissions
+                </h3>
+                <p className="text-[11px] text-slate-400">
+                  Electronic ABDM Artefacts
+                </p>
+              </div>
+
+              <button
+                onClick={() => onNavigateRoute("consents")}
+                className="text-xs text-teal-700 hover:text-teal-900 font-medium flex items-center gap-1 transition-colors cursor-pointer"
+              >
+                <span>Manage</span>
+                <ChevronRight className="w-3.5 h-3.5" />
+              </button>
+            </div>
+
+            <div className="space-y-3">
+              {recentConsents.map((consent) => (
                 <div
                   key={consent.id}
                   onClick={() => onSelectConsent(consent)}
-                  className="p-3 rounded-lg border border-slate-200/90 bg-white hover:border-slate-300 hover:shadow-2xs transition-all cursor-pointer"
+                  className="p-3 rounded-xl border border-slate-200/50 bg-white/50 hover:bg-white/80 transition-all cursor-pointer shadow-2xs hover:shadow-xs"
                 >
-                  <div className="flex items-start justify-between gap-2">
-                    <div>
-                      <span className="text-xs font-semibold text-slate-900 block">
-                        {consent.requester}
-                      </span>
-                      <span className="text-[10px] text-slate-400 block mt-0.5">
-                        {consent.purpose}
-                      </span>
-                    </div>
-                    <Badge
-                      variant={
-                        consent.status === "GRANTED"
-                          ? "success"
-                          : consent.status === "PENDING"
-                          ? "warning"
-                          : "danger"
-                      }
-                      size="sm"
-                      dot
+                  <div className="flex items-center justify-between gap-2 mb-1">
+                    <span className="text-xs font-semibold text-slate-800 truncate">
+                      {consent.requester}
+                    </span>
+                    <span
+                      className={`text-[10px] font-medium px-2 py-0.2 rounded-full border ${getConsentStatusBadge(
+                        consent.status
+                      )}`}
                     >
                       {consent.status}
-                    </Badge>
+                    </span>
                   </div>
-                  <div className="mt-2.5 pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-500">
+
+                  <p className="text-[11px] text-slate-500 line-clamp-1 mb-2">
+                    {consent.purpose}
+                  </p>
+
+                  <div className="flex items-center justify-between text-[10px] text-slate-400 pt-1.5 border-t border-slate-100/70">
                     <span className="flex items-center gap-1">
                       <Clock className="w-3 h-3 text-slate-400" />
-                      <span>{consent.expiresAt}</span>
+                      <span>Expires: {consent.expiresAt}</span>
                     </span>
-                    <span className="text-teal-700 font-medium hover:underline">
-                      Manage Consent →
-                    </span>
+                    <span className="text-teal-700 font-medium">Details →</span>
                   </div>
                 </div>
               ))}
-            </CardContent>
-          </Card>
+            </div>
+          </div>
 
-          {/* ABDM Care Contexts & Identity Card */}
-          <Card>
-            <CardHeader>
-              <CardTitle>Linked Health ID (ABHA)</CardTitle>
-              <CardDescription>
-                Government of India National Health Stack identity profile
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="p-4 space-y-3">
-              <div className="p-3 bg-slate-50 rounded-lg border border-slate-100 space-y-1.5 text-xs">
-                <div className="flex justify-between">
-                  <span className="text-slate-500">ABHA Address:</span>
-                  <span className="font-semibold text-slate-800 font-mono">
-                    {SYNTHETIC_PATIENT.abhaAddress}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">ABHA Number:</span>
-                  <span className="font-semibold text-slate-800 font-mono">
-                    {SYNTHETIC_PATIENT.abhaId}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Age / Gender:</span>
-                  <span className="font-medium text-slate-800">
-                    {SYNTHETIC_PATIENT.age} Yrs • {SYNTHETIC_PATIENT.gender}
-                  </span>
-                </div>
-                <div className="flex justify-between">
-                  <span className="text-slate-500">Blood Group:</span>
-                  <span className="font-medium text-teal-800">
-                    {SYNTHETIC_PATIENT.bloodGroup}
-                  </span>
-                </div>
-              </div>
-
-              <div className="p-2.5 rounded-lg bg-teal-50/70 border border-teal-100 flex items-start gap-2 text-xs text-teal-900">
-                <Sparkles className="w-4 h-4 text-teal-700 shrink-0 mt-0.5" />
-                <span className="text-[11px] leading-relaxed">
-                  Longitudinal records are protected under ABDM end-to-end encryption protocols.
-                </span>
-              </div>
-            </CardContent>
-          </Card>
-        </div>
+          <div className="pt-3 mt-3 border-t border-slate-200/50 flex items-center gap-1.5 text-[11px] text-slate-400">
+            <Sparkles className="w-3.5 h-3.5 text-teal-600 shrink-0" />
+            <span className="truncate">Patient-directed consent lifecycle</span>
+          </div>
+        </GlassPanel>
       </div>
     </div>
   );
