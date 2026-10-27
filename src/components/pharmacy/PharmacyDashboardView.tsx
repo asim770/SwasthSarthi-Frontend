@@ -128,15 +128,15 @@ export const PharmacyDashboardView: React.FC = () => {
       />
 
       {/* Safety & Protocol Banner */}
-      <div className="p-3.5 bg-white border border-slate-200 rounded-xl shadow-2xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[18px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
-          <Pill className="w-4 h-4 text-teal-600 shrink-0" />
-          <span className="text-slate-600">
-            <strong>Pharmacy Fulfilment Scope:</strong>{" "}
+          <Pill className="w-4 h-4 text-[#008080] shrink-0" />
+          <span className="text-[#475569]">
+            <strong className="text-[#172033]">Pharmacy Fulfilment Scope:</strong>{" "}
             {user?.facility ? (
-              <span className="font-semibold text-slate-800">{user.facility}</span>
+              <span className="font-semibold text-[#172033]">{user.facility}</span>
             ) : (
-              <span className="text-slate-500">Authorized network dispensing hub</span>
+              <span className="text-[#64748b]">Authorized network dispensing hub</span>
             )}
             {" • "}
             {isPharmacist &&
@@ -145,28 +145,28 @@ export const PharmacyDashboardView: React.FC = () => {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 rounded bg-teal-50 text-teal-700 font-mono text-[10px] font-semibold border border-teal-200">
+          <span className="px-2 py-0.5 rounded-md bg-white text-[#008080] font-mono text-[10px] font-semibold border border-[#b2d8d8]">
             FHIR R4 MedicationRequest
           </span>
-          <span className="px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-mono text-[10px] font-semibold border border-emerald-200">
+          <span className="px-2 py-0.5 rounded-md bg-emerald-50 text-emerald-700 font-mono text-[10px] font-semibold border border-emerald-200">
             MedicationDispense
           </span>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-slate-200">
+      <div className="flex items-center gap-2 border-b border-[#d7eaea]">
         <button
           onClick={() => setActiveTab("prescriptions")}
           className={`pb-3 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors ${
             activeTab === "prescriptions"
-              ? "border-teal-600 text-teal-700"
-              : "border-transparent text-slate-500 hover:text-slate-800"
+              ? "border-[#008080] text-[#008080]"
+              : "border-transparent text-[#64748b] hover:text-[#172033]"
           }`}
         >
           <Pill className="w-4 h-4" />
           Eligible Prescriptions
-          <span className="ml-1 px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 text-[10px]">
+          <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] text-[10px]">
             {prescriptions.length}
           </span>
         </button>
@@ -175,13 +175,13 @@ export const PharmacyDashboardView: React.FC = () => {
           onClick={() => setActiveTab("dispenses")}
           className={`pb-3 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors ${
             activeTab === "dispenses"
-              ? "border-teal-600 text-teal-700"
-              : "border-transparent text-slate-500 hover:text-slate-800"
+              ? "border-[#008080] text-[#008080]"
+              : "border-transparent text-[#64748b] hover:text-[#172033]"
           }`}
         >
           <History className="w-4 h-4" />
           Dispensing Audit Log
-          <span className="ml-1 px-1.5 py-0.2 rounded-full bg-slate-100 text-slate-600 text-[10px]">
+          <span className="ml-1 px-1.5 py-0.2 rounded-full bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] text-[10px]">
             {dispenses.length}
           </span>
         </button>
@@ -205,7 +205,7 @@ export const PharmacyDashboardView: React.FC = () => {
                 placeholder="Search prescription ID, medication, or patient..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 bg-white"
+                className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] focus:border-[#008080] bg-white text-[#172033]"
               />
             </div>
 
@@ -215,10 +215,10 @@ export const PharmacyDashboardView: React.FC = () => {
                 <button
                   key={st}
                   onClick={() => setStatusFilter(st)}
-                  className={`px-2.5 py-1 text-xs font-medium rounded-lg whitespace-nowrap transition-colors cursor-pointer ${
+                  className={`px-2.5 py-1 text-xs font-semibold rounded-[12px] whitespace-nowrap transition-colors cursor-pointer ${
                     statusFilter === st
-                      ? "bg-teal-700 text-white shadow-2xs"
-                      : "bg-white text-slate-600 border border-slate-200 hover:bg-slate-50"
+                      ? "bg-[#008080] text-white shadow-xs"
+                      : "bg-white text-[#475569] border border-[#d7eaea] hover:bg-[#f0fdfa] hover:text-[#008080]"
                   }`}
                 >
                   {st}
@@ -229,8 +229,8 @@ export const PharmacyDashboardView: React.FC = () => {
 
           {/* Prescriptions List */}
           {loading ? (
-            <div className="p-12 text-center text-xs text-slate-500 bg-white border border-slate-200 rounded-xl">
-              <RefreshCw className="w-5 h-5 text-teal-600 animate-spin mx-auto mb-2" />
+            <div className="p-12 text-center text-xs text-[#64748b] bg-white border border-[#d7eaea] rounded-[18px]">
+              <RefreshCw className="w-5 h-5 text-[#008080] animate-spin mx-auto mb-2" />
               Retrieving prescription records from DAL...
             </div>
           ) : filteredPrescriptions.length === 0 ? (

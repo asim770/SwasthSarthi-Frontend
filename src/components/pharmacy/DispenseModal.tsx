@@ -124,61 +124,61 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             </span>
           </div>
 
-          <div className="text-slate-600">
-            <strong>Patient:</strong> <span className="font-mono">{prescription.patientId}</span> •{" "}
+          <div className="text-[#475569]">
+            <strong>Patient:</strong> <span className="font-mono text-[#172033]">{prescription.patientId}</span> •{" "}
             <strong>Prescriber:</strong> Dr. {prescription.doctorId}
           </div>
 
-          <div className="pt-2 border-t border-slate-200/80 grid grid-cols-3 gap-2 text-center text-[11px]">
-            <div className="bg-white p-2 rounded border border-slate-200">
-              <span className="text-slate-500 block text-[10px]">Total Authorized</span>
-              <span className="font-bold text-slate-900">{prescription.totalQuantity} units</span>
+          <div className="pt-2 border-t border-[#d7eaea] grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div className="bg-white p-2.5 rounded-[10px] border border-[#d7eaea] shadow-2xs">
+              <span className="text-[#64748b] block text-[10px]">Total Authorized</span>
+              <span className="font-bold text-[#172033]">{prescription.totalQuantity} units</span>
             </div>
-            <div className="bg-white p-2 rounded border border-slate-200">
-              <span className="text-slate-500 block text-[10px]">Already Dispensed</span>
-              <span className="font-bold text-slate-900">
+            <div className="bg-white p-2.5 rounded-[10px] border border-[#d7eaea] shadow-2xs">
+              <span className="text-[#64748b] block text-[10px]">Already Dispensed</span>
+              <span className="font-bold text-[#172033]">
                 {prescription.dispensedQuantity ?? 0} units
               </span>
             </div>
-            <div className="bg-teal-50 p-2 rounded border border-teal-200">
-              <span className="text-teal-700 block text-[10px] font-semibold">Remaining</span>
-              <span className="font-bold text-teal-900">{remaining} units</span>
+            <div className="bg-[#f0fdfa] p-2.5 rounded-[10px] border border-[#b2d8d8] shadow-2xs">
+              <span className="text-[#008080] block text-[10px] font-semibold">Remaining</span>
+              <span className="font-bold text-[#004c4c]">{remaining} units</span>
             </div>
           </div>
         </div>
 
         {error && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-800 flex items-start gap-2">
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-[12px] text-xs text-rose-800 flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
         {successMessage && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center gap-2">
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-[12px] text-xs text-emerald-800 flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>{successMessage}</span>
           </div>
         )}
 
         {isExpired && (
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-lg text-xs text-amber-800 flex items-center gap-2">
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-[12px] text-xs text-amber-800 flex items-center gap-2">
             <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
             <span>This prescription has passed its expiry date and cannot be dispensed.</span>
           </div>
         )}
 
         {isFulfilled && (
-          <div className="p-3 bg-slate-100 border border-slate-200 rounded-lg text-xs text-slate-700 flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 text-slate-500 shrink-0" />
+          <div className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-xs text-[#475569] flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 text-[#008080] shrink-0" />
             <span>This prescription has been completely fulfilled. No units remaining.</span>
           </div>
         )}
 
         {/* Quantity to Dispense */}
         <div>
-          <div className="flex items-center justify-between mb-1">
-            <label className="text-xs font-semibold text-slate-700">
+          <div className="flex items-center justify-between mb-1.5">
+            <label className="text-xs font-semibold text-[#172033]">
               Quantity to Dispense Now (Units) *
             </label>
             <div className="flex gap-1.5">
@@ -186,7 +186,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
                 type="button"
                 onClick={() => setQuantity(Math.max(1, Math.floor(remaining / 2)))}
                 disabled={isFulfilled || isExpired}
-                className="text-[10px] font-semibold px-2 py-0.5 rounded bg-slate-100 hover:bg-slate-200 text-slate-700 cursor-pointer"
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-[8px] bg-white border border-[#d7eaea] hover:bg-[#f0fdfa] text-[#475569] cursor-pointer"
               >
                 Half ({Math.max(1, Math.floor(remaining / 2))})
               </button>
@@ -194,7 +194,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
                 type="button"
                 onClick={() => setQuantity(remaining)}
                 disabled={isFulfilled || isExpired}
-                className="text-[10px] font-semibold px-2 py-0.5 rounded bg-teal-100 hover:bg-teal-200 text-teal-800 cursor-pointer"
+                className="text-[10px] font-semibold px-2 py-0.5 rounded-[8px] bg-[#f0fdfa] hover:bg-[#e8f4f4] text-[#008080] border border-[#b2d8d8] cursor-pointer"
               >
                 Full ({remaining})
               </button>
@@ -208,9 +208,9 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             disabled={isFulfilled || isExpired || loading}
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-full px-3 py-2 text-sm border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 font-bold"
+            className="w-full px-3.5 py-2.5 text-sm border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] font-bold text-[#172033] bg-white shadow-2xs"
           />
-          <p className="text-[10px] text-slate-500 mt-1">
+          <p className="text-[10px] text-[#64748b] mt-1">
             Backend will atomically verify available quantity to protect against concurrent double-dispensing.
           </p>
         </div>
@@ -218,7 +218,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
         {/* Batch Number & Idempotency Key */}
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1">
+            <label className="block text-xs font-semibold text-[#172033] mb-1.5">
               Lot / Batch Number *
             </label>
             <input
@@ -227,19 +227,19 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
               disabled={isFulfilled || isExpired || loading}
               value={batchNumber}
               onChange={(e) => setBatchNumber(e.target.value)}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 font-mono"
+              className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] font-mono text-[#172033] bg-white shadow-2xs"
             />
           </div>
 
           <div>
-            <label className="block text-xs font-semibold text-slate-700 mb-1 flex items-center justify-between">
+            <label className="block text-xs font-semibold text-[#172033] mb-1.5 flex items-center justify-between">
               <span>Idempotency Key</span>
               <button
                 type="button"
                 onClick={() =>
                   setIdempotencyKey(`idemp-${crypto.randomUUID ? crypto.randomUUID().slice(0, 8) : Date.now()}`)
                 }
-                className="text-[10px] text-teal-700 hover:underline cursor-pointer"
+                className="text-[10px] text-[#008080] hover:text-[#006666] cursor-pointer font-semibold"
               >
                 New Key
               </button>
@@ -250,14 +250,14 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
               disabled={isFulfilled || isExpired || loading}
               value={idempotencyKey}
               onChange={(e) => setIdempotencyKey(e.target.value)}
-              className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 font-mono text-slate-600 bg-slate-50"
+              className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] font-mono text-[#475569] bg-[#f0fdfa]"
             />
           </div>
         </div>
 
         {/* Pharmacist Notes */}
         <div>
-          <label className="block text-xs font-semibold text-slate-700 mb-1">
+          <label className="block text-xs font-semibold text-[#172033] mb-1.5">
             Pharmacist Verification Notes
           </label>
           <input
@@ -265,13 +265,13 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             disabled={isFulfilled || isExpired || loading}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-3 py-2 text-xs border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600"
+            className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] text-[#172033] bg-white shadow-2xs"
           />
         </div>
 
         {/* Concurrency Guarantee Notice */}
-        <div className="p-2.5 bg-teal-50/60 border border-teal-200/80 rounded-lg text-[11px] text-teal-900 flex items-start gap-2">
-          <Lock className="w-3.5 h-3.5 text-teal-700 shrink-0 mt-0.5" />
+        <div className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-[11px] text-[#004c4c] flex items-start gap-2">
+          <Lock className="w-3.5 h-3.5 text-[#008080] shrink-0 mt-0.5" />
           <span>
             <strong>Concurrency & Fraud Protection:</strong> Processed with atomic conditional decrements
             and a unique idempotency constraint. Replays will safely resolve without balance mutation.
@@ -279,7 +279,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-slate-100">
+        <div className="flex items-center justify-between pt-3 border-t border-[#d7eaea]">
           <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
             Cancel
           </Button>
@@ -287,7 +287,6 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             type="submit"
             variant="primary"
             disabled={isFulfilled || isExpired || loading}
-            className="bg-teal-700 hover:bg-teal-800"
           >
             {loading ? "Recording Dispense Event..." : `Dispense ${quantity} Units`}
           </Button>

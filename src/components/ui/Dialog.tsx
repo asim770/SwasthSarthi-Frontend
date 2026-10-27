@@ -59,16 +59,16 @@ export const Dialog: React.FC<DialogProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        className={`relative w-full ${maxWidthStyles[maxWidth]} bg-white rounded-xl shadow-xl border border-slate-200 z-10 overflow-hidden transform transition-all`}
+        className={`relative w-full ${maxWidthStyles[maxWidth]} bg-white rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.06)] border border-[#d7eaea] z-10 overflow-hidden transform transition-all`}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-5 pb-4 border-b border-slate-100">
+        <div className="flex items-start justify-between p-5 pb-4 border-b border-[#d7eaea]/70">
           <div>
-            <h2 id="dialog-title" className="text-base font-semibold text-slate-900">
+            <h2 id="dialog-title" className="text-base font-semibold text-[#172033]">
               {title}
             </h2>
             {description && (
-              <p className="text-xs text-slate-500 mt-1 leading-relaxed">
+              <p className="text-xs text-[#475569] mt-1 leading-relaxed">
                 {description}
               </p>
             )}
@@ -76,20 +76,20 @@ export const Dialog: React.FC<DialogProps> = ({
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="text-slate-400 hover:text-slate-600 rounded-lg p-1 hover:bg-slate-100 transition-colors"
+            className="text-slate-400 hover:text-[#008080] rounded-lg p-1 hover:bg-[#f0fdfa] transition-colors cursor-pointer"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Body Content */}
-        <div className="p-5 max-h-[70vh] overflow-y-auto text-sm text-slate-700">
+        <div className="p-5 max-h-[70vh] overflow-y-auto text-sm text-[#475569]">
           {children}
         </div>
 
         {/* Footer */}
         {footer && (
-          <div className="p-4 bg-slate-50 border-t border-slate-100 flex items-center justify-end gap-2.5">
+          <div className="p-4 bg-[#f0fdfa] border-t border-[#d7eaea]/70 flex items-center justify-end gap-2.5">
             {footer}
           </div>
         )}

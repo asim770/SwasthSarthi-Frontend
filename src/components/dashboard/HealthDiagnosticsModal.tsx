@@ -49,12 +49,12 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
     >
       <div className="space-y-4 text-xs">
         {/* Endpoint info */}
-        <div className="p-3 bg-slate-50 border border-slate-200/80 rounded-lg flex items-center justify-between">
+        <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px] flex items-center justify-between">
           <div>
-            <span className="text-[10px] text-slate-400 font-semibold uppercase block">
+            <span className="text-[10px] text-[#64748b] font-semibold uppercase block">
               REST Health Endpoint
             </span>
-            <code className="text-xs text-teal-800 font-mono font-medium">
+            <code className="text-xs text-[#008080] font-mono font-medium">
               {API_BASE_URL}/health
             </code>
           </div>
@@ -74,23 +74,23 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
         </div>
 
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-lg text-red-700 text-xs">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-[12px] text-red-700 text-xs">
             <span className="font-semibold block mb-0.5">Gateway Notice:</span>
             <span>{error}</span>
           </div>
         )}
 
         {/* Services Status Cards */}
-        <div className="space-y-2">
+        <div className="space-y-2.5">
           {/* API Gateway */}
-          <div className="p-3 bg-white border border-slate-200 rounded-lg flex items-center justify-between">
+          <div className="p-3.5 bg-white border border-[#d7eaea] rounded-[14px] flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[#f0fdfa] border border-[#d7eaea] text-[#008080] flex items-center justify-center">
                 <Server className="w-4 h-4" />
               </div>
               <div>
-                <span className="font-semibold text-slate-900 block text-xs">Next.js REST API</span>
-                <span className="text-[10px] text-slate-400">Headless Route Handlers (Port 3001)</span>
+                <span className="font-semibold text-[#172033] block text-xs">Next.js REST API</span>
+                <span className="text-[10px] text-[#64748b]">Headless Route Handlers (Port 3001)</span>
               </div>
             </div>
             <Badge variant={healthData ? "success" : "danger"} size="sm" dot>
@@ -99,14 +99,14 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
           </div>
 
           {/* MongoDB */}
-          <div className="p-3 bg-white border border-slate-200 rounded-lg flex items-center justify-between">
+          <div className="p-3.5 bg-white border border-[#d7eaea] rounded-[14px] flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-emerald-50 text-emerald-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-emerald-50 border border-emerald-100 text-emerald-700 flex items-center justify-center">
                 <Database className="w-4 h-4" />
               </div>
               <div>
-                <span className="font-semibold text-slate-900 block text-xs">MongoDB + Mongoose</span>
-                <span className="text-[10px] text-slate-400">
+                <span className="font-semibold text-[#172033] block text-xs">MongoDB + Mongoose</span>
+                <span className="text-[10px] text-[#64748b]">
                   {healthData?.services.database.databaseName || "Database connection pool"}
                 </span>
               </div>
@@ -125,14 +125,14 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
           </div>
 
           {/* Redis / BullMQ */}
-          <div className="p-3 bg-white border border-slate-200 rounded-lg flex items-center justify-between">
+          <div className="p-3.5 bg-white border border-[#d7eaea] rounded-[14px] flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-2.5">
-              <div className="w-8 h-8 rounded-lg bg-sky-50 text-sky-700 flex items-center justify-center">
+              <div className="w-8 h-8 rounded-lg bg-[#f0fdfa] border border-[#d7eaea] text-[#008080] flex items-center justify-center">
                 <Activity className="w-4 h-4" />
               </div>
               <div>
-                <span className="font-semibold text-slate-900 block text-xs">Redis &amp; BullMQ</span>
-                <span className="text-[10px] text-slate-400">
+                <span className="font-semibold text-[#172033] block text-xs">Redis &amp; BullMQ</span>
+                <span className="text-[10px] text-[#64748b]">
                   Async message queues for FHIR imports &amp; ABDM
                 </span>
               </div>
@@ -154,10 +154,10 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
         {/* Live Payload Preview */}
         {healthData && (
           <div>
-            <span className="text-[10px] text-slate-400 font-semibold uppercase block mb-1">
+            <span className="text-[10px] text-[#64748b] font-semibold uppercase block mb-1">
               Live Gateway Response Payload
             </span>
-            <pre className="p-3 bg-slate-900 text-slate-200 rounded-lg text-[11px] font-mono overflow-x-auto max-h-40">
+            <pre className="p-3 bg-slate-900 text-emerald-400 rounded-[12px] text-[11px] font-mono overflow-x-auto max-h-40 border border-[#d7eaea]">
               {JSON.stringify(healthData, null, 2)}
             </pre>
           </div>

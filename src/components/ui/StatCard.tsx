@@ -21,20 +21,20 @@ export const StatCard: React.FC<StatCardProps> = ({
   trend,
 }) => {
   return (
-    <div className="bg-white border border-slate-200 rounded-xl p-5 shadow-xs hover:border-slate-300 transition-colors">
+    <div className="bg-white border border-[#d7eaea] rounded-[18px] p-5 shadow-[0_6px_24px_rgba(15,23,42,0.05)] hover:border-[#b2d8d8] transition-all">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold text-slate-500 uppercase tracking-wider">
+        <span className="text-xs font-semibold text-[#64748b] uppercase tracking-wider">
           {title}
         </span>
-        <div className="w-9 h-9 rounded-lg bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700">
+        <div className="w-9 h-9 rounded-xl bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080]">
           {icon}
         </div>
       </div>
       <div className="flex items-baseline gap-2 mb-1">
-        <span className="text-2xl font-bold text-slate-900 tracking-tight">{value}</span>
+        <span className="text-2xl font-bold text-[#172033] tracking-tight">{value}</span>
         {badge}
       </div>
-      <div className="flex items-center justify-between text-xs text-slate-500">
+      <div className="flex items-center justify-between text-xs text-[#64748b]">
         {subtitle && <span>{subtitle}</span>}
         {trend && (
           <span

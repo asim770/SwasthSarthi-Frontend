@@ -99,17 +99,17 @@ export function NotificationListView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 rounded-2xl p-6 text-white shadow-xl">
+      <div className="bg-white border border-[#d7eaea] rounded-[18px] p-6 shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30 text-xs font-semibold mb-3">
+            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] text-xs font-semibold mb-3">
               <Bell className="w-3.5 h-3.5" />
               Real-time In-App Dispatch
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
-              Notifications & Consent Alerts
+            <h1 className="text-2xl font-bold tracking-tight text-[#172033] mb-2">
+              Notifications &amp; Consent Alerts
             </h1>
-            <p className="text-slate-300 text-sm leading-relaxed">
+            <p className="text-[#475569] text-sm leading-relaxed">
               Timely, privacy-safe notifications for consent requests, authorized record queries, diagnostic test completions, and prescription dispensations.
             </p>
           </div>
@@ -117,7 +117,7 @@ export function NotificationListView() {
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAll}
-              className="flex items-center gap-2 px-4 py-2 bg-teal-700 text-white rounded-lg text-xs font-semibold hover:bg-teal-800 transition-colors shadow-2xs cursor-pointer self-start sm:self-auto shrink-0"
+              className="flex items-center gap-2 px-4 py-2 bg-[#008080] text-white rounded-[12px] text-xs font-semibold hover:bg-[#006666] active:bg-[#004c4c] transition-colors shadow-xs cursor-pointer self-start sm:self-auto shrink-0"
             >
               <CheckCheck className="w-4 h-4" />
               Mark all as read ({unreadCount})
@@ -127,12 +127,12 @@ export function NotificationListView() {
       </div>
 
       {/* Toolbar & Filters */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-[18px] border border-[#d7eaea] shadow-xs">
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs border border-slate-200 rounded-lg px-2.5 py-2 bg-white text-slate-700 font-medium cursor-pointer"
+            className="text-xs border border-[#d7eaea] rounded-[12px] px-2.5 py-2 bg-white text-[#172033] font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#008080]"
           >
             <option value="ALL">All Categories</option>
             <option value="CONSENT">Consent Events</option>
@@ -143,12 +143,12 @@ export function NotificationListView() {
             <option value="SECURITY">Security & Auth</option>
           </select>
 
-          <label className="flex items-center gap-1.5 text-xs text-slate-600 cursor-pointer ml-2">
+          <label className="flex items-center gap-1.5 text-xs text-[#475569] cursor-pointer ml-2">
             <input
               type="checkbox"
               checked={unreadOnly}
               onChange={(e) => setUnreadOnly(e.target.checked)}
-              className="rounded border-slate-300 text-teal-600 focus:ring-teal-500 w-3.5 h-3.5"
+              className="rounded border-[#d7eaea] text-[#008080] focus:ring-[#008080] w-3.5 h-3.5"
             />
             <span>Unread only</span>
           </label>
@@ -157,7 +157,7 @@ export function NotificationListView() {
         <button
           onClick={loadNotifications}
           disabled={loading}
-          className="p-2 border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 transition-colors cursor-pointer self-end sm:self-auto"
+          className="p-2 border border-[#d7eaea] rounded-[12px] text-[#008080] hover:bg-[#f0fdfa] transition-colors cursor-pointer self-end sm:self-auto"
           title="Refresh notifications"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -165,16 +165,16 @@ export function NotificationListView() {
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-[18px] text-rose-800 text-xs">
           {error}
         </div>
       )}
 
       {/* Notifications Inbox */}
-      <div className="bg-white rounded-xl border border-slate-200/80 shadow-2xs overflow-hidden">
+      <div className="bg-white rounded-[18px] border border-[#d7eaea] shadow-xs overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-slate-400 text-sm">
-            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-teal-600" />
+          <div className="p-12 text-center text-[#64748b] text-sm">
+            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#008080]" />
             Loading notifications...
           </div>
         ) : filteredNotifications.length === 0 ? (

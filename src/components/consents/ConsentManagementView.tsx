@@ -331,11 +331,11 @@ export const ConsentManagementView: React.FC = () => {
 
       {/* Role Context Notification Banner */}
       {user?.role === "patient" && (
-        <div className="p-4 bg-teal-50/80 border border-teal-200/80 rounded-xl flex items-start gap-3.5 text-xs text-teal-900 shadow-2xs">
-          <ShieldCheck className="w-5 h-5 text-teal-700 shrink-0 mt-0.5" />
+        <div className="p-4 bg-[#f0fdfa] border border-[#d7eaea] rounded-[18px] flex items-start gap-3.5 text-xs text-[#004c4c] shadow-xs">
+          <ShieldCheck className="w-5 h-5 text-[#008080] shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <span className="font-bold block">Patient Data Sovereignty Guaranteed</span>
-            <p className="text-teal-800 leading-relaxed">
+            <span className="font-bold block text-[#172033]">Patient Data Sovereignty Guaranteed</span>
+            <p className="text-[#475569] leading-relaxed">
               No healthcare practitioner or facility can inspect your clinical records without your explicit,
               time-bounded consent. You have granular authority to approve specific categories, deny requests,
               or permanently revoke access at any time.
@@ -345,11 +345,11 @@ export const ConsentManagementView: React.FC = () => {
       )}
 
       {user?.role === "doctor" && (
-        <div className="p-4 bg-blue-50/80 border border-blue-200/80 rounded-xl flex items-start gap-3.5 text-xs text-blue-900 shadow-2xs">
-          <Lock className="w-5 h-5 text-blue-700 shrink-0 mt-0.5" />
+        <div className="p-4 bg-[#f0fdfa] border border-[#d7eaea] rounded-[18px] flex items-start gap-3.5 text-xs text-[#004c4c] shadow-xs">
+          <Lock className="w-5 h-5 text-[#008080] shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <span className="font-bold block">Doctor Consent Request Workflow</span>
-            <p className="text-blue-800 leading-relaxed">
+            <span className="font-bold block text-[#172033]">Doctor Consent Request Workflow</span>
+            <p className="text-[#475569] leading-relaxed">
               Submitting a consent request initiates an electronic artifact in the patient’s inbox.
               Clinical record endpoints remain strictly locked until the patient reviews and grants permission.
             </p>
@@ -358,11 +358,11 @@ export const ConsentManagementView: React.FC = () => {
       )}
 
       {user?.role === "admin" && (
-        <div className="p-4 bg-amber-50/80 border border-amber-200/80 rounded-xl flex items-start gap-3.5 text-xs text-amber-900 shadow-2xs">
-          <AlertTriangle className="w-5 h-5 text-amber-700 shrink-0 mt-0.5" />
+        <div className="p-4 bg-amber-50/70 border border-amber-200/80 rounded-[18px] flex items-start gap-3.5 text-xs text-amber-900 shadow-xs">
+          <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
           <div className="space-y-1">
-            <span className="font-bold block">Administrative Metadata Access Only</span>
-            <p className="text-amber-800 leading-relaxed">
+            <span className="font-bold block text-[#172033]">Administrative Metadata Access Only</span>
+            <p className="text-[#475569] leading-relaxed">
               Administrators possess governance visibility into consent artifacts and expiry metadata,
               but are strictly forbidden from approving or revoking consents on behalf of patients, or reading clinical content.
             </p>
@@ -371,7 +371,7 @@ export const ConsentManagementView: React.FC = () => {
       )}
 
       {/* Tabs Filter Bar */}
-      <div className="flex items-center gap-1.5 border-b border-slate-200 overflow-x-auto pb-1 text-xs">
+      <div className="flex items-center gap-1.5 border-b border-[#d7eaea] overflow-x-auto pb-1 text-xs">
         {[
           { key: "ALL", label: "All Consents", count: counts.ALL },
           { key: "PENDING", label: "Pending", count: counts.PENDING },
@@ -383,18 +383,18 @@ export const ConsentManagementView: React.FC = () => {
           <button
             key={tab.key}
             onClick={() => setActiveTab(tab.key)}
-            className={`flex items-center gap-2 px-3.5 py-2 rounded-t-lg font-medium transition-colors cursor-pointer shrink-0 border-b-2 -mb-1 ${
+            className={`flex items-center gap-2 px-3.5 py-2 rounded-t-[12px] font-medium transition-colors cursor-pointer shrink-0 border-b-2 -mb-1 ${
               activeTab === tab.key
-                ? "border-teal-600 text-teal-800 bg-white font-semibold shadow-2xs"
-                : "border-transparent text-slate-500 hover:text-slate-800 hover:bg-slate-100/60"
+                ? "border-[#008080] text-[#008080] bg-white font-semibold shadow-2xs"
+                : "border-transparent text-[#64748b] hover:text-[#172033] hover:bg-[#f0fdfa]/60"
             }`}
           >
             <span>{tab.label}</span>
             <span
               className={`px-1.5 py-0.2 rounded-full text-[10px] ${
                 activeTab === tab.key
-                  ? "bg-teal-100 text-teal-800 font-bold"
-                  : "bg-slate-200/70 text-slate-600"
+                  ? "bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] font-bold"
+                  : "bg-slate-200/70 text-[#64748b]"
               }`}
             >
               {tab.count}
@@ -405,8 +405,8 @@ export const ConsentManagementView: React.FC = () => {
 
       {/* Consent Cards List */}
       {loading ? (
-        <div className="py-16 text-center text-xs text-slate-500 flex flex-col items-center justify-center gap-2">
-          <RefreshCw className="w-5 h-5 text-teal-600 animate-spin" />
+        <div className="py-16 text-center text-xs text-[#64748b] flex flex-col items-center justify-center gap-2">
+          <RefreshCw className="w-5 h-5 text-[#008080] animate-spin" />
           <span>Evaluating cryptographic consent artifacts...</span>
         </div>
       ) : error ? (

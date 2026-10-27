@@ -234,27 +234,27 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {step === "IDENTIFIER" && (
           <form onSubmit={handleRequestChallenge} className="space-y-4">
             <div>
-              <label className="block text-xs font-semibold text-slate-700 mb-1.5">
+              <label className="block text-xs font-semibold text-[#172033] mb-1.5">
                 ABHA Address or ABHA Number
               </label>
-              <div className="relative rounded-lg shadow-2xs">
+              <div className="relative rounded-[12px] shadow-2xs">
                 <input
                   type="text"
                   placeholder="e.g. rahul.verma@sbx or 32-8492-1920-4491"
                   value={identifier}
                   onChange={(e) => setIdentifier(e.target.value)}
                   required
-                  className="w-full px-3.5 py-2.5 text-xs text-slate-900 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 font-mono"
+                  className="w-full px-3.5 py-2.5 text-xs text-[#172033] border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] focus:border-[#008080] font-mono bg-white"
                 />
               </div>
-              <p className="mt-1 text-[11px] text-slate-400">
+              <p className="mt-1 text-[11px] text-[#64748b]">
                 Synthetic format: <code>user@sbx</code> or <code>14-digit ABHA</code>
               </p>
             </div>
 
             {/* Quick Demo Persona Badges */}
             <div>
-              <span className="text-[11px] font-semibold text-slate-500 uppercase tracking-wider block mb-2">
+              <span className="text-[11px] font-semibold text-[#64748b] uppercase tracking-wider block mb-2">
                 Or Select a Synthetic Demo Persona
               </span>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
@@ -266,26 +266,26 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                       key={persona.id}
                       type="button"
                       onClick={() => setIdentifier(persona.id)}
-                      className={`flex items-center gap-2.5 p-2 rounded-lg border text-left transition-all ${
+                      className={`flex items-center gap-2.5 p-2 rounded-[12px] border text-left transition-all ${
                         isSelected
-                          ? "bg-teal-50 border-teal-500 text-teal-900 shadow-2xs"
-                          : "bg-white border-slate-200 hover:border-slate-300 hover:bg-slate-50 text-slate-700"
+                          ? "bg-[#f0fdfa] border-[#008080] text-[#004c4c] shadow-2xs"
+                          : "bg-white border-[#d7eaea] hover:border-[#b2d8d8] hover:bg-[#f0fdfa] text-[#475569]"
                       }`}
                     >
                       <div
-                        className={`w-7 h-7 rounded-md flex items-center justify-center shrink-0 ${
+                        className={`w-7 h-7 rounded-lg flex items-center justify-center shrink-0 ${
                           isSelected
-                            ? "bg-teal-700 text-white"
-                            : "bg-slate-100 text-slate-600"
+                            ? "bg-[#008080] text-white"
+                            : "bg-[#f0fdfa] border border-[#d7eaea] text-[#008080]"
                         }`}
                       >
                         <Icon className="w-3.5 h-3.5" />
                       </div>
                       <div className="min-w-0 flex-1">
-                        <div className="text-xs font-semibold truncate leading-tight">
+                        <div className="text-xs font-semibold truncate leading-tight text-[#172033]">
                           {persona.name}
                         </div>
-                        <div className="text-[10px] text-slate-400 truncate font-mono">
+                        <div className="text-[10px] text-[#64748b] truncate font-mono">
                           {persona.badge}
                         </div>
                       </div>
@@ -313,11 +313,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           <form onSubmit={handleVerifyOtp} className="space-y-4">
             <div>
               <div className="flex items-center justify-between mb-1.5">
-                <label className="text-xs font-semibold text-slate-700">
+                <label className="text-xs font-semibold text-[#172033]">
                   6-Digit Verification Code
                 </label>
-                <span className="text-xs font-mono text-slate-500">
-                  Expires in: <strong className="text-slate-800">{formatTimer(secondsRemaining)}</strong>
+                <span className="text-xs font-mono text-[#64748b]">
+                  Expires in: <strong className="text-[#172033]">{formatTimer(secondsRemaining)}</strong>
                 </span>
               </div>
 
@@ -329,43 +329,43 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 placeholder="000000"
                 value={otp}
                 onChange={(e) => setOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                className="w-full text-center text-xl tracking-[0.5em] font-mono font-bold py-3 border border-slate-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-600 focus:border-teal-600 bg-white"
+                className="w-full text-center text-xl tracking-[0.5em] font-mono font-bold py-3 border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] focus:border-[#008080] bg-white text-[#172033]"
               />
             </div>
 
             {/* Development-only Mock Delivery Helper Box */}
-            <div className="p-3 bg-teal-50/70 border border-teal-200/80 rounded-xl space-y-2">
+            <div className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px] space-y-2">
               <div className="flex items-center justify-between">
-                <div className="flex items-center gap-1.5 text-xs font-semibold text-teal-900">
-                  <Sparkles className="w-3.5 h-3.5 text-teal-700" />
+                <div className="flex items-center gap-1.5 text-xs font-semibold text-[#004c4c]">
+                  <Sparkles className="w-3.5 h-3.5 text-[#008080]" />
                   <span>Mock Telephony Gateway (Development Assistant)</span>
                 </div>
                 <Badge variant="teal" size="sm">Demo Channel</Badge>
               </div>
-              <p className="text-[11px] text-slate-600 leading-relaxed">
+              <p className="text-[11px] text-[#475569] leading-relaxed">
                 In local development, the synthetic OTP is delivered via an isolated mock channel.
               </p>
               {mockOtpLoading ? (
-                <div className="text-xs text-slate-400 font-mono">Fetching delivered mock OTP...</div>
+                <div className="text-xs text-[#64748b] font-mono">Fetching delivered mock OTP...</div>
               ) : mockOtp ? (
-                <div className="flex items-center justify-between p-2 bg-white border border-teal-100 rounded-lg">
+                <div className="flex items-center justify-between p-2 bg-white border border-[#d7eaea] rounded-[10px]">
                   <div className="flex items-center gap-2">
-                    <KeyRound className="w-3.5 h-3.5 text-teal-600" />
-                    <span className="text-xs text-slate-700 font-medium">Delivered OTP:</span>
-                    <strong className="text-sm font-mono text-teal-800 tracking-wider">
+                    <KeyRound className="w-3.5 h-3.5 text-[#008080]" />
+                    <span className="text-xs text-[#475569] font-medium">Delivered OTP:</span>
+                    <strong className="text-sm font-mono text-[#008080] tracking-wider">
                       {mockOtp}
                     </strong>
                   </div>
                   <button
                     type="button"
                     onClick={() => setOtp(mockOtp)}
-                    className="text-xs text-teal-700 font-semibold hover:text-teal-900 underline"
+                    className="text-xs text-[#008080] font-semibold hover:text-[#006666] underline"
                   >
                     Auto-Fill
                   </button>
                 </div>
               ) : (
-                <div className="text-xs text-slate-500">
+                <div className="text-xs text-[#64748b]">
                   Mock OTP inspection unavailable in this environment.
                 </div>
               )}

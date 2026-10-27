@@ -48,20 +48,20 @@ export function PatientAccessHistoryView() {
   return (
     <div className="space-y-6">
       {/* Header Banner */}
-      <div className="bg-gradient-to-r from-teal-900 to-slate-900 rounded-2xl p-6 text-white shadow-xl">
+      <div className="bg-white border border-[#d7eaea] rounded-[18px] p-6 shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
         <div className="max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30 text-xs font-semibold mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] text-xs font-semibold mb-3">
             <Clock className="w-3.5 h-3.5" />
             Patient Data Disclosure Ledger
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
-            Health Data Access & Disclosure History
+          <h1 className="text-2xl font-bold tracking-tight text-[#172033] mb-2">
+            Health Data Access &amp; Disclosure History
           </h1>
-          <p className="text-slate-300 text-sm leading-relaxed mb-4">
+          <p className="text-[#475569] text-sm leading-relaxed mb-4">
             A transparent, patient-scoped record of all healthcare practitioners, diagnostic laboratories, and pharmacies that have accessed, transferred, or contributed to your health records under consented workflows.
           </p>
-          <div className="p-3 bg-teal-800/40 border border-teal-500/30 rounded-xl text-teal-200 text-xs flex items-center gap-2">
-            <ShieldCheck className="w-4 h-4 shrink-0 text-teal-300" />
+          <div className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-[#004c4c] text-xs flex items-center gap-2">
+            <ShieldCheck className="w-4 h-4 shrink-0 text-[#008080]" />
             <span>
               <strong>Privacy Guarantee:</strong> This access history records authorization outcomes without disclosing unconsented third-party metadata or clinical diagnostic notes.
             </span>
@@ -70,14 +70,14 @@ export function PatientAccessHistoryView() {
       </div>
 
       {/* Toolbar */}
-      <div className="flex items-center justify-between bg-white p-4 rounded-xl border border-slate-200/80 shadow-2xs">
-        <div className="text-xs font-semibold text-slate-700">
+      <div className="flex items-center justify-between bg-white p-4 rounded-[18px] border border-[#d7eaea] shadow-xs">
+        <div className="text-xs font-semibold text-[#172033]">
           Showing <strong>{events.length}</strong> logged access events
         </div>
         <button
           onClick={loadHistory}
           disabled={loading}
-          className="flex items-center gap-1.5 px-3 py-1.5 border border-slate-200 rounded-lg text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors cursor-pointer"
+          className="flex items-center gap-1.5 px-3 py-1.5 border border-[#d7eaea] rounded-[12px] text-xs font-semibold text-[#008080] hover:bg-[#f0fdfa] transition-colors cursor-pointer"
         >
           <RefreshCw className={`w-3.5 h-3.5 ${loading ? "animate-spin" : ""}`} />
           Refresh Ledger
@@ -85,33 +85,33 @@ export function PatientAccessHistoryView() {
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-xl text-rose-800 text-xs flex items-center gap-2">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-[18px] text-rose-800 text-xs flex items-center gap-2">
           <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
           <span>{error}</span>
         </div>
       )}
 
       {/* Events List */}
-      <div className="bg-white rounded-xl border border-slate-200/80 shadow-2xs overflow-hidden">
+      <div className="bg-white rounded-[18px] border border-[#d7eaea] shadow-xs overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-slate-400 text-sm">
-            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-teal-600" />
+          <div className="p-12 text-center text-[#64748b] text-sm">
+            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#008080]" />
             Loading access history...
           </div>
         ) : events.length === 0 ? (
-          <div className="p-12 text-center text-slate-500">
-            <Clock className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <p className="text-sm font-medium">No recorded access events yet.</p>
-            <p className="text-xs text-slate-400 mt-1">
+          <div className="p-12 text-center text-[#64748b]">
+            <Clock className="w-10 h-10 text-[#b2d8d8] mx-auto mb-2" />
+            <p className="text-sm font-semibold text-[#172033]">No recorded access events yet.</p>
+            <p className="text-xs text-[#64748b] mt-1">
               Events will appear when practitioners request consent or access your clinical timeline.
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-[#d7eaea]/50">
             {events.map((evt) => (
               <div
                 key={evt.eventId}
-                className="p-4 sm:p-5 hover:bg-slate-50/60 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                className="p-4 sm:p-5 hover:bg-[#f0fdfa]/50 transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
               >
                 <div className="space-y-1 max-w-xl">
                   <div className="flex items-center gap-2">

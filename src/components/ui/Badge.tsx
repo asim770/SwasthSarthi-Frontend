@@ -28,7 +28,7 @@ export const Badge: React.FC<BadgeProps> = ({
     info: "bg-sky-50 text-sky-800 border-sky-200",
     neutral: "bg-slate-100 text-slate-700 border-slate-200",
     danger: "bg-red-50 text-red-700 border-red-200",
-    teal: "bg-teal-50 text-teal-800 border-teal-200",
+    teal: "bg-[#f0fdfa] text-[#008080] border-[#b2d8d8]",
   };
 
   const dotStyles = {
@@ -37,7 +37,7 @@ export const Badge: React.FC<BadgeProps> = ({
     info: "bg-sky-600",
     neutral: "bg-slate-500",
     danger: "bg-red-600",
-    teal: "bg-teal-600",
+    teal: "bg-[#008080]",
   };
 
   return (

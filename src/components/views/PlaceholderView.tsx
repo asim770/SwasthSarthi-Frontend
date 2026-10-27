@@ -258,21 +258,21 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
         <div className="space-y-6">
           {adminOverview && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 bg-white border border-slate-200 rounded-xl">
-                <span className="text-xs text-slate-500 block">Total Users</span>
-                <span className="text-xl font-bold text-slate-900">{adminOverview.totalUsers}</span>
+              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
+                <span className="text-xs text-[#64748b] block">Total Users</span>
+                <span className="text-xl font-bold text-[#172033]">{adminOverview.totalUsers}</span>
               </div>
-              <div className="p-4 bg-white border border-slate-200 rounded-xl">
-                <span className="text-xs text-slate-500 block">Active Sessions</span>
+              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
+                <span className="text-xs text-[#64748b] block">Active Sessions</span>
                 <span className="text-xl font-bold text-emerald-600">{adminOverview.activeSessions}</span>
               </div>
-              <div className="p-4 bg-white border border-slate-200 rounded-xl">
-                <span className="text-xs text-slate-500 block">Total Consents</span>
-                <span className="text-xl font-bold text-slate-900">{adminOverview.totalConsents}</span>
+              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
+                <span className="text-xs text-[#64748b] block">Total Consents</span>
+                <span className="text-xl font-bold text-[#172033]">{adminOverview.totalConsents}</span>
               </div>
-              <div className="p-4 bg-white border border-slate-200 rounded-xl">
-                <span className="text-xs text-slate-500 block">Granted Consents</span>
-                <span className="text-xl font-bold text-teal-600">{adminOverview.grantedConsents}</span>
+              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
+                <span className="text-xs text-[#64748b] block">Granted Consents</span>
+                <span className="text-xl font-bold text-[#008080]">{adminOverview.grantedConsents}</span>
               </div>
             </div>
           )}
@@ -280,13 +280,13 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
           <Card>
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm font-bold text-slate-900">Security Audit Trail (DAL Verified)</h4>
+                <h4 className="text-sm font-bold text-[#172033]">Security Audit Trail (DAL Verified)</h4>
                 <Badge variant="teal" size="sm">Live Server Telemetry</Badge>
               </div>
               {dataLoading ? (
-                <div className="py-8 text-center text-xs text-slate-500">Loading audit trail...</div>
+                <div className="py-8 text-center text-xs text-[#64748b]">Loading audit trail...</div>
               ) : auditLogs.length > 0 ? (
-                <div className="divide-y divide-slate-100 overflow-x-auto">
+                <div className="divide-y divide-[#d7eaea]/50 overflow-x-auto">
                   {(auditLogs as Array<{
                     _id: string;
                     action: string;
@@ -302,18 +302,18 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                             log.outcome === "ALLOWED" ? "bg-emerald-500" : "bg-red-500"
                           }`}
                         />
-                        <span className="font-mono font-semibold text-slate-800">{log.action}</span>
-                        <span className="text-slate-400">({log.targetResourceType})</span>
+                        <span className="font-mono font-semibold text-[#172033]">{log.action}</span>
+                        <span className="text-[#64748b]">({log.targetResourceType})</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[11px] text-slate-500 uppercase">{log.principalRole}</span>
+                        <span className="text-[11px] text-[#64748b] uppercase">{log.principalRole}</span>
                         <Badge
                           variant={log.outcome === "ALLOWED" ? "success" : "danger"}
                           size="sm"
                         >
                           {log.outcome}
                         </Badge>
-                        <span className="text-[10px] text-slate-400 font-mono">
+                        <span className="text-[10px] text-[#64748b] font-mono">
                           {new Date(log.timestamp).toLocaleTimeString()}
                         </span>
                       </div>
@@ -321,7 +321,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                   ))}
                 </div>
               ) : (
-                <div className="py-8 text-center text-xs text-slate-500">No audit events recorded yet.</div>
+                <div className="py-8 text-center text-xs text-[#64748b]">No audit events recorded yet.</div>
               )}
             </CardContent>
           </Card>
@@ -333,15 +333,15 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-sm font-bold text-slate-900">
+              <h4 className="text-sm font-bold text-[#172033]">
                 Assigned Laboratory Orders ({user.facility})
               </h4>
               <Badge variant="teal" size="sm">Facility Scoped</Badge>
             </div>
             {dataLoading ? (
-              <div className="py-8 text-center text-xs text-slate-500">Loading test orders...</div>
+              <div className="py-8 text-center text-xs text-[#64748b]">Loading test orders...</div>
             ) : labOrders.length > 0 ? (
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-[#d7eaea]/50">
                 {(labOrders as Array<{
                   orderId: string;
                   patientName: string;
@@ -352,11 +352,11 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                 }>).map((order) => (
                   <div key={order.orderId} className="py-3 flex items-center justify-between text-xs">
                     <div>
-                      <div className="flex items-center gap-2 font-semibold text-slate-800">
+                      <div className="flex items-center gap-2 font-semibold text-[#172033]">
                         <span>{order.testName}</span>
                         <Badge variant="neutral" size="sm">{order.priority}</Badge>
                       </div>
-                      <span className="text-slate-500 text-[11px]">
+                      <span className="text-[#475569] text-[11px]">
                         Patient: <strong>{order.patientName}</strong> • Order ID: <code>{order.orderId}</code>
                       </span>
                     </div>
@@ -367,7 +367,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                 ))}
               </div>
             ) : (
-              <div className="py-8 text-center text-xs text-slate-500">No active test orders assigned to your facility.</div>
+              <div className="py-8 text-center text-xs text-[#64748b]">No active test orders assigned to your facility.</div>
             )}
           </CardContent>
         </Card>
@@ -378,15 +378,15 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
         <Card>
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-sm font-bold text-slate-900">
+              <h4 className="text-sm font-bold text-[#172033]">
                 Active Eligible Prescriptions ({user.facility})
               </h4>
               <Badge variant="teal" size="sm">Fulfillment Allowed</Badge>
             </div>
             {dataLoading ? (
-              <div className="py-8 text-center text-xs text-slate-500">Loading prescriptions...</div>
+              <div className="py-8 text-center text-xs text-[#64748b]">Loading prescriptions...</div>
             ) : prescriptions.length > 0 ? (
-              <div className="divide-y divide-slate-100">
+              <div className="divide-y divide-[#d7eaea]/50">
                 {(prescriptions as Array<{
                   prescriptionId: string;
                   patientName: string;
@@ -396,10 +396,10 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                 }>).map((rx) => (
                   <div key={rx.prescriptionId} className="py-3 flex items-center justify-between text-xs">
                     <div>
-                      <span className="font-semibold text-slate-800 block">
+                      <span className="font-semibold text-[#172033] block">
                         {rx.medications.map((m) => `${m.name} (${m.dosage})`).join(", ")}
                       </span>
-                      <span className="text-slate-500 text-[11px]">
+                      <span className="text-[#475569] text-[11px]">
                         Patient: <strong>{rx.patientName}</strong> • Refills Remaining: <strong>{rx.remainingRefills}</strong>
                       </span>
                     </div>
@@ -408,7 +408,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                 ))}
               </div>
             ) : (
-              <div className="py-8 text-center text-xs text-slate-500">No active prescriptions available.</div>
+              <div className="py-8 text-center text-xs text-[#64748b]">No active prescriptions available.</div>
             )}
           </CardContent>
         </Card>
@@ -418,22 +418,22 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
       {!isAdminBlocked && !isLabBlocked && !isPharmacyBlocked && !(user?.role === "admin" && route === "access") && !(user?.role === "laboratory" && route === "labs") && !(user?.role === "pharmacy" && route === "prescriptions") && (
         <Card>
           <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-teal-50 border border-teal-100 flex items-center justify-center text-teal-700 mb-4 shadow-xs">
+            <div className="w-14 h-14 rounded-[18px] bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080] mb-4 shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
               <Icon className="w-6 h-6" />
             </div>
 
-            <h3 className="text-base font-bold text-slate-900 mb-1">
+            <h3 className="text-base font-bold text-[#172033] mb-1">
               {config.title} Architecture Overview
             </h3>
-            <p className="text-xs text-slate-500 max-w-md mb-6 leading-relaxed">
+            <p className="text-xs text-[#475569] max-w-md mb-6 leading-relaxed">
               {config.details}
             </p>
 
-            <div className="flex items-center gap-2 p-3 bg-slate-50 border border-slate-200/80 rounded-lg max-w-lg text-left text-xs text-slate-700 mb-6">
-              <Info className="w-4 h-4 text-teal-600 shrink-0" />
+            <div className="flex items-center gap-2 p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] max-w-lg text-left text-xs text-[#475569] mb-6">
+              <Info className="w-4 h-4 text-[#008080] shrink-0" />
               <span>
                 Backend authorization policies are active. You are authenticated as{" "}
-                <strong>{user ? `${user.name} (${user.role})` : "Guest"}</strong>.
+                <strong className="text-[#172033]">{user ? `${user.name} (${user.role})` : "Guest"}</strong>.
               </span>
             </div>
 

@@ -59,14 +59,16 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
         </>
       }
     >
-      <div className="space-y-4 text-xs text-slate-700">
+      <div className="space-y-4 text-xs text-[#475569]">
         {/* Status header */}
-        <div className="flex items-center justify-between p-3 bg-slate-50 border border-slate-100 rounded-lg">
-          <div className="flex items-center gap-2">
-            <Building2 className="w-4 h-4 text-teal-700 shrink-0" />
+        <div className="flex items-center justify-between p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px]">
+          <div className="flex items-center gap-2.5">
+            <div className="w-8 h-8 rounded-lg bg-white border border-[#d7eaea] flex items-center justify-center text-[#008080]">
+              <Building2 className="w-4 h-4 shrink-0" />
+            </div>
             <div>
-              <span className="font-semibold text-slate-900 block text-xs">{consent.requester}</span>
-              <span className="text-[10px] text-slate-400">{consent.hiuType}</span>
+              <span className="font-semibold text-[#172033] block text-xs">{consent.requester}</span>
+              <span className="text-[10px] text-[#64748b]">{consent.hiuType}</span>
             </div>
           </div>
           <Badge
@@ -86,21 +88,21 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
 
         {/* Purpose */}
         <div>
-          <span className="font-semibold text-slate-900 uppercase tracking-wider text-[10px] block mb-1">
+          <span className="font-semibold text-[#172033] uppercase tracking-wider text-[10px] block mb-1">
             Care Purpose &amp; Justification
           </span>
-          <p className="p-3 bg-white border border-slate-200 rounded-lg text-slate-700 leading-relaxed">
+          <p className="p-3 bg-white border border-[#d7eaea] rounded-[12px] text-[#475569] leading-relaxed shadow-2xs">
             {consent.purpose}
           </p>
         </div>
 
         {/* Scope and Date Ranges */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50 rounded-lg border border-slate-100">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-[#f0fdfa] rounded-[14px] border border-[#d7eaea]">
           <div>
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">Data Scope (FHIR)</span>
-            <div className="flex flex-wrap gap-1 mt-1">
+            <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Data Scope (FHIR)</span>
+            <div className="flex flex-wrap gap-1 mt-1.5">
               {consent.dataTypes.map((t) => (
-                <span key={t} className="px-2 py-0.5 bg-white border border-slate-200 rounded text-[10px] font-mono text-slate-700">
+                <span key={t} className="px-2 py-0.5 bg-white border border-[#d7eaea] rounded-[6px] text-[10px] font-mono text-[#004c4c]">
                   {t}
                 </span>
               ))}
@@ -108,16 +110,16 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
           </div>
 
           <div>
-            <span className="text-slate-400 block text-[10px] uppercase font-semibold">Consent Validity</span>
-            <span className="text-slate-900 font-medium block mt-1">
+            <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Consent Validity</span>
+            <span className="text-[#172033] font-medium block mt-1.5">
               {consent.expiresAt}
             </span>
           </div>
         </div>
 
         {/* Security badge */}
-        <div className="flex items-center gap-2 p-3 bg-teal-50 border border-teal-100 rounded-lg text-teal-900">
-          <ShieldCheck className="w-4 h-4 text-teal-700 shrink-0" />
+        <div className="flex items-center gap-2.5 p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-[#004c4c]">
+          <ShieldCheck className="w-4 h-4 text-[#008080] shrink-0" />
           <span className="text-[11px] leading-tight">
             Consent is governed by NDHM Consent Management Protocol. You retain complete right to revoke consent at any moment.
           </span>

@@ -2,17 +2,37 @@
 
 @layer base {
   :root {
-    --app-bg: #f5f8fc;
+    /* Official SwasthSaarthi Colour Tokens */
+    --app-background: #f0f8f8;
+    --surface-primary: #ffffff;
+    --surface-secondary: #f0fdfa;
+    --surface-glass: rgba(255, 255, 255, 0.78);
+
+    --teal-light: #b2d8d8;
+    --teal-medium: #66b2b2;
+    --teal-primary: #008080;
+    --teal-hover: #006666;
+    --teal-deep: #004c4c;
+
+    --text-primary: #172033;
+    --text-secondary: #475569;
+    --text-muted: #64748b;
+
+    --border-subtle: #d7eaea;
+    --border-glass: rgba(255, 255, 255, 0.85);
+
+    --shadow-soft: 0 6px 24px rgba(15, 23, 42, 0.05);
+    --radius-card: 18px;
+    --radius-button: 12px;
+
+    /* Backward-compatible and typography variables */
+    --app-bg: #f0f8f8;
     --glass-bg: rgba(255, 255, 255, 0.58);
     --glass-bg-strong: rgba(255, 255, 255, 0.78);
     --glass-border: rgba(255, 255, 255, 0.78);
     --glass-highlight: rgba(255, 255, 255, 0.92);
-    --text-primary: #172033;
-    --text-secondary: #64748b;
-    --text-muted: #94a3b8;
-    --accent: #0d9488;
-    --accent-soft: rgba(13, 148, 136, 0.09);
-    --shadow-soft: 0 8px 28px rgba(15, 23, 42, 0.06);
+    --accent: #008080;
+    --accent-soft: rgba(0, 128, 128, 0.09);
 
     --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif;
     --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
@@ -20,74 +40,77 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: var(--app-bg);
-    color: var(--text-primary);
+    background-color: var(--app-background, #f0f8f8);
+    color: var(--text-primary, #172033);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
   }
 }
 
-/* Light Cool-Grey Background with subtle white and pale-teal ambient gradients */
+/* Light Teal Background with subtle airy gradient */
 .app-light-bg {
-  background-color: var(--app-bg);
+  background-color: var(--app-background, #f0f8f8);
   background-image:
-    radial-gradient(at 0% 0%, rgba(13, 148, 136, 0.06) 0px, transparent 50%),
-    radial-gradient(at 100% 0%, rgba(56, 189, 248, 0.05) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(20, 184, 166, 0.04) 0px, transparent 50%),
-    radial-gradient(at 100% 100%, rgba(241, 245, 249, 0.8) 0px, transparent 50%);
+    radial-gradient(at 0% 0%, rgba(178, 216, 216, 0.22) 0px, transparent 48%),
+    radial-gradient(at 100% 0%, rgba(240, 253, 250, 0.85) 0px, transparent 50%),
+    radial-gradient(at 50% 100%, rgba(102, 178, 178, 0.08) 0px, transparent 50%),
+    linear-gradient(180deg, #f5fafa 0%, #f0f8f8 45%, #e8f4f4 100%);
   background-attachment: fixed;
 }
 
-/* Apple-Inspired Glassmorphic Surfaces */
+/* Apple-Inspired Glassmorphic Surfaces with subtle teal borders */
 .glass-panel {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 24px -2px rgba(15, 23, 42, 0.035), 0 1px 2px 0 rgba(15, 23, 42, 0.02);
+  background: var(--surface-glass, rgba(255, 255, 255, 0.78));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle, #d7eaea);
+  border-radius: var(--radius-card, 18px);
+  box-shadow: var(--shadow-soft, 0 6px 24px rgba(15, 23, 42, 0.05));
 }
 
 .glass-panel-interactive {
-  background: rgba(255, 255, 255, 0.75);
-  backdrop-filter: blur(16px);
-  -webkit-backdrop-filter: blur(16px);
-  border: 1px solid rgba(255, 255, 255, 0.85);
-  box-shadow: 0 4px 20px -2px rgba(15, 23, 42, 0.03);
+  background: var(--surface-glass, rgba(255, 255, 255, 0.78));
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid var(--border-subtle, #d7eaea);
+  border-radius: var(--radius-card, 18px);
+  box-shadow: var(--shadow-soft, 0 6px 24px rgba(15, 23, 42, 0.05));
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-interactive:hover {
-  background: rgba(255, 255, 255, 0.9);
-  border-color: rgba(255, 255, 255, 1);
-  box-shadow: 0 8px 30px -4px rgba(15, 23, 42, 0.06), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  background: rgba(255, 255, 255, 0.95);
+  border-color: var(--teal-light, #b2d8d8);
+  box-shadow: 0 8px 30px -4px rgba(0, 128, 128, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
   transform: translateY(-1px);
 }
 
 .glass-sidebar {
-  background: rgba(255, 255, 255, 0.82);
+  background: rgba(255, 255, 255, 0.85);
   backdrop-filter: blur(24px);
   -webkit-backdrop-filter: blur(24px);
-  border-right: 1px solid rgba(226, 232, 240, 0.75);
+  border-right: 1px solid var(--border-subtle, #d7eaea);
 }
 
 .glass-header {
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.8);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid rgba(226, 232, 240, 0.65);
+  border-bottom: 1px solid var(--border-subtle, #d7eaea);
 }
 
 .glass-input {
-  background: rgba(241, 245, 249, 0.65);
-  border: 1px solid rgba(226, 232, 240, 0.8);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid var(--border-subtle, #d7eaea);
+  border-radius: var(--radius-button, 12px);
   transition: all 160ms ease;
 }
 
 .glass-input:focus {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: rgba(13, 148, 136, 0.4);
-  box-shadow: 0 0 0 3px rgba(13, 148, 136, 0.12);
+  background: #ffffff;
+  border-color: var(--teal-primary, #008080);
+  box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.15);
 }
 
 /* Subtle, refined macOS-style scrollbar */

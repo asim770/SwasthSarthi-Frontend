@@ -187,18 +187,18 @@ export const TransferModal: React.FC<TransferModalProps> = ({
       <div className="space-y-4 py-1">
         {/* Active Consent Context Banner */}
         {activeConsent ? (
-          <div className="p-3 bg-teal-50/60 border border-teal-200 rounded-xl text-xs space-y-1.5">
+          <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px] text-xs space-y-1.5 shadow-2xs">
             <div className="flex items-center justify-between">
-              <div className="flex items-center gap-1.5 font-semibold text-teal-900">
-                <ShieldCheck className="w-4 h-4 text-teal-600" />
+              <div className="flex items-center gap-1.5 font-semibold text-[#004c4c]">
+                <ShieldCheck className="w-4 h-4 text-[#008080]" />
                 <span>Authorized under Consent #{activeConsent.consentId}</span>
               </div>
-              <Badge variant="success" size="sm">ACTIVE & VALID</Badge>
+              <Badge variant="success" size="sm">ACTIVE &amp; VALID</Badge>
             </div>
-            <div className="grid grid-cols-2 gap-2 text-slate-600 pt-1 text-[11px]">
+            <div className="grid grid-cols-2 gap-2 text-[#475569] pt-1 text-[11px]">
               <div>
-                <span className="text-slate-400">Permitted Categories: </span>
-                <strong>
+                <span className="text-[#64748b]">Permitted Categories: </span>
+                <strong className="text-[#172033]">
                   {(activeConsent.approvedHiTypes.length > 0
                     ? activeConsent.approvedHiTypes
                     : activeConsent.hiTypes
@@ -206,8 +206,8 @@ export const TransferModal: React.FC<TransferModalProps> = ({
                 </strong>
               </div>
               <div>
-                <span className="text-slate-400">Date Range: </span>
-                <strong>
+                <span className="text-[#64748b]">Date Range: </span>
+                <strong className="text-[#172033]">
                   {new Date(activeConsent.dateRangeFrom).toLocaleDateString()} –{" "}
                   {new Date(activeConsent.dateRangeTo).toLocaleDateString()}
                 </strong>
@@ -215,7 +215,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({
             </div>
           </div>
         ) : (
-          <div className="p-3 bg-amber-50 border border-amber-200 rounded-xl text-xs flex items-center gap-2 text-amber-900">
+          <div className="p-3 bg-amber-50 border border-amber-200 rounded-[12px] text-xs flex items-center gap-2 text-amber-900">
             <AlertCircle className="w-4 h-4 text-amber-600 shrink-0" />
             <span>
               <strong>Warning:</strong> No active consent detected for patient <strong>{patientName}</strong>. Transfers require patient consent approval.
@@ -225,7 +225,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({
 
         {/* Select Originating Institution */}
         <div>
-          <label className="block text-xs font-semibold text-slate-800 mb-2">
+          <label className="block text-xs font-semibold text-[#172033] mb-2">
             Select Originating Institution (Mock HIP Source System):
           </label>
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
@@ -234,22 +234,22 @@ export const TransferModal: React.FC<TransferModalProps> = ({
                 key={hip.id}
                 type="button"
                 onClick={() => setSelectedHipId(hip.id)}
-                className={`p-3 rounded-xl border text-left transition-all cursor-pointer ${
+                className={`p-3 rounded-[14px] border text-left transition-all cursor-pointer ${
                   selectedHipId === hip.id
-                    ? "border-teal-600 bg-teal-50/50 shadow-xs ring-1 ring-teal-500"
-                    : "border-slate-200 hover:border-slate-300 bg-white"
+                    ? "border-[#008080] bg-[#f0fdfa] shadow-xs ring-1 ring-[#008080]"
+                    : "border-[#d7eaea] hover:border-[#b2d8d8] hover:bg-[#f0fdfa]/40 bg-white"
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
-                  <span className="font-bold text-xs text-slate-900">{hip.name}</span>
+                  <span className="font-bold text-xs text-[#172033]">{hip.name}</span>
                   <Badge variant={selectedHipId === hip.id ? "teal" : "neutral"} size="sm">
                     {hip.type}
                   </Badge>
                 </div>
-                <p className="text-[11px] text-slate-500 leading-tight mb-2">
+                <p className="text-[11px] text-[#475569] leading-tight mb-2">
                   {hip.speciality}
                 </p>
-                <div className="flex items-center justify-between text-[10px] text-slate-400">
+                <div className="flex items-center justify-between text-[10px] text-[#64748b]">
                   <span>{hip.city}</span>
                   <span className="font-mono">{hip.id}</span>
                 </div>
@@ -261,12 +261,12 @@ export const TransferModal: React.FC<TransferModalProps> = ({
         {/* Discovered Care Contexts for Selected Institution */}
         <div>
           <div className="flex items-center justify-between mb-1.5">
-            <span className="text-xs font-semibold text-slate-800">
+            <span className="text-xs font-semibold text-[#172033]">
               Discovered Care Contexts at {selectedHip?.name}:
             </span>
             {loadingContexts && (
-              <span className="flex items-center gap-1 text-[11px] text-slate-500">
-                <Loader2 className="w-3 h-3 animate-spin text-teal-600" />
+              <span className="flex items-center gap-1 text-[11px] text-[#64748b]">
+                <Loader2 className="w-3 h-3 animate-spin text-[#008080]" />
                 Discovering care contexts...
               </span>
             )}
@@ -277,22 +277,22 @@ export const TransferModal: React.FC<TransferModalProps> = ({
               {relevantContexts.map((ctx) => (
                 <div
                   key={ctx.careContextId}
-                  className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs flex items-center justify-between"
+                  className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-xs flex items-center justify-between shadow-2xs"
                 >
                   <div>
-                    <div className="font-semibold text-slate-800 flex items-center gap-2">
+                    <div className="font-semibold text-[#172033] flex items-center gap-2">
                       <span>{ctx.description}</span>
-                      <code className="text-[10px] text-slate-500 bg-slate-100 px-1 rounded">
+                      <code className="text-[10px] text-[#004c4c] bg-white border border-[#d7eaea] px-1.5 py-0.5 rounded-[6px]">
                         {ctx.careContextId}
                       </code>
                     </div>
-                    <div className="text-[11px] text-slate-500 flex items-center gap-3 mt-1">
+                    <div className="text-[11px] text-[#475569] flex items-center gap-3 mt-1.5">
                       <span className="flex items-center gap-1">
-                        <Layers className="w-3 h-3 text-slate-400" />
+                        <Layers className="w-3 h-3 text-[#008080]" />
                         {ctx.resourceCount} records ({ctx.availableHiTypes.join(", ")})
                       </span>
                       <span className="flex items-center gap-1">
-                        <Calendar className="w-3 h-3 text-slate-400" />
+                        <Calendar className="w-3 h-3 text-[#64748b]" />
                         {ctx.earliestDate} – {ctx.latestDate}
                       </span>
                     </div>
@@ -302,7 +302,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({
               ))}
             </div>
           ) : (
-            <div className="p-3 bg-slate-50 border border-slate-200 rounded-lg text-xs text-slate-500 text-center">
+            <div className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-xs text-[#64748b] text-center">
               {loadingContexts
                 ? "Probing simulated ABDM network..."
                 : `Care contexts registered under ${selectedHipId} for ${patientName}.`}

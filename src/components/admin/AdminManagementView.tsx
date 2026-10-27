@@ -230,46 +230,46 @@ export function AdminManagementView() {
   return (
     <div className="space-y-6">
       {/* Top Banner / Academic Disclaimers */}
-      <div className="bg-gradient-to-r from-slate-900 via-teal-950 to-slate-900 rounded-2xl p-6 text-white shadow-xl relative overflow-hidden">
+      <div className="bg-white border border-[#d7eaea] rounded-[18px] p-6 shadow-[0_6px_24px_rgba(15,23,42,0.05)] relative overflow-hidden">
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-teal-500/20 text-teal-300 border border-teal-500/30 text-xs font-semibold mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] text-xs font-semibold mb-3">
             <ShieldAlert className="w-3.5 h-3.5" />
-            Administrative Trust Boundary & Chain Integrity
+            Administrative Trust Boundary &amp; Chain Integrity
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-white mb-2">
-            Administrator Onboarding & Integrity Ledger
+          <h1 className="text-2xl font-bold tracking-tight text-[#172033] mb-2">
+            Administrator Onboarding &amp; Integrity Ledger
           </h1>
-          <p className="text-slate-300 text-sm leading-relaxed mb-4">
+          <p className="text-[#475569] text-sm leading-relaxed mb-4">
             Manage simulated healthcare facilities, review practitioner affiliations, and independently verify the SHA-256 cryptographic audit chain.
           </p>
-          <div className="p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-200 text-xs flex items-start gap-2.5">
-            <Info className="w-4 h-4 shrink-0 text-amber-300 mt-0.5" />
+          <div className="p-3 bg-amber-50/70 border border-amber-200/80 rounded-[12px] text-amber-900 text-xs flex items-start gap-2.5">
+            <Info className="w-4 h-4 shrink-0 text-amber-600 mt-0.5" />
             <div>
-              <strong>Simulated Sandbox Verification:</strong> Verification against the Health Facility Registry (HFR) and Healthcare Professionals Registry (HPR) is executed via a mock academic engine. Suspended or unapproved facilities are strictly barred from clinical exchange. Administrators have zero access to patient clinical contents or FHIR Bundles.
+              <strong className="text-amber-950">Simulated Sandbox Verification:</strong> Verification against the Health Facility Registry (HFR) and Healthcare Professionals Registry (HPR) is executed via a mock academic engine. Suspended or unapproved facilities are strictly barred from clinical exchange. Administrators have zero access to patient clinical contents or FHIR Bundles.
             </div>
           </div>
         </div>
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-slate-200 gap-4">
+      <div className="flex border-b border-[#d7eaea] gap-4">
         <button
           onClick={() => setActiveTab("institutions")}
           className={`flex items-center gap-2 pb-3 px-2 font-medium text-sm transition-colors border-b-2 cursor-pointer ${
             activeTab === "institutions"
-              ? "border-teal-600 text-teal-700"
-              : "border-transparent text-slate-500 hover:text-slate-800"
+              ? "border-[#008080] text-[#008080] font-semibold"
+              : "border-transparent text-[#64748b] hover:text-[#172033]"
           }`}
         >
           <Building2 className="w-4 h-4" />
-          Institutions & Facilities ({institutions.length})
+          Institutions &amp; Facilities ({institutions.length})
         </button>
         <button
           onClick={() => setActiveTab("practitioners")}
           className={`flex items-center gap-2 pb-3 px-2 font-medium text-sm transition-colors border-b-2 cursor-pointer ${
             activeTab === "practitioners"
-              ? "border-teal-600 text-teal-700"
-              : "border-transparent text-slate-500 hover:text-slate-800"
+              ? "border-[#008080] text-[#008080] font-semibold"
+              : "border-transparent text-[#64748b] hover:text-[#172033]"
           }`}
         >
           <UserCheck className="w-4 h-4" />
@@ -279,8 +279,8 @@ export function AdminManagementView() {
           onClick={() => setActiveTab("audit")}
           className={`flex items-center gap-2 pb-3 px-2 font-medium text-sm transition-colors border-b-2 cursor-pointer ${
             activeTab === "audit"
-              ? "border-teal-600 text-teal-700"
-              : "border-transparent text-slate-500 hover:text-slate-800"
+              ? "border-[#008080] text-[#008080] font-semibold"
+              : "border-transparent text-[#64748b] hover:text-[#172033]"
           }`}
         >
           <FileKey className="w-4 h-4" />
