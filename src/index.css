@@ -3,36 +3,36 @@
 @layer base {
   :root {
     /* Official SwaasthSaarthi Unified Editorial Tokens */
-    --app-background: #FAF7F2;
+    --app-background: #F0F7F6;
     --surface-primary: #ffffff;
-    --surface-secondary: #F4EFE6;
-    --surface-glass: rgba(250, 247, 242, 0.95);
+    --surface-secondary: #E4F1EE;
+    --surface-glass: rgba(240, 247, 246, 0.95);
 
-    --teal-light: #EAE4D9;
-    --teal-medium: #6F5E97;
-    --teal-primary: #57477D;
-    --teal-hover: #453763;
-    --teal-deep: #2C2244;
+    --teal-light: #D0E5E1;
+    --teal-medium: #14B8A6;
+    --teal-primary: #0F766E;
+    --teal-hover: #0D655E;
+    --teal-deep: #134E4A;
 
     --text-primary: #191817;
     --text-secondary: #5C574F;
     --text-muted: #7A746B;
 
-    --border-subtle: #EAE4D9;
-    --border-glass: #EAE4D9;
+    --border-subtle: #D0E5E1;
+    --border-glass: #D0E5E1;
 
     --shadow-soft: 0 4px 20px rgba(26, 25, 24, 0.04);
     --radius-card: 0px;
     --radius-button: 0px;
 
     /* Backward-compatible and typography variables */
-    --app-bg: #FAF7F2;
-    --glass-bg: rgba(250, 247, 242, 0.88);
-    --glass-bg-strong: rgba(250, 247, 242, 0.98);
-    --glass-border: #EAE4D9;
+    --app-bg: #F0F7F6;
+    --glass-bg: rgba(240, 247, 246, 0.88);
+    --glass-bg-strong: rgba(240, 247, 246, 0.98);
+    --glass-border: #D0E5E1;
     --glass-highlight: rgba(255, 255, 255, 0.95);
-    --accent: #57477D;
-    --accent-soft: rgba(87, 71, 125, 0.08);
+    --accent: #0F766E;
+    --accent-soft: rgba(15, 118, 110, 0.08);
 
     --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif;
     --font-serif: "Playfair Display", Georgia, Cambria, "Times New Roman", serif;
@@ -41,7 +41,7 @@
 
   body {
     font-family: var(--font-sans);
-    background-color: #FAF7F2;
+    background-color: #F0F7F6;
     color: var(--text-primary, #191817);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
@@ -84,20 +84,20 @@
 
 /* Warm Ivory Background for entire platform */
 .app-light-bg {
-  background-color: #FAF7F2;
+  background-color: #F0F7F6;
 }
 
 /* Editorial Glassmorphic Surfaces with hairline ivory borders */
 .glass-panel {
   background: #ffffff;
-  border: 1px solid #EAE4D9;
+  border: 1px solid #D0E5E1;
   border-radius: 0px;
   box-shadow: var(--shadow-soft, 0 4px 20px rgba(26, 25, 24, 0.04));
 }
 
 .glass-panel-interactive {
   background: #ffffff;
-  border: 1px solid #EAE4D9;
+  border: 1px solid #D0E5E1;
   border-radius: 0px;
   box-shadow: var(--shadow-soft, 0 4px 20px rgba(26, 25, 24, 0.04));
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
@@ -111,22 +111,22 @@
 }
 
 .glass-sidebar {
-  background: rgba(250, 247, 242, 0.95);
+  background: rgba(240, 247, 246, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-right: 1px solid #EAE4D9;
+  border-right: 1px solid #D0E5E1;
 }
 
 .glass-header {
-  background: rgba(250, 247, 242, 0.95);
+  background: rgba(240, 247, 246, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid #EAE4D9;
+  border-bottom: 1px solid #D0E5E1;
 }
 
 .glass-input {
-  background: #FAF7F2;
-  border: 1px solid #D5CEC2;
+  background: #F0F7F6;
+  border: 1px solid #B6D6D0;
   border-radius: 0px;
   transition: all 160ms ease;
 }

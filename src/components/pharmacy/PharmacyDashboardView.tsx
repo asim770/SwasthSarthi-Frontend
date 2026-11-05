@@ -160,9 +160,9 @@ export const PharmacyDashboardView: React.FC = () => {
       )}
 
       {/* Safety & Protocol Banner */}
-      <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
-          <Pill className="w-4 h-4 text-[#57477D] shrink-0" />
+          <Pill className="w-4 h-4 text-[#0F766E] shrink-0" />
           <span className="text-[#5C574F]">
             <strong className="text-[#1A1918]">Pharmacy Fulfilment Scope:</strong>{" "}
             {user?.facility ? (
@@ -177,7 +177,7 @@ export const PharmacyDashboardView: React.FC = () => {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 rounded-none bg-white text-[#57477D] font-mono text-[10px] font-semibold border border-[#EAE4D9]">
+          <span className="px-2 py-0.5 rounded-none bg-white text-[#0F766E] font-mono text-[10px] font-semibold border border-[#D0E5E1]">
             FHIR R4 MedicationRequest
           </span>
           <span className="px-2 py-0.5 rounded-none bg-emerald-50 text-emerald-800 font-mono text-[10px] font-semibold border border-emerald-200">
@@ -187,7 +187,7 @@ export const PharmacyDashboardView: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#EAE4D9]">
+      <div className="flex items-center gap-2 border-b border-[#D0E5E1]">
         <button
           onClick={() => setActiveTab("prescriptions")}
           className={`pb-3 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors ${
@@ -198,7 +198,7 @@ export const PharmacyDashboardView: React.FC = () => {
         >
           <Pill className="w-4 h-4" />
           Eligible Prescriptions
-          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] text-[10px] font-mono">
+          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
             {prescriptions.length}
           </span>
         </button>
@@ -213,7 +213,7 @@ export const PharmacyDashboardView: React.FC = () => {
         >
           <History className="w-4 h-4" />
           Dispensing Audit Log
-          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] text-[10px] font-mono">
+          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
             {dispenses.length}
           </span>
         </button>
@@ -237,7 +237,7 @@ export const PharmacyDashboardView: React.FC = () => {
                 placeholder="Search prescription ID, medication, or patient..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2] text-[#1A1918]"
+                className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6] text-[#1A1918]"
               />
             </div>
 
@@ -250,7 +250,7 @@ export const PharmacyDashboardView: React.FC = () => {
                   className={`px-2.5 py-1 text-xs font-semibold rounded-none whitespace-nowrap transition-colors cursor-pointer ${
                     statusFilter === st
                       ? "bg-[#1A1918] text-white shadow-none"
-                      : "bg-[#FAF7F2] text-[#69655E] border border-[#D5CEC2] hover:bg-[#EAE4D9] hover:text-[#1A1918]"
+                      : "bg-[#F0F7F6] text-[#69655E] border border-[#B6D6D0] hover:bg-[#D0E5E1] hover:text-[#1A1918]"
                   }`}
                 >
                   {st}
@@ -261,12 +261,12 @@ export const PharmacyDashboardView: React.FC = () => {
 
           {/* Prescriptions List */}
           {loading ? (
-            <div className="p-12 text-center text-xs text-[#69655E] bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
-              <RefreshCw className="w-5 h-5 text-[#57477D] animate-spin mx-auto mb-2" />
+            <div className="p-12 text-center text-xs text-[#69655E] bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
+              <RefreshCw className="w-5 h-5 text-[#0F766E] animate-spin mx-auto mb-2" />
               Retrieving prescription records from DAL...
             </div>
           ) : filteredPrescriptions.length === 0 ? (
-            <div className="p-12 text-center text-xs text-[#69655E] bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+            <div className="p-12 text-center text-xs text-[#69655E] bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
               <Pill className="w-8 h-8 text-[#8C877D] mx-auto mb-3" />
               <p className="font-semibold text-[#1A1918] font-editorial-serif text-base">No prescriptions found</p>
               <p className="text-[#69655E] mt-1 max-w-sm mx-auto">
@@ -290,7 +290,7 @@ export const PharmacyDashboardView: React.FC = () => {
                   new Date(rx.expiresAt).getTime() > Date.now();
 
                 return (
-                  <Card key={rx.prescriptionId} className="border-[#EAE4D9] rounded-none shadow-none hover:border-[#D5CEC2] transition-colors">
+                  <Card key={rx.prescriptionId} className="border-[#D0E5E1] rounded-none shadow-none hover:border-[#B6D6D0] transition-colors">
                     <CardContent className="p-4 sm:p-5">
                       <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4">
                         {/* Prescription Meta */}
@@ -329,16 +329,16 @@ export const PharmacyDashboardView: React.FC = () => {
                           </div>
 
                           {/* Medications list */}
-                          <div className="pt-2 border-t border-[#EAE4D9] space-y-1.5">
+                          <div className="pt-2 border-t border-[#D0E5E1] space-y-1.5">
                             {rx.medications.map((m, mIdx) => (
                               <div
                                 key={mIdx}
-                                className="flex flex-col sm:flex-row sm:items-center justify-between text-xs bg-[#FAF7F2] px-2.5 py-1.5 rounded-none border border-[#EAE4D9] gap-1"
+                                className="flex flex-col sm:flex-row sm:items-center justify-between text-xs bg-[#F0F7F6] px-2.5 py-1.5 rounded-none border border-[#D0E5E1] gap-1"
                               >
                                 <div className="flex items-center gap-2">
-                                  <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                                  <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                                   <span className="font-bold text-[#1A1918]">{m.name}</span>
-                                  <span className="text-[10px] text-[#57477D] font-mono">
+                                  <span className="text-[10px] text-[#0F766E] font-mono">
                                     {m.code || "RxNorm"}
                                   </span>
                                   <span className="text-[#5C574F]">
@@ -355,7 +355,7 @@ export const PharmacyDashboardView: React.FC = () => {
                         </div>
 
                         {/* Progress and Dispensing Action */}
-                        <div className="lg:w-64 shrink-0 flex flex-col justify-between pt-3 lg:pt-0 lg:pl-5 lg:border-l border-[#EAE4D9] space-y-3">
+                        <div className="lg:w-64 shrink-0 flex flex-col justify-between pt-3 lg:pt-0 lg:pl-5 lg:border-l border-[#D0E5E1] space-y-3">
                           <div>
                             <div className="flex items-center justify-between text-xs mb-1">
                               <span className="text-[#69655E] font-medium">Fulfilment</span>
@@ -363,13 +363,13 @@ export const PharmacyDashboardView: React.FC = () => {
                                 {dispensed} / {total} units ({progressPct}%)
                               </span>
                             </div>
-                            <div className="w-full h-1.5 bg-[#EAE4D9] rounded-none overflow-hidden">
+                            <div className="w-full h-1.5 bg-[#D0E5E1] rounded-none overflow-hidden">
                               <div
                                 className={`h-full rounded-none transition-all ${
                                   progressPct === 100
                                     ? "bg-emerald-600"
                                     : progressPct > 0
-                                    ? "bg-[#57477D]"
+                                    ? "bg-[#0F766E]"
                                     : "bg-[#8C877D]"
                                 }`}
                                 style={{ width: `${progressPct}%` }}
@@ -377,7 +377,7 @@ export const PharmacyDashboardView: React.FC = () => {
                             </div>
                             <div className="text-[10px] text-[#69655E] mt-1 flex justify-between font-mono">
                               <span>Remaining balance:</span>
-                              <span className="font-bold text-[#57477D]">{remaining} units</span>
+                              <span className="font-bold text-[#0F766E]">{remaining} units</span>
                             </div>
                           </div>
 
@@ -393,7 +393,7 @@ export const PharmacyDashboardView: React.FC = () => {
                                 Dispense Medication
                               </Button>
                             ) : (
-                              <div className="text-center p-2 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] text-[11px] text-[#69655E] font-medium">
+                              <div className="text-center p-2 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] text-[11px] text-[#69655E] font-medium">
                                 {rx.status === "DISPENSED" || remaining === 0
                                   ? "Fully Fulfilled"
                                   : rx.status === "EXPIRED"
@@ -416,7 +416,7 @@ export const PharmacyDashboardView: React.FC = () => {
       {activeTab === "dispenses" && (
         <div className="space-y-4">
           {dispenses.length === 0 ? (
-            <div className="p-12 text-center text-xs text-[#69655E] bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+            <div className="p-12 text-center text-xs text-[#69655E] bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
               <History className="w-8 h-8 text-[#8C877D] mx-auto mb-3" />
               <p className="font-semibold text-[#1A1918] font-editorial-serif text-base">No dispensing events recorded yet</p>
               <p className="text-[#69655E] mt-1 max-w-sm mx-auto">
@@ -425,10 +425,10 @@ export const PharmacyDashboardView: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="bg-white border border-[#EAE4D9] rounded-none overflow-hidden shadow-none">
+            <div className="bg-white border border-[#D0E5E1] rounded-none overflow-hidden shadow-none">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#FAF7F2] border-b border-[#EAE4D9] text-[#69655E] font-mono font-medium uppercase tracking-wider text-[11px]">
+                  <thead className="bg-[#F0F7F6] border-b border-[#D0E5E1] text-[#69655E] font-mono font-medium uppercase tracking-wider text-[11px]">
                     <tr>
                       <th className="py-3 px-4">Dispense ID & Date</th>
                       <th className="py-3 px-4">Prescription</th>
@@ -439,9 +439,9 @@ export const PharmacyDashboardView: React.FC = () => {
                       <th className="py-3 px-4">Dispensing Facility</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#EAE4D9]">
+                  <tbody className="divide-y divide-[#D0E5E1]">
                     {dispenses.map((evt) => (
-                      <tr key={evt.dispenseId} className="hover:bg-[#FAF7F2]/80 transition-colors">
+                      <tr key={evt.dispenseId} className="hover:bg-[#F0F7F6]/80 transition-colors">
                         <td className="py-3 px-4">
                           <div className="font-mono font-semibold text-[#1A1918]">
                             {evt.dispenseId}
@@ -457,7 +457,7 @@ export const PharmacyDashboardView: React.FC = () => {
                           {evt.patientName || evt.patientAbha || "Patient"}
                         </td>
                         <td className="py-3 px-4">
-                          <span className="font-bold text-[#57477D] bg-[#FAF7F2] px-2 py-0.5 rounded-none border border-[#EAE4D9] font-mono">
+                          <span className="font-bold text-[#0F766E] bg-[#F0F7F6] px-2 py-0.5 rounded-none border border-[#D0E5E1] font-mono">
                             +{evt.quantityDispensed} units
                           </span>
                         </td>

@@ -106,7 +106,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
     >
       <form onSubmit={handleDispense} className="space-y-4">
         {/* Prescription Reference Card */}
-        <div className="bg-[#FAF7F2] border border-[#EAE4D9] rounded-none p-3 text-xs space-y-2">
+        <div className="bg-[#F0F7F6] border border-[#D0E5E1] rounded-none p-3 text-xs space-y-2">
           <div className="flex items-center justify-between">
             <span className="font-mono font-bold text-[#1A1918]">
               {prescription.prescriptionId}
@@ -114,10 +114,10 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             <span
               className={`px-2 py-0.5 rounded-none text-[10px] font-mono font-semibold border ${
                 prescription.status === "ACTIVE"
-                  ? "bg-[#57477D]/10 text-[#57477D] border-[#57477D]/20"
+                  ? "bg-[#0F766E]/10 text-[#0F766E] border-[#0F766E]/20"
                   : prescription.status === "PARTIALLY_DISPENSED"
                   ? "bg-amber-50 text-amber-800 border-amber-200"
-                  : "bg-[#FAF7F2] text-[#69655E] border-[#EAE4D9]"
+                  : "bg-[#F0F7F6] text-[#69655E] border-[#D0E5E1]"
               }`}
             >
               {prescription.status}
@@ -129,19 +129,19 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             <strong>Prescriber:</strong> Dr. {prescription.doctorId}
           </div>
 
-          <div className="pt-2 border-t border-[#EAE4D9] grid grid-cols-3 gap-2 text-center text-[11px]">
-            <div className="bg-white p-2.5 rounded-none border border-[#EAE4D9] shadow-2xs">
+          <div className="pt-2 border-t border-[#D0E5E1] grid grid-cols-3 gap-2 text-center text-[11px]">
+            <div className="bg-white p-2.5 rounded-none border border-[#D0E5E1] shadow-2xs">
               <span className="text-[#69655E] block text-[10px]">Total Authorized</span>
               <span className="font-bold text-[#1A1918]">{prescription.totalQuantity} units</span>
             </div>
-            <div className="bg-white p-2.5 rounded-none border border-[#EAE4D9]">
+            <div className="bg-white p-2.5 rounded-none border border-[#D0E5E1]">
               <span className="text-[#69655E] block text-[10px]">Already Dispensed</span>
               <span className="font-bold text-[#1A1918]">
                 {prescription.dispensedQuantity ?? 0} units
               </span>
             </div>
-            <div className="bg-[#FAF7F2] p-2.5 rounded-none border border-[#EAE4D9]">
-              <span className="text-[#57477D] block text-[10px] font-mono font-semibold">Remaining</span>
+            <div className="bg-[#F0F7F6] p-2.5 rounded-none border border-[#D0E5E1]">
+              <span className="text-[#0F766E] block text-[10px] font-mono font-semibold">Remaining</span>
               <span className="font-bold text-[#1A1918] font-mono">{remaining} units</span>
             </div>
           </div>
@@ -169,8 +169,8 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
         )}
 
         {isFulfilled && (
-          <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#5C574F] flex items-center gap-2 font-mono">
-            <ShieldCheck className="w-4 h-4 text-[#57477D] shrink-0" />
+          <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs text-[#5C574F] flex items-center gap-2 font-mono">
+            <ShieldCheck className="w-4 h-4 text-[#0F766E] shrink-0" />
             <span>This prescription has been completely fulfilled. No units remaining.</span>
           </div>
         )}
@@ -186,7 +186,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
                 type="button"
                 onClick={() => setQuantity(Math.max(1, Math.floor(remaining / 2)))}
                 disabled={isFulfilled || isExpired}
-                className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-none bg-white border border-[#D5CEC2] hover:bg-[#FAF7F2] text-[#5C574F] cursor-pointer"
+                className="text-[10px] font-mono font-semibold px-2 py-0.5 rounded-none bg-white border border-[#B6D6D0] hover:bg-[#F0F7F6] text-[#5C574F] cursor-pointer"
               >
                 Half ({Math.max(1, Math.floor(remaining / 2))})
               </button>
@@ -208,7 +208,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             disabled={isFulfilled || isExpired || loading}
             value={quantity}
             onChange={(e) => setQuantity(Number(e.target.value))}
-            className="w-full px-3.5 py-2.5 text-sm border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] font-bold text-[#1A1918] bg-[#FAF7F2]"
+            className="w-full px-3.5 py-2.5 text-sm border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] font-bold text-[#1A1918] bg-[#F0F7F6]"
           />
           <p className="text-[10px] text-[#69655E] mt-1">
             Backend will atomically verify available quantity to protect against concurrent double-dispensing.
@@ -227,7 +227,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
               disabled={isFulfilled || isExpired || loading}
               value={batchNumber}
               onChange={(e) => setBatchNumber(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] font-mono text-[#1A1918] bg-[#FAF7F2]"
+              className="w-full px-3.5 py-2.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] font-mono text-[#1A1918] bg-[#F0F7F6]"
             />
           </div>
 
@@ -239,7 +239,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
                 onClick={() =>
                   setIdempotencyKey(`idemp-${crypto.randomUUID ? crypto.randomUUID().slice(0, 8) : Date.now()}`)
                 }
-                className="text-[10px] text-[#57477D] hover:text-[#1A1918] cursor-pointer font-mono font-semibold"
+                className="text-[10px] text-[#0F766E] hover:text-[#1A1918] cursor-pointer font-mono font-semibold"
               >
                 New Key
               </button>
@@ -250,7 +250,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
               disabled={isFulfilled || isExpired || loading}
               value={idempotencyKey}
               onChange={(e) => setIdempotencyKey(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono text-[#5C574F] bg-[#FAF7F2]"
+              className="w-full px-3.5 py-2.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono text-[#5C574F] bg-[#F0F7F6]"
             />
           </div>
         </div>
@@ -265,13 +265,13 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
             disabled={isFulfilled || isExpired || loading}
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
+            className="w-full px-3.5 py-2.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#F0F7F6]"
           />
         </div>
 
         {/* Concurrency Guarantee Notice */}
-        <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-[11px] text-[#5C574F] flex items-start gap-2 font-mono">
-          <Lock className="w-3.5 h-3.5 text-[#57477D] shrink-0 mt-0.5" />
+        <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-[11px] text-[#5C574F] flex items-start gap-2 font-mono">
+          <Lock className="w-3.5 h-3.5 text-[#0F766E] shrink-0 mt-0.5" />
           <span>
             <strong>Concurrency & Fraud Protection:</strong> Processed with atomic conditional decrements
             and a unique idempotency constraint. Replays will safely resolve without balance mutation.
@@ -279,7 +279,7 @@ export const DispenseModal: React.FC<DispenseModalProps> = ({
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#EAE4D9]">
+        <div className="flex items-center justify-between pt-3 border-t border-[#D0E5E1]">
           <Button type="button" variant="secondary" onClick={onClose} disabled={loading}>
             Cancel
           </Button>

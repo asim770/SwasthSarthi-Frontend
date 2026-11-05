@@ -21,12 +21,12 @@ export const StatCard: React.FC<StatCardProps> = ({
   trend,
 }) => {
   return (
-    <div className="bg-white border border-[#EAE4D9] rounded-none p-5 hover:border-[#D5CEC2] transition-colors">
+    <div className="bg-white border border-[#D0E5E1] rounded-none p-5 hover:border-[#B6D6D0] transition-colors">
       <div className="flex items-center justify-between mb-3">
         <span className="text-[11px] font-mono font-semibold text-[#69655E] uppercase tracking-wider">
           {title}
         </span>
-        <div className="w-9 h-9 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
+        <div className="w-9 h-9 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
           {icon}
         </div>
       </div>

@@ -90,8 +90,8 @@ export const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
       ) : (
         <form onSubmit={handleSubmit} className="space-y-3.5 font-editorial-sans">
           {/* Mock File Upload Dropzone */}
-          <div className="border border-dashed border-[#D5CEC2] rounded-none p-5 text-center bg-[#FAF7F2] hover:bg-white transition-colors cursor-pointer">
-            <UploadCloud className="w-6 h-6 text-[#57477D] mx-auto mb-1.5" />
+          <div className="border border-dashed border-[#B6D6D0] rounded-none p-5 text-center bg-[#F0F7F6] hover:bg-white transition-colors cursor-pointer">
+            <UploadCloud className="w-6 h-6 text-[#0F766E] mx-auto mb-1.5" />
             <span className="text-xs font-semibold text-[#191817] block">
               Drag &amp; drop PDF report, CCDA, or FHIR JSON
             </span>
@@ -117,7 +117,7 @@ export const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
               <select
                 value={resourceType}
                 onChange={(e) => setResourceType(e.target.value as "DiagnosticReport" | "Encounter" | "Immunization")}
-                className="w-full rounded-none border border-[#D5CEC2] text-xs text-[#191817] bg-[#FAF7F2] px-3 py-2.5 focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+                className="w-full rounded-none border border-[#B6D6D0] text-xs text-[#191817] bg-[#F0F7F6] px-3 py-2.5 focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
               >
                 <option value="DiagnosticReport">DiagnosticReport (Lab / Imaging)</option>
                 <option value="Encounter">Encounter (Consultation / OP)</option>
@@ -150,7 +150,7 @@ export const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
               placeholder="Key diagnostic findings, measurements, or doctor notes..."
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="w-full rounded-none border border-[#D5CEC2] text-xs text-[#191817] p-2.5 focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2]"
+              className="w-full rounded-none border border-[#B6D6D0] text-xs text-[#191817] p-2.5 focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6]"
             />
           </div>
         </form>

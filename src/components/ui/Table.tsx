@@ -20,7 +20,7 @@ export const TableHeader: React.FC<React.HTMLAttributes<HTMLTableSectionElement>
   ...props
 }) => {
   return (
-    <thead className={`bg-[#FAF7F2] border-b border-[#EAE4D9] text-[11px] font-mono font-medium text-[#69655E] uppercase tracking-wider ${className}`} {...props}>
+    <thead className={`bg-[#F0F7F6] border-b border-[#D0E5E1] text-[11px] font-mono font-medium text-[#69655E] uppercase tracking-wider ${className}`} {...props}>
       {children}
     </thead>
   );
@@ -31,7 +31,7 @@ export const TableBody: React.FC<React.HTMLAttributes<HTMLTableSectionElement>> 
   className = "",
   ...props
 }) => {
-  return <tbody className={`divide-y divide-[#EAE4D9] bg-white ${className}`} {...props}>{children}</tbody>;
+  return <tbody className={`divide-y divide-[#D0E5E1] bg-white ${className}`} {...props}>{children}</tbody>;
 };
 
 export const TableRow: React.FC<React.HTMLAttributes<HTMLTableRowElement>> = ({
@@ -41,7 +41,7 @@ export const TableRow: React.FC<React.HTMLAttributes<HTMLTableRowElement>> = ({
 }) => {
   return (
     <tr
-      className={`hover:bg-[#FAF7F2]/80 transition-colors border-b border-[#EAE4D9] ${className}`}
+      className={`hover:bg-[#F0F7F6]/80 transition-colors border-b border-[#D0E5E1] ${className}`}
       {...props}
     >
       {children}

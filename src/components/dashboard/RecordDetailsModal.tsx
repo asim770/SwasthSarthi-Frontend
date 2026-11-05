@@ -90,7 +90,7 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
     >
       <div className="space-y-4 font-editorial-sans">
         {/* Meta Header */}
-        <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-[#EAE4D9]">
+        <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-[#D0E5E1]">
           <Badge variant={getBadgeVariant(record.resourceType)} size="md">
             {record.resourceType}
           </Badge>
@@ -106,7 +106,7 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
           <div className="relative">
             <button
               onClick={handleCopyJson}
-              className="absolute right-2.5 top-2.5 px-2.5 py-1 rounded-none bg-[#1A1918] text-[#FAF7F2] hover:bg-[#2E2C2A] text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
+              className="absolute right-2.5 top-2.5 px-2.5 py-1 rounded-none bg-[#1A1918] text-[#F0F7F6] hover:bg-[#2E2C2A] text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
             >
               {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
               <span>{copied ? "Copied" : "Copy JSON"}</span>
@@ -118,9 +118,9 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
         ) : (
           <>
             {/* Clinical Metadata Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-[#FAF7F2] rounded-none border border-[#EAE4D9]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-[#F0F7F6] rounded-none border border-[#D0E5E1]">
               <div className="flex items-center gap-2.5 text-xs text-[#5C574F]">
-                <Building2 className="w-4 h-4 text-[#57477D] shrink-0" />
+                <Building2 className="w-4 h-4 text-[#0F766E] shrink-0" />
                 <div>
                   <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Healthcare Provider</span>
                   <span className="font-semibold text-[#191817]">{record.provider}</span>
@@ -128,7 +128,7 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
               </div>
 
               <div className="flex items-center gap-2.5 text-xs text-[#5C574F]">
-                <User className="w-4 h-4 text-[#57477D] shrink-0" />
+                <User className="w-4 h-4 text-[#0F766E] shrink-0" />
                 <div>
                   <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Attending Clinician</span>
                   <span className="font-semibold text-[#191817]">{record.doctor}</span>
@@ -136,7 +136,7 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
               </div>
 
               <div className="flex items-center gap-2.5 text-xs text-[#5C574F]">
-                <Calendar className="w-4 h-4 text-[#57477D] shrink-0" />
+                <Calendar className="w-4 h-4 text-[#0F766E] shrink-0" />
                 <div>
                   <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Record Date</span>
                   <span className="font-semibold text-[#191817]">{record.date}</span>
@@ -157,18 +157,18 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
               <h4 className="text-xs font-editorial-serif font-bold text-[#191817] uppercase tracking-wider mb-1.5">
                 Clinical Findings &amp; Summary
               </h4>
-              <div className="p-3.5 bg-white border border-[#EAE4D9] rounded-none text-xs text-[#5C574F] leading-relaxed shadow-2xs">
+              <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none text-xs text-[#5C574F] leading-relaxed shadow-2xs">
                 {record.summary}
               </div>
             </div>
 
             {/* ABHA Identifier Banner */}
-            <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between text-xs">
+            <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#57477D]" />
+                <FileText className="w-4 h-4 text-[#0F766E]" />
                 <span className="text-[#191817] font-semibold">Linked to ABHA: rahul.verma@sbx</span>
               </div>
-              <span className="text-[#57477D] font-mono text-[11px] font-bold">NRCES HL7 FHIR R4</span>
+              <span className="text-[#0F766E] font-mono text-[11px] font-bold">NRCES HL7 FHIR R4</span>
             </div>
           </>
         )}

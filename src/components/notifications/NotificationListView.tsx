@@ -142,7 +142,7 @@ export function NotificationListView() {
   const getCategoryIcon = (cat: NotificationCategory) => {
     switch (cat) {
       case "CONSENT":
-        return <FileText className="w-4 h-4 text-[#57477D]" />;
+        return <FileText className="w-4 h-4 text-[#0F766E]" />;
       case "RECORD_ACCESS":
       case "CLINICAL_ACCESS":
         return <ShieldAlert className="w-4 h-4 text-indigo-600" />;
@@ -200,12 +200,12 @@ export function NotificationListView() {
       />
 
       {/* Toolbar & Filters */}
-      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-[#EAE4D9] shadow-2xs">
+      <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 border border-[#D0E5E1] shadow-2xs">
         <div className="flex flex-wrap items-center gap-3">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs border border-[#EAE4D9] rounded-none px-3 py-1.5 bg-[#FAF7F2] text-[#191817] font-medium cursor-pointer focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918]"
+            className="text-xs border border-[#D0E5E1] rounded-none px-3 py-1.5 bg-[#F0F7F6] text-[#191817] font-medium cursor-pointer focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918]"
           >
             <option value="ALL">All Categories</option>
             <option value="CONSENT">Consent Requests</option>
@@ -221,7 +221,7 @@ export function NotificationListView() {
               type="checkbox"
               checked={unreadOnly}
               onChange={(e) => setUnreadOnly(e.target.checked)}
-              className="rounded-none border-[#D5CEC2] text-[#1A1918] focus:ring-[#1A1918] w-3.5 h-3.5 cursor-pointer"
+              className="rounded-none border-[#B6D6D0] text-[#1A1918] focus:ring-[#1A1918] w-3.5 h-3.5 cursor-pointer"
             />
             <span>Unread only</span>
           </label>
@@ -239,28 +239,28 @@ export function NotificationListView() {
       )}
 
       {/* Notifications Inbox */}
-      <div className="bg-white rounded-none border border-[#EAE4D9] shadow-[0_4px_20px_rgba(26,25,24,0.04)] overflow-hidden">
+      <div className="bg-white rounded-none border border-[#D0E5E1] shadow-[0_4px_20px_rgba(26,25,24,0.04)] overflow-hidden">
         {loading ? (
           <div className="p-12 text-center text-[#7A746B] text-xs space-y-2">
-            <RefreshCw className="w-5 h-5 animate-spin mx-auto text-[#57477D]" />
+            <RefreshCw className="w-5 h-5 animate-spin mx-auto text-[#0F766E]" />
             <p>Loading notifications...</p>
           </div>
         ) : filteredNotifications.length === 0 ? (
           <EmptyState
             title="No Notifications"
             description="You're all caught up. Updates regarding consent authorizations, lab reports, and prescriptions will appear here."
-            icon={<Bell className="w-5 h-5 text-[#57477D]" />}
+            icon={<Bell className="w-5 h-5 text-[#0F766E]" />}
           />
         ) : (
-          <div className="divide-y divide-[#EAE4D9]">
+          <div className="divide-y divide-[#D0E5E1]">
             {filteredNotifications.map((n) => (
               <div
                 key={n._id}
-                className={`p-4 sm:p-5 transition-colors flex items-start justify-between gap-4 ${!n.isRead ? "bg-[#FAF7F2] font-medium" : "hover:bg-[#FAF7F2]/50"
+                className={`p-4 sm:p-5 transition-colors flex items-start justify-between gap-4 ${!n.isRead ? "bg-[#F0F7F6] font-medium" : "hover:bg-[#F0F7F6]/50"
                   }`}
               >
                 <div className="flex items-start gap-3.5">
-                  <div className="p-2 rounded-none bg-white border border-[#EAE4D9] text-[#57477D] mt-0.5 shrink-0 shadow-2xs">
+                  <div className="p-2 rounded-none bg-white border border-[#D0E5E1] text-[#0F766E] mt-0.5 shrink-0 shadow-2xs">
                     {getCategoryIcon(n.category)}
                   </div>
                   <div className="space-y-1">
@@ -269,9 +269,9 @@ export function NotificationListView() {
                         {n.title}
                       </span>
                       {!n.isRead && (
-                        <span className="w-1.5 h-1.5 rounded-full bg-[#57477D] shrink-0" />
+                        <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E] shrink-0" />
                       )}
-                      <span className="px-2 py-0.5 rounded-none text-[10px] font-mono font-medium tracking-wider bg-[#FAF7F2] text-[#57477D] border border-[#57477D]/25 uppercase">
+                      <span className="px-2 py-0.5 rounded-none text-[10px] font-mono font-medium tracking-wider bg-[#F0F7F6] text-[#0F766E] border border-[#0F766E]/25 uppercase">
                         {n.category}
                       </span>
                     </div>
@@ -297,7 +297,7 @@ export function NotificationListView() {
                 {!n.isRead && (
                   <button
                     onClick={() => handleMarkOne(n.notificationId)}
-                    className="p-1.5 text-[#7A746B] hover:text-[#191817] hover:bg-[#FAF7F2] rounded-none transition-colors cursor-pointer shrink-0 border border-transparent hover:border-[#D5CEC2]"
+                    className="p-1.5 text-[#7A746B] hover:text-[#191817] hover:bg-[#F0F7F6] rounded-none transition-colors cursor-pointer shrink-0 border border-transparent hover:border-[#B6D6D0]"
                     title="Mark as read"
                   >
                     <Check className="w-4 h-4" />

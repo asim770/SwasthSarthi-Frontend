@@ -217,7 +217,7 @@ export function AdminManagementView() {
         );
       case "REJECTED":
         return (
-          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none text-xs font-mono font-medium bg-[#FAF7F2] text-[#5C574F] border border-[#D5CEC2]">
+          <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-none text-xs font-mono font-medium bg-[#F0F7F6] text-[#5C574F] border border-[#B6D6D0]">
             <XCircle className="w-3.5 h-3.5" />
             Rejected
           </span>
@@ -230,9 +230,9 @@ export function AdminManagementView() {
   return (
     <div className="space-y-6">
       {/* Top Banner / Academic Disclaimers */}
-      <div className="bg-white border border-[#EAE4D9] rounded-none p-6 relative overflow-hidden">
+      <div className="bg-white border border-[#D0E5E1] rounded-none p-6 relative overflow-hidden">
         <div className="relative z-10 max-w-3xl">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] text-[11px] font-mono font-semibold uppercase tracking-wider mb-3">
+          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[11px] font-mono font-semibold uppercase tracking-wider mb-3">
             <ShieldAlert className="w-3.5 h-3.5" />
             Administrative Trust Boundary &amp; Chain Integrity
           </div>
@@ -242,8 +242,8 @@ export function AdminManagementView() {
           <p className="text-[#5C574F] text-sm leading-relaxed mb-4">
             Manage simulated healthcare facilities, review practitioner affiliations, and independently verify the SHA-256 cryptographic audit chain.
           </p>
-          <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-[#5C574F] text-xs flex items-start gap-2.5 font-mono">
-            <Info className="w-4 h-4 shrink-0 text-[#57477D] mt-0.5" />
+          <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-[#5C574F] text-xs flex items-start gap-2.5 font-mono">
+            <Info className="w-4 h-4 shrink-0 text-[#0F766E] mt-0.5" />
             <div>
               <strong className="text-[#1A1918]">Simulated Sandbox Verification:</strong> Verification against the Health Facility Registry (HFR) and Healthcare Professionals Registry (HPR) is executed via a mock academic engine. Suspended or unapproved facilities are strictly barred from clinical exchange. Administrators have zero access to patient clinical contents or FHIR Bundles.
             </div>
@@ -252,7 +252,7 @@ export function AdminManagementView() {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex border-b border-[#EAE4D9] gap-2 overflow-x-auto">
+      <div className="flex border-b border-[#D0E5E1] gap-2 overflow-x-auto">
         <button
           onClick={() => setActiveTab("institutions")}
           className={`flex items-center gap-2 pb-3 px-3 font-medium text-xs sm:text-sm transition-colors border-b-2 cursor-pointer rounded-none whitespace-nowrap ${
@@ -261,7 +261,7 @@ export function AdminManagementView() {
               : "border-transparent text-[#69655E] hover:text-[#1A1918]"
           }`}
         >
-          <Building2 className="w-4 h-4 text-[#57477D]" />
+          <Building2 className="w-4 h-4 text-[#0F766E]" />
           Institutions &amp; Facilities ({institutions.length})
         </button>
         <button
@@ -272,7 +272,7 @@ export function AdminManagementView() {
               : "border-transparent text-[#69655E] hover:text-[#1A1918]"
           }`}
         >
-          <UserCheck className="w-4 h-4 text-[#57477D]" />
+          <UserCheck className="w-4 h-4 text-[#0F766E]" />
           Practitioners Queue ({practitioners.length})
         </button>
         <button
@@ -283,7 +283,7 @@ export function AdminManagementView() {
               : "border-transparent text-[#69655E] hover:text-[#1A1918]"
           }`}
         >
-          <FileKey className="w-4 h-4 text-[#57477D]" />
+          <FileKey className="w-4 h-4 text-[#0F766E]" />
           Audit Chain Cryptographic Verification
         </button>
       </div>
@@ -292,7 +292,7 @@ export function AdminManagementView() {
       {activeTab === "institutions" && (
         <div className="space-y-4">
           {/* Controls Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-none border border-[#EAE4D9]">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-none border border-[#D0E5E1]">
             <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-64">
                 <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#7A746B]" />
@@ -301,14 +301,14 @@ export function AdminManagementView() {
                   placeholder="Search facilities..."
                   value={instSearch}
                   onChange={(e) => setInstSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2]"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6]"
                 />
               </div>
 
               <select
                 value={instTypeFilter}
                 onChange={(e) => setInstTypeFilter(e.target.value)}
-                className="text-xs border border-[#D5CEC2] rounded-none px-2.5 py-1.5 bg-[#FAF7F2] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                className="text-xs border border-[#B6D6D0] rounded-none px-2.5 py-1.5 bg-[#F0F7F6] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
               >
                 <option value="ALL">All Facility Types</option>
                 <option value="HOSPITAL">Hospitals</option>
@@ -320,7 +320,7 @@ export function AdminManagementView() {
               <select
                 value={instStatusFilter}
                 onChange={(e) => setInstStatusFilter(e.target.value)}
-                className="text-xs border border-[#D5CEC2] rounded-none px-2.5 py-1.5 bg-[#FAF7F2] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                className="text-xs border border-[#B6D6D0] rounded-none px-2.5 py-1.5 bg-[#F0F7F6] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="PENDING">Pending Review</option>
@@ -334,7 +334,7 @@ export function AdminManagementView() {
               <button
                 onClick={loadInstitutions}
                 disabled={instLoading}
-                className="p-2 border border-[#D5CEC2] rounded-none text-[#5C574F] hover:bg-[#FAF7F2] transition-colors cursor-pointer"
+                className="p-2 border border-[#B6D6D0] rounded-none text-[#5C574F] hover:bg-[#F0F7F6] transition-colors cursor-pointer"
                 title="Refresh list"
               >
                 <RefreshCw className={`w-4 h-4 ${instLoading ? "animate-spin" : ""}`} />
@@ -350,22 +350,22 @@ export function AdminManagementView() {
           </div>
 
           {/* Institutions Table */}
-          <div className="bg-white rounded-none border border-[#EAE4D9] overflow-hidden">
+          <div className="bg-white rounded-none border border-[#D0E5E1] overflow-hidden">
             {instLoading ? (
               <div className="p-8 text-center text-[#7A746B] text-xs font-mono">
-                <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#57477D]" />
+                <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F766E]" />
                 Loading facilities...
               </div>
             ) : institutions.length === 0 ? (
               <div className="p-12 text-center text-[#69655E]">
-                <Building2 className="w-10 h-10 text-[#D5CEC2] mx-auto mb-2" />
+                <Building2 className="w-10 h-10 text-[#B6D6D0] mx-auto mb-2" />
                 <p className="text-sm font-medium font-editorial-serif text-[#1A1918]">No institutions matching the current filters.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-[#FAF7F2] text-[#69655E] border-b border-[#EAE4D9] font-mono font-medium uppercase text-[10px] tracking-wider">
+                    <tr className="bg-[#F0F7F6] text-[#69655E] border-b border-[#D0E5E1] font-mono font-medium uppercase text-[10px] tracking-wider">
                       <th className="py-3 px-4">Facility Details</th>
                       <th className="py-3 px-4">Type</th>
                       <th className="py-3 px-4">HFR Mock ID</th>
@@ -374,9 +374,9 @@ export function AdminManagementView() {
                       <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#EAE4D9]">
+                  <tbody className="divide-y divide-[#D0E5E1]">
                     {institutions.map((inst) => (
-                      <tr key={inst._id} className="hover:bg-[#FAF7F2]/60 transition-colors">
+                      <tr key={inst._id} className="hover:bg-[#F0F7F6]/60 transition-colors">
                         <td className="py-3 px-4">
                           <div className="font-semibold text-[#1A1918] text-sm">{inst.name}</div>
                           <div className="text-[#69655E] text-[11px] font-mono">ID: {inst.facilityId}</div>
@@ -387,7 +387,7 @@ export function AdminManagementView() {
                           )}
                         </td>
                         <td className="py-3 px-4">
-                          <span className="px-2 py-0.5 rounded-none text-[10px] font-mono font-bold tracking-wider bg-[#FAF7F2] border border-[#EAE4D9] text-[#57477D] uppercase">
+                          <span className="px-2 py-0.5 rounded-none text-[10px] font-mono font-bold tracking-wider bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] uppercase">
                             {inst.type}
                           </span>
                         </td>
@@ -414,7 +414,7 @@ export function AdminManagementView() {
                           <div className="flex items-center justify-end gap-1.5">
                             <button
                               onClick={() => setSelectedFacilityHistory(inst)}
-                              className="px-2.5 py-1 text-[#5C574F] hover:text-[#1A1918] border border-[#D5CEC2] rounded-none text-xs hover:bg-[#FAF7F2] transition-colors flex items-center gap-1 cursor-pointer font-mono"
+                              className="px-2.5 py-1 text-[#5C574F] hover:text-[#1A1918] border border-[#B6D6D0] rounded-none text-xs hover:bg-[#F0F7F6] transition-colors flex items-center gap-1 cursor-pointer font-mono"
                               title="Audit History"
                             >
                               <History className="w-3.5 h-3.5" />
@@ -449,7 +449,7 @@ export function AdminManagementView() {
       {activeTab === "practitioners" && (
         <div className="space-y-4">
           {/* Controls Bar */}
-          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-none border border-[#EAE4D9]">
+          <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-none border border-[#D0E5E1]">
             <div className="flex flex-wrap items-center gap-2.5 w-full sm:w-auto">
               <div className="relative flex-1 sm:w-64">
                 <Search className="w-4 h-4 absolute left-3 top-2.5 text-[#7A746B]" />
@@ -458,14 +458,14 @@ export function AdminManagementView() {
                   placeholder="Search practitioners..."
                   value={practSearch}
                   onChange={(e) => setPractSearch(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2]"
+                  className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6]"
                 />
               </div>
 
               <select
                 value={practRoleFilter}
                 onChange={(e) => setPractRoleFilter(e.target.value)}
-                className="text-xs border border-[#D5CEC2] rounded-none px-2.5 py-1.5 bg-[#FAF7F2] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                className="text-xs border border-[#B6D6D0] rounded-none px-2.5 py-1.5 bg-[#F0F7F6] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
               >
                 <option value="ALL">All Roles</option>
                 <option value="doctor">Doctors</option>
@@ -476,7 +476,7 @@ export function AdminManagementView() {
               <select
                 value={practStatusFilter}
                 onChange={(e) => setPractStatusFilter(e.target.value)}
-                className="text-xs border border-[#D5CEC2] rounded-none px-2.5 py-1.5 bg-[#FAF7F2] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                className="text-xs border border-[#B6D6D0] rounded-none px-2.5 py-1.5 bg-[#F0F7F6] text-[#1A1918] font-medium cursor-pointer focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
               >
                 <option value="ALL">All Statuses</option>
                 <option value="PENDING">Pending Review</option>
@@ -489,7 +489,7 @@ export function AdminManagementView() {
             <button
               onClick={loadPractitioners}
               disabled={practLoading}
-              className="p-2 border border-[#D5CEC2] rounded-none text-[#5C574F] hover:bg-[#FAF7F2] transition-colors cursor-pointer"
+              className="p-2 border border-[#B6D6D0] rounded-none text-[#5C574F] hover:bg-[#F0F7F6] transition-colors cursor-pointer"
               title="Refresh queue"
             >
               <RefreshCw className={`w-4 h-4 ${practLoading ? "animate-spin" : ""}`} />
@@ -497,22 +497,22 @@ export function AdminManagementView() {
           </div>
 
           {/* Practitioners Table */}
-          <div className="bg-white rounded-none border border-[#EAE4D9] overflow-hidden">
+          <div className="bg-white rounded-none border border-[#D0E5E1] overflow-hidden">
             {practLoading ? (
               <div className="p-8 text-center text-[#7A746B] text-xs font-mono">
-                <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#57477D]" />
+                <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#0F766E]" />
                 Loading practitioners queue...
               </div>
             ) : practitioners.length === 0 ? (
               <div className="p-12 text-center text-[#69655E]">
-                <UserCheck className="w-10 h-10 text-[#D5CEC2] mx-auto mb-2" />
+                <UserCheck className="w-10 h-10 text-[#B6D6D0] mx-auto mb-2" />
                 <p className="text-sm font-medium font-editorial-serif text-[#1A1918]">No practitioners matching the current filters.</p>
               </div>
             ) : (
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs border-collapse">
                   <thead>
-                    <tr className="bg-[#FAF7F2] text-[#69655E] border-b border-[#EAE4D9] font-mono font-medium uppercase text-[10px] tracking-wider">
+                    <tr className="bg-[#F0F7F6] text-[#69655E] border-b border-[#D0E5E1] font-mono font-medium uppercase text-[10px] tracking-wider">
                       <th className="py-3 px-4">Practitioner</th>
                       <th className="py-3 px-4">Role</th>
                       <th className="py-3 px-4">Assigned Facility</th>
@@ -521,16 +521,16 @@ export function AdminManagementView() {
                       <th className="py-3 px-4 text-right">Decision</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#EAE4D9]">
+                  <tbody className="divide-y divide-[#D0E5E1]">
                     {practitioners.map((doc) => {
                       const isSelf = user?.id === doc._id;
                       return (
-                        <tr key={doc._id} className="hover:bg-[#FAF7F2]/60 transition-colors">
+                        <tr key={doc._id} className="hover:bg-[#F0F7F6]/60 transition-colors">
                           <td className="py-3 px-4">
                             <div className="font-semibold text-[#1A1918] text-sm flex items-center gap-1.5">
                               {doc.name}
                               {isSelf && (
-                                <span className="text-[10px] bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] px-1.5 py-0.2 rounded-none font-mono">
+                                <span className="text-[10px] bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] px-1.5 py-0.2 rounded-none font-mono">
                                   Your Account
                                 </span>
                               )}
@@ -541,7 +541,7 @@ export function AdminManagementView() {
                             )}
                           </td>
                           <td className="py-3 px-4">
-                            <span className="px-2 py-0.5 rounded-none text-[10px] font-mono font-bold tracking-wider bg-[#FAF7F2] border border-[#EAE4D9] text-[#57477D] uppercase">
+                            <span className="px-2 py-0.5 rounded-none text-[10px] font-mono font-bold tracking-wider bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] uppercase">
                               {doc.role}
                             </span>
                           </td>
@@ -573,7 +573,7 @@ export function AdminManagementView() {
                               title={isSelf ? "Self-approval is strictly forbidden" : "Review credentials"}
                               className={`px-3 py-1 rounded-none text-xs font-mono font-medium transition-colors cursor-pointer ${
                                 isSelf
-                                  ? "bg-[#FAF7F2] text-[#7A746B] cursor-not-allowed border border-[#D5CEC2]"
+                                  ? "bg-[#F0F7F6] text-[#7A746B] cursor-not-allowed border border-[#B6D6D0]"
                                   : "bg-[#1A1918] text-white hover:bg-[#2A2928] border border-[#1A1918]"
                               }`}
                             >
@@ -594,11 +594,11 @@ export function AdminManagementView() {
       {/* TAB 3: AUDIT CHAIN VERIFICATION */}
       {activeTab === "audit" && (
         <div className="space-y-6">
-          <div className="bg-white rounded-none border border-[#EAE4D9] p-6">
+          <div className="bg-white rounded-none border border-[#D0E5E1] p-6">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-6">
               <div>
                 <h3 className="text-lg font-editorial-serif font-bold text-[#1A1918] flex items-center gap-2">
-                  <FileKey className="w-5 h-5 text-[#57477D]" />
+                  <FileKey className="w-5 h-5 text-[#0F766E]" />
                   Append-Only SHA-256 Audit Chain Verification
                 </h3>
                 <p className="text-xs text-[#5C574F] mt-1">
@@ -624,7 +624,7 @@ export function AdminManagementView() {
 
             {auditReport && (
               <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
-                <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+                <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
                   <div className="text-[11px] font-mono font-semibold text-[#69655E] uppercase tracking-wider mb-1">
                     Chain Integrity Status
                   </div>
@@ -648,7 +648,7 @@ export function AdminManagementView() {
                   </p>
                 </div>
 
-                <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+                <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
                   <div className="text-[11px] font-mono font-semibold text-[#69655E] uppercase tracking-wider mb-1">
                     Verified Sequential Events
                   </div>
@@ -660,11 +660,11 @@ export function AdminManagementView() {
                   </p>
                 </div>
 
-                <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+                <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
                   <div className="text-[11px] font-mono font-semibold text-[#69655E] uppercase tracking-wider mb-1">
                     Last Verified SHA-256 Hash
                   </div>
-                  <div className="font-mono text-[10px] text-[#1A1918] break-all bg-white p-2 rounded-none border border-[#EAE4D9] mt-1">
+                  <div className="font-mono text-[10px] text-[#1A1918] break-all bg-white p-2 rounded-none border border-[#D0E5E1] mt-1">
                     {auditReport.lastEventHash || "N/A"}
                   </div>
                   <p className="text-[10px] text-[#7A746B] mt-1 font-mono">
@@ -674,9 +674,9 @@ export function AdminManagementView() {
               </div>
             )}
 
-            <div className="mt-6 p-4 bg-[#FAF7F2] rounded-none border border-[#EAE4D9] text-xs text-[#5C574F] space-y-2">
+            <div className="mt-6 p-4 bg-[#F0F7F6] rounded-none border border-[#D0E5E1] text-xs text-[#5C574F] space-y-2">
               <div className="font-semibold text-[#1A1918] flex items-center gap-1.5">
-                <Info className="w-4 h-4 text-[#57477D]" />
+                <Info className="w-4 h-4 text-[#0F766E]" />
                 Chain Architecture & Immutability Notes
               </div>
               <p>
@@ -696,10 +696,10 @@ export function AdminManagementView() {
       {/* REGISTER INSTITUTION MODAL */}
       {isRegisterModalOpen && (
         <div className="fixed inset-0 z-50 bg-[#1A1918]/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-none max-w-lg w-full p-6 shadow-2xl border border-[#EAE4D9] animate-in fade-in zoom-in duration-150">
-            <div className="flex items-center justify-between pb-4 border-b border-[#EAE4D9]">
+          <div className="bg-white rounded-none max-w-lg w-full p-6 shadow-2xl border border-[#D0E5E1] animate-in fade-in zoom-in duration-150">
+            <div className="flex items-center justify-between pb-4 border-b border-[#D0E5E1]">
               <h3 className="text-lg font-editorial-serif font-bold text-[#1A1918] flex items-center gap-2">
-                <Building2 className="w-5 h-5 text-[#57477D]" />
+                <Building2 className="w-5 h-5 text-[#0F766E]" />
                 Register Synthetic Institution
               </h3>
               <button
@@ -727,7 +727,7 @@ export function AdminManagementView() {
                   placeholder="e.g. AIIMS Delhi / Fortis Healthcare"
                   value={newInstName}
                   onChange={(e) => setNewInstName(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2]"
+                  className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6]"
                 />
               </div>
 
@@ -739,7 +739,7 @@ export function AdminManagementView() {
                   <select
                     value={newInstType}
                     onChange={(e) => setNewInstType(e.target.value as FacilityType)}
-                    className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                    className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                   >
                     <option value="HOSPITAL">Hospital</option>
                     <option value="LABORATORY">Diagnostic Lab</option>
@@ -755,7 +755,7 @@ export function AdminManagementView() {
                     type="text"
                     value={newInstCity}
                     onChange={(e) => setNewInstCity(e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                    className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                   />
                 </div>
               </div>
@@ -769,7 +769,7 @@ export function AdminManagementView() {
                     type="text"
                     value={newInstPhone}
                     onChange={(e) => setNewInstPhone(e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none font-mono bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                    className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none font-mono bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                   />
                 </div>
                 <div>
@@ -781,7 +781,7 @@ export function AdminManagementView() {
                     placeholder="contact@facility.sbx"
                     value={newInstEmail}
                     onChange={(e) => setNewInstEmail(e.target.value)}
-                    className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                    className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                   />
                 </div>
               </div>
@@ -795,18 +795,18 @@ export function AdminManagementView() {
                   placeholder="IN-HFR-2026-XXXX"
                   value={newInstHfrId}
                   onChange={(e) => setNewInstHfrId(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none font-mono bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                  className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none font-mono bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                 />
                 <p className="text-[11px] text-[#7A746B] mt-1 font-mono">
                   Simulated identifier for academic demonstration only.
                 </p>
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#EAE4D9]">
+              <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#D0E5E1]">
                 <button
                   type="button"
                   onClick={() => setIsRegisterModalOpen(false)}
-                  className="px-4 py-2 border border-[#D5CEC2] rounded-none text-xs font-mono font-medium text-[#5C574F] hover:bg-[#FAF7F2] transition-colors cursor-pointer"
+                  className="px-4 py-2 border border-[#B6D6D0] rounded-none text-xs font-mono font-medium text-[#5C574F] hover:bg-[#F0F7F6] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -826,13 +826,13 @@ export function AdminManagementView() {
       {/* DECISION / REVIEW MODAL */}
       {reviewTarget && (
         <div className="fixed inset-0 z-50 bg-[#1A1918]/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-none max-w-md w-full p-6 shadow-2xl border border-[#EAE4D9]">
+          <div className="bg-white rounded-none max-w-md w-full p-6 shadow-2xl border border-[#D0E5E1]">
             <h3 className="text-lg font-editorial-serif font-bold text-[#1A1918] mb-1">
               Review Verification Decision
             </h3>
             <p className="text-xs text-[#5C574F] mb-4">
               Reviewing: <strong>{reviewTarget.name}</strong> (Current Status:{" "}
-              <span className="font-mono text-[#57477D] font-bold">{reviewTarget.currentStatus}</span>)
+              <span className="font-mono text-[#0F766E] font-bold">{reviewTarget.currentStatus}</span>)
             </p>
 
             {reviewError && (
@@ -853,7 +853,7 @@ export function AdminManagementView() {
                     className={`py-2 px-3 text-xs font-mono font-semibold rounded-none border transition-colors cursor-pointer ${
                       reviewDecision === "APPROVE"
                         ? "bg-emerald-50 border-emerald-500 text-emerald-800"
-                        : "border-[#D5CEC2] text-[#5C574F] hover:bg-[#FAF7F2]"
+                        : "border-[#B6D6D0] text-[#5C574F] hover:bg-[#F0F7F6]"
                     }`}
                   >
                     Approve
@@ -864,7 +864,7 @@ export function AdminManagementView() {
                     className={`py-2 px-3 text-xs font-mono font-semibold rounded-none border transition-colors cursor-pointer ${
                       reviewDecision === "SUSPEND"
                         ? "bg-amber-50 border-amber-500 text-amber-800"
-                        : "border-[#D5CEC2] text-[#5C574F] hover:bg-[#FAF7F2]"
+                        : "border-[#B6D6D0] text-[#5C574F] hover:bg-[#F0F7F6]"
                     }`}
                   >
                     Suspend
@@ -875,7 +875,7 @@ export function AdminManagementView() {
                     className={`py-2 px-3 text-xs font-mono font-semibold rounded-none border transition-colors cursor-pointer ${
                       reviewDecision === "REJECT"
                         ? "bg-rose-50 border-rose-500 text-rose-800"
-                        : "border-[#D5CEC2] text-[#5C574F] hover:bg-[#FAF7F2]"
+                        : "border-[#B6D6D0] text-[#5C574F] hover:bg-[#F0F7F6]"
                     }`}
                   >
                     Reject
@@ -892,15 +892,15 @@ export function AdminManagementView() {
                   placeholder="State the regulatory or verification reason..."
                   value={reviewReason}
                   onChange={(e) => setReviewReason(e.target.value)}
-                  className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2] text-[#1A1918]"
+                  className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6] text-[#1A1918]"
                 />
               </div>
 
-              <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#EAE4D9]">
+              <div className="flex items-center justify-end gap-2 pt-4 border-t border-[#D0E5E1]">
                 <button
                   type="button"
                   onClick={() => setReviewTarget(null)}
-                  className="px-4 py-2 border border-[#D5CEC2] rounded-none text-xs font-mono font-medium text-[#5C574F] hover:bg-[#FAF7F2] transition-colors cursor-pointer"
+                  className="px-4 py-2 border border-[#B6D6D0] rounded-none text-xs font-mono font-medium text-[#5C574F] hover:bg-[#F0F7F6] transition-colors cursor-pointer"
                 >
                   Cancel
                 </button>
@@ -921,8 +921,8 @@ export function AdminManagementView() {
       {/* FACILITY CHANGE HISTORY DRAWER */}
       {selectedFacilityHistory && (
         <div className="fixed inset-0 z-50 bg-[#1A1918]/60 backdrop-blur-xs flex items-center justify-center p-4">
-          <div className="bg-white rounded-none max-w-lg w-full p-6 shadow-2xl border border-[#EAE4D9]">
-            <div className="flex items-center justify-between pb-3 border-b border-[#EAE4D9] mb-4">
+          <div className="bg-white rounded-none max-w-lg w-full p-6 shadow-2xl border border-[#D0E5E1]">
+            <div className="flex items-center justify-between pb-3 border-b border-[#D0E5E1] mb-4">
               <div>
                 <h3 className="text-lg font-editorial-serif font-bold text-[#1A1918]">Facility Status Audit Trail</h3>
                 <p className="text-xs text-[#5C574F] font-mono">{selectedFacilityHistory.name}</p>
@@ -942,10 +942,10 @@ export function AdminManagementView() {
             ) : (
               <div className="space-y-3 max-h-80 overflow-y-auto">
                 {selectedFacilityHistory.changeHistory.map((h, idx) => (
-                  <div key={idx} className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs">
+                  <div key={idx} className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs">
                     <div className="flex items-center justify-between font-semibold text-[#1A1918]">
                       <span className="font-mono">
-                        {h.fromStatus} → <span className="text-[#57477D] font-bold">{h.toStatus}</span>
+                        {h.fromStatus} → <span className="text-[#0F766E] font-bold">{h.toStatus}</span>
                       </span>
                       <span className="text-[10px] text-[#7A746B] font-mono font-normal">
                         {new Date(h.changedAt).toLocaleString()}
@@ -964,10 +964,10 @@ export function AdminManagementView() {
               </div>
             )}
 
-            <div className="pt-4 border-t border-[#EAE4D9] flex justify-end">
+            <div className="pt-4 border-t border-[#D0E5E1] flex justify-end">
               <button
                 onClick={() => setSelectedFacilityHistory(null)}
-                className="px-4 py-1.5 bg-[#FAF7F2] hover:bg-[#EAE4D9] border border-[#D5CEC2] text-[#1A1918] rounded-none text-xs font-mono font-medium transition-colors cursor-pointer"
+                className="px-4 py-1.5 bg-[#F0F7F6] hover:bg-[#D0E5E1] border border-[#B6D6D0] text-[#1A1918] rounded-none text-xs font-mono font-medium transition-colors cursor-pointer"
               >
                 Close
               </button>

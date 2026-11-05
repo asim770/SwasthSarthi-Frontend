@@ -79,17 +79,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
   const sidebarContent = (
     <div className="flex flex-col h-full glass-sidebar select-none transition-all duration-200">
       {/* Brand Header */}
-      <div className="flex items-center justify-between h-16 px-4 shrink-0 border-b border-[#EAE4D9]">
+      <div className="flex items-center justify-between h-16 px-4 shrink-0 border-b border-[#D0E5E1]">
         <div className="flex items-center gap-2.5 overflow-hidden">
-          <div className="w-8 h-8 rounded-none bg-[#57477D] flex items-center justify-center text-white shrink-0 shadow-xs">
-            <Activity className="w-4 h-4 text-[#FAF7F2]" />
+          <div className="w-8 h-8 rounded-none bg-[#0F766E] flex items-center justify-center text-white shrink-0 shadow-xs">
+            <Activity className="w-4 h-4 text-[#F0F7F6]" />
           </div>
           {!isCollapsed && (
             <div className="flex flex-col truncate">
               <span className="font-editorial-serif font-bold text-[#1A1918] tracking-tight text-sm leading-tight">
                 SwaasthSaarthi
               </span>
-              <span className="text-[10px] text-[#57477D] font-mono tracking-wide">
+              <span className="text-[10px] text-[#0F766E] font-mono tracking-wide">
                 ABDM · FHIR R4
               </span>
             </div>
@@ -155,7 +155,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
             <p className="font-medium text-[#1A1918]">No matching pages</p>
             <button
               onClick={() => setNavSearch("")}
-              className="mt-1.5 text-[11px] text-[#57477D] hover:underline cursor-pointer"
+              className="mt-1.5 text-[11px] text-[#0F766E] hover:underline cursor-pointer"
             >
               Clear search filter
             </button>
@@ -173,11 +173,11 @@ export const Sidebar: React.FC<SidebarProps> = ({
                 className={`w-full flex items-center gap-2.5 px-2.5 py-2 rounded-none text-xs font-medium transition-all duration-150 relative cursor-pointer ${
                   isActive
                     ? "bg-[#1A1918] text-white font-medium shadow-2xs border border-[#1A1918]"
-                    : "text-[#5C574F] hover:text-[#191817] hover:bg-[#FAF7F2] border border-transparent"
+                    : "text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] border border-transparent"
                 } ${isCollapsed ? "justify-center px-1.5" : ""}`}
               >
                 {isActive && (
-                  <span className="absolute left-0 top-1 bottom-1 w-1 bg-[#57477D]" />
+                  <span className="absolute left-0 top-1 bottom-1 w-1 bg-[#0F766E]" />
                 )}
                 <Icon
                   className={`w-4 h-4 shrink-0 transition-colors ${
@@ -191,8 +191,8 @@ export const Sidebar: React.FC<SidebarProps> = ({
                       <span
                         className={`text-[10px] font-mono px-1.5 py-0.2 rounded-none ${
                           isActive
-                            ? "bg-[#FAF7F2] text-[#1A1918]"
-                            : "bg-[#EAE4D9] text-[#69655E]"
+                            ? "bg-[#F0F7F6] text-[#1A1918]"
+                            : "bg-[#D0E5E1] text-[#69655E]"
                         }`}
                       >
                         {item.badge}
@@ -207,17 +207,17 @@ export const Sidebar: React.FC<SidebarProps> = ({
       </nav>
 
       {/* Bottom Profile / Session Card */}
-      <div className="p-3 border-t border-[#EAE4D9] shrink-0">
+      <div className="p-3 border-t border-[#D0E5E1] shrink-0">
         {!isAuthenticated ? (
           <div
-            className={`p-2.5 rounded-none bg-white border border-[#EAE4D9] shadow-2xs ${
+            className={`p-2.5 rounded-none bg-white border border-[#D0E5E1] shadow-2xs ${
               isCollapsed ? "text-center" : ""
             }`}
           >
             {!isCollapsed ? (
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
-                  <div className="w-7 h-7 rounded-none bg-[#FAF7F2] text-[#57477D] flex items-center justify-center font-bold text-xs shrink-0 border border-[#EAE4D9]">
+                  <div className="w-7 h-7 rounded-none bg-[#F0F7F6] text-[#0F766E] flex items-center justify-center font-bold text-xs shrink-0 border border-[#D0E5E1]">
                     <Shield className="w-3.5 h-3.5" />
                   </div>
                   <div className="truncate">
@@ -241,7 +241,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
               <button
                 onClick={onOpenLogin}
                 title="Sign in with ABHA"
-                className="w-full flex justify-center text-[#57477D] p-1 cursor-pointer"
+                className="w-full flex justify-center text-[#0F766E] p-1 cursor-pointer"
               >
                 <Shield className="w-4 h-4" />
               </button>
@@ -249,13 +249,13 @@ export const Sidebar: React.FC<SidebarProps> = ({
           </div>
         ) : (
           <div
-            className={`p-2 rounded-none bg-white border border-[#EAE4D9] shadow-2xs ${
+            className={`p-2 rounded-none bg-white border border-[#D0E5E1] shadow-2xs ${
               isCollapsed ? "text-center" : ""
             }`}
           >
             <div className="flex items-center justify-between gap-2">
               <div className="flex items-center gap-2 overflow-hidden">
-                <div className="w-7 h-7 rounded-none bg-[#57477D] text-white font-semibold text-xs flex items-center justify-center shrink-0">
+                <div className="w-7 h-7 rounded-none bg-[#0F766E] text-white font-semibold text-xs flex items-center justify-center shrink-0">
                   {getInitials(user?.name)}
                 </div>
                 {!isCollapsed && (
@@ -277,7 +277,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
                     <button
                       onClick={onOpenLogin}
                       title="Switch Demo Persona"
-                      className="p-1 text-[#69655E] hover:text-[#57477D] hover:bg-[#FAF7F2] rounded-none transition-colors cursor-pointer"
+                      className="p-1 text-[#69655E] hover:text-[#0F766E] hover:bg-[#F0F7F6] rounded-none transition-colors cursor-pointer"
                     >
                       <User className="w-3.5 h-3.5" />
                     </button>

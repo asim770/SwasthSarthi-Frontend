@@ -61,9 +61,9 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
     >
       <div className="space-y-4 text-xs text-[#5C574F] font-editorial-sans">
         {/* Status header */}
-        <div className="flex items-center justify-between p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+        <div className="flex items-center justify-between p-4 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
           <div className="flex items-center gap-3">
-            <div className="w-8 h-8 rounded-none bg-white border border-[#D5CEC2] flex items-center justify-center text-[#57477D] shadow-2xs">
+            <div className="w-8 h-8 rounded-none bg-white border border-[#B6D6D0] flex items-center justify-center text-[#0F766E] shadow-2xs">
               <Building2 className="w-4 h-4 shrink-0" />
             </div>
             <div>
@@ -91,18 +91,18 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
           <span className="font-semibold text-[#191817] uppercase tracking-wider text-[10px] font-mono block mb-1">
             Care Purpose &amp; Justification
           </span>
-          <p className="p-3.5 bg-white border border-[#EAE4D9] rounded-none text-[#5C574F] leading-relaxed shadow-2xs">
+          <p className="p-3.5 bg-white border border-[#D0E5E1] rounded-none text-[#5C574F] leading-relaxed shadow-2xs">
             {consent.purpose}
           </p>
         </div>
 
         {/* Scope and Date Ranges */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-[#FAF7F2] rounded-none border border-[#EAE4D9]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-[#F0F7F6] rounded-none border border-[#D0E5E1]">
           <div>
             <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Data Scope (FHIR)</span>
             <div className="flex flex-wrap gap-1 mt-1.5">
               {consent.dataTypes.map((t) => (
-                <span key={t} className="px-2 py-0.5 bg-white border border-[#EAE4D9] rounded-none text-[10px] font-mono text-[#57477D] font-bold">
+                <span key={t} className="px-2 py-0.5 bg-white border border-[#D0E5E1] rounded-none text-[10px] font-mono text-[#0F766E] font-bold">
                   {t}
                 </span>
               ))}
@@ -118,7 +118,7 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
         </div>
 
         {/* Security badge */}
-        <div className="flex items-center gap-2.5 p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-[#5C574F]">
+        <div className="flex items-center gap-2.5 p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-[#5C574F]">
           <ShieldCheck className="w-4 h-4 text-[#4E8C78] shrink-0" />
           <span className="text-[11px] leading-tight">
             Consent is governed by NDHM Consent Management Protocol. You retain complete right to revoke consent at any moment.

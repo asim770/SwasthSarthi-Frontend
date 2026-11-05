@@ -338,10 +338,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* ========================================================================= */}
       {/* 1. COMPREHENSIVE PATIENT OVERVIEW BANNER                                   */}
       {/* ========================================================================= */}
-      <div className="p-5 sm:p-6 bg-white border border-[#EAE4D9] shadow-[0_4px_20px_rgba(26,25,24,0.04)] space-y-4">
+      <div className="p-5 sm:p-6 bg-white border border-[#D0E5E1] shadow-[0_4px_20px_rgba(26,25,24,0.04)] space-y-4">
         <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
           <div className="flex items-start gap-4">
-            <div className="w-12 h-12 bg-[#57477D] text-white flex items-center justify-center font-editorial-serif font-bold text-lg shrink-0 rounded-none shadow-2xs">
+            <div className="w-12 h-12 bg-[#0F766E] text-white flex items-center justify-center font-editorial-serif font-bold text-lg shrink-0 rounded-none shadow-2xs">
               {displayName.slice(0, 2).toUpperCase()}
             </div>
             <div>
@@ -352,7 +352,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <span className="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200 font-medium">
                   Verified Patient
                 </span>
-                <span className="text-[10px] bg-[#FAF7F2] text-[#57477D] px-2 py-0.5 border border-[#EAE4D9] font-medium">
+                <span className="text-[10px] bg-[#F0F7F6] text-[#0F766E] px-2 py-0.5 border border-[#D0E5E1] font-medium">
                   ABDM Linked
                 </span>
               </div>
@@ -361,19 +361,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <span>{user?.email || "patient@swaasthsaarthi.in"}</span>
                 {user?.phone && (
                   <>
-                    <span className="text-[#D5CEC2]">•</span>
+                    <span className="text-[#B6D6D0]">•</span>
                     <span>{user.phone}</span>
                   </>
                 )}
                 {user?.gender && (
                   <>
-                    <span className="text-[#D5CEC2]">•</span>
+                    <span className="text-[#B6D6D0]">•</span>
                     <span>{user.gender}</span>
                   </>
                 )}
                 {user?.dateOfBirth && (
                   <>
-                    <span className="text-[#D5CEC2]">•</span>
+                    <span className="text-[#B6D6D0]">•</span>
                     <span className="font-mono">DOB: {user.dateOfBirth}</span>
                   </>
                 )}
@@ -382,7 +382,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* PERMANENT PATIENT ID BADGE */}
-          <div className="flex items-center gap-3 bg-[#FAF7F2] border border-[#EAE4D9] px-4 py-2.5 shrink-0">
+          <div className="flex items-center gap-3 bg-[#F0F7F6] border border-[#D0E5E1] px-4 py-2.5 shrink-0">
             <div>
               <div className="text-[10px] font-mono font-medium text-[#7A746B] uppercase tracking-wider">
                 Patient ID
@@ -395,7 +395,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <button
               type="button"
               onClick={() => handleCopyPid(currentPatientId)}
-              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[#5C574F] hover:text-[#191817] hover:bg-white border border-[#EAE4D9] rounded-none cursor-pointer transition-colors shadow-2xs"
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[#5C574F] hover:text-[#191817] hover:bg-white border border-[#D0E5E1] rounded-none cursor-pointer transition-colors shadow-2xs"
               title="Copy Patient ID"
             >
               {copiedPid ? (
@@ -414,24 +414,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
         </div>
 
         {/* Quick Longitudinal Metrics Strip */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-[#EAE4D9] border border-[#EAE4D9] text-center">
-          <div className="p-3 bg-[#FAF7F2]">
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-[#D0E5E1] border border-[#D0E5E1] text-center">
+          <div className="p-3 bg-[#F0F7F6]">
             <span className="text-[11px] text-[#6E685F] block font-medium">Total Records</span>
             <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{allUnifiedRecords.length}</span>
           </div>
-          <div className="p-3 bg-[#FAF7F2]">
+          <div className="p-3 bg-[#F0F7F6]">
             <span className="text-[11px] text-[#6E685F] block font-medium">Lab Reports</span>
             <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{labReports.length}</span>
           </div>
-          <div className="p-3 bg-[#FAF7F2]">
+          <div className="p-3 bg-[#F0F7F6]">
             <span className="text-[11px] text-[#6E685F] block font-medium">Doctor Encounters</span>
             <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{doctorReports.length}</span>
           </div>
-          <div className="p-3 bg-[#FAF7F2]">
+          <div className="p-3 bg-[#F0F7F6]">
             <span className="text-[11px] text-[#6E685F] block font-medium">Active Medications</span>
             <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{currentPrescriptions.length}</span>
           </div>
-          <div className="p-3 bg-[#FAF7F2]">
+          <div className="p-3 bg-[#F0F7F6]">
             <span className="text-[11px] text-[#6E685F] block font-medium">Follow-ups</span>
             <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{upcomingFollowUps.length}</span>
           </div>
@@ -441,7 +441,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* ========================================================================= */}
       {/* 2. TAB NAVIGATION SWITCHER                                                */}
       {/* ========================================================================= */}
-      <div className="flex bg-white border border-[#EAE4D9] p-1 gap-1 overflow-x-auto scrollbar-thin">
+      <div className="flex bg-white border border-[#D0E5E1] p-1 gap-1 overflow-x-auto scrollbar-thin">
         {[
           { id: "overview", label: "Overview", icon: Activity },
           { id: "unified", label: "Health Records", icon: FileText },
@@ -461,7 +461,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium whitespace-nowrap cursor-pointer transition-all ${
                 isActive
                   ? "bg-[#1A1918] text-white border border-[#1A1918] shadow-2xs font-semibold"
-                  : "bg-transparent text-[#5C574F] hover:bg-[#FAF7F2] hover:text-[#191817]"
+                  : "bg-transparent text-[#5C574F] hover:bg-[#F0F7F6] hover:text-[#191817]"
               }`}
             >
               <Icon className="w-3.5 h-3.5" />
@@ -479,16 +479,16 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Recent Health Updates & Upcoming Follow-ups */}
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-4">
             {/* Left: Latest Doctor & Laboratory Updates */}
-            <div className="p-5 bg-white border border-[#EAE4D9] space-y-3.5 shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
-              <div className="flex items-center justify-between pb-2.5 border-b border-[#EAE4D9]">
+            <div className="p-5 bg-white border border-[#D0E5E1] space-y-3.5 shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+              <div className="flex items-center justify-between pb-2.5 border-b border-[#D0E5E1]">
                 <div className="flex items-center gap-2 font-editorial-serif font-bold text-sm text-[#191817]">
-                  <FileText className="w-4 h-4 text-[#57477D]" />
+                  <FileText className="w-4 h-4 text-[#0F766E]" />
                   <span>Recent Clinical Records</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setActiveTab("unified")}
-                  className="text-xs font-medium text-[#57477D] hover:underline cursor-pointer"
+                  className="text-xs font-medium text-[#0F766E] hover:underline cursor-pointer"
                 >
                   View All →
                 </button>
@@ -499,18 +499,18 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   <div
                     key={idx}
                     onClick={() => setActiveDetailRecord(rec)}
-                    className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] hover:border-[#1A1918] hover:bg-white cursor-pointer transition-all space-y-1.5"
+                    className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] hover:border-[#1A1918] hover:bg-white cursor-pointer transition-all space-y-1.5"
                   >
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-xs text-[#191817]">{rec.title}</span>
-                      <span className="text-[10px] font-mono bg-white px-2 py-0.5 border border-[#EAE4D9] text-[#5C574F]">
+                      <span className="text-[10px] font-mono bg-white px-2 py-0.5 border border-[#D0E5E1] text-[#5C574F]">
                         {rec.date}
                       </span>
                     </div>
                     <p className="text-[11px] text-[#5C574F] line-clamp-1">{rec.summary}</p>
-                    <div className="flex items-center justify-between text-[10px] text-[#7A746B] pt-1 border-t border-[#EAE4D9]/50">
+                    <div className="flex items-center justify-between text-[10px] text-[#7A746B] pt-1 border-t border-[#D0E5E1]/50">
                       <span>Submitted by: <strong className="text-[#191817]">{rec.submittedBy}</strong></span>
-                      <span className="text-[#57477D] font-medium hover:underline">Inspect →</span>
+                      <span className="text-[#0F766E] font-medium hover:underline">Inspect →</span>
                     </div>
                   </div>
                 ))}
@@ -518,24 +518,24 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Right: Upcoming Follow-ups & Active Prescriptions */}
-            <div className="p-5 bg-white border border-[#EAE4D9] space-y-3.5 shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
-              <div className="flex items-center justify-between pb-2.5 border-b border-[#EAE4D9]">
+            <div className="p-5 bg-white border border-[#D0E5E1] space-y-3.5 shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+              <div className="flex items-center justify-between pb-2.5 border-b border-[#D0E5E1]">
                 <div className="flex items-center gap-2 font-editorial-serif font-bold text-sm text-[#191817]">
-                  <Calendar className="w-4 h-4 text-[#57477D]" />
+                  <Calendar className="w-4 h-4 text-[#0F766E]" />
                   <span>Upcoming Follow-ups &amp; Action Items</span>
                 </div>
               </div>
 
               <div className="space-y-2.5">
                 {upcomingFollowUps.map((fu, idx) => (
-                  <div key={idx} className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] flex items-start gap-3.5">
-                    <div className="w-8 h-8 bg-white border border-[#EAE4D9] text-[#57477D] flex items-center justify-center shrink-0">
+                  <div key={idx} className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] flex items-start gap-3.5">
+                    <div className="w-8 h-8 bg-white border border-[#D0E5E1] text-[#0F766E] flex items-center justify-center shrink-0">
                       <Clock className="w-4 h-4" />
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center justify-between">
                         <span className="font-semibold text-xs text-[#191817]">{fu.title}</span>
-                        <span className="text-[10px] font-mono text-[#7A746B] bg-white px-1.5 py-0.5 border border-[#EAE4D9]">
+                        <span className="text-[10px] font-mono text-[#7A746B] bg-white px-1.5 py-0.5 border border-[#D0E5E1]">
                           {fu.date}
                         </span>
                       </div>
@@ -546,7 +546,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                 ))}
 
-                <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] space-y-1.5">
+                <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] space-y-1.5">
                   <div className="flex items-center justify-between">
                     <span className="font-semibold text-xs text-[#191817]">Current Medication (Active Rx)</span>
                     <span className="text-[10px] font-medium bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200">
@@ -570,9 +570,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* TAB 2: UNIFIED MEDICAL RECORDS                                            */}
       {/* ========================================================================= */}
       {activeTab === "unified" && (
-        <div className="p-5 bg-white border border-[#EAE4D9] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+        <div className="p-5 bg-white border border-[#D0E5E1] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
           {/* Search, Filter, Sort Controls */}
-          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between pb-3.5 border-b border-[#EAE4D9]">
+          <div className="flex flex-col sm:flex-row gap-3 items-stretch sm:items-center justify-between pb-3.5 border-b border-[#D0E5E1]">
             <div className="flex items-center gap-2 flex-1 max-w-md">
               <div className="relative flex-1">
                 <input
@@ -580,7 +580,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search records by title, physician, facility..."
-                  className="w-full pl-8 pr-3 py-2 text-xs border border-[#D5CEC2] bg-[#FAF7F2] text-[#191817] rounded-none focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+                  className="w-full pl-8 pr-3 py-2 text-xs border border-[#B6D6D0] bg-[#F0F7F6] text-[#191817] rounded-none focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
                 />
                 <Search className="w-3.5 h-3.5 text-[#7A746B] absolute left-2.5 top-2.5" />
               </div>
@@ -590,7 +590,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <select
                 value={selectedCategory}
                 onChange={(e) => setSelectedCategory(e.target.value)}
-                className="px-3 py-2 border border-[#D5CEC2] bg-[#FAF7F2] text-[#191817] text-xs font-medium rounded-none focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918]"
+                className="px-3 py-2 border border-[#B6D6D0] bg-[#F0F7F6] text-[#191817] text-xs font-medium rounded-none focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918]"
               >
                 <option value="ALL">All Categories</option>
                 <option value="DiagnosticReport">Laboratory Reports</option>
@@ -603,7 +603,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               <select
                 value={sortBy}
                 onChange={(e) => setSortBy(e.target.value as "newest" | "oldest")}
-                className="px-3 py-2 border border-[#D5CEC2] bg-[#FAF7F2] text-[#191817] text-xs font-medium rounded-none focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918]"
+                className="px-3 py-2 border border-[#B6D6D0] bg-[#F0F7F6] text-[#191817] text-xs font-medium rounded-none focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918]"
               >
                 <option value="newest">Newest First</option>
                 <option value="oldest">Oldest First</option>
@@ -615,19 +615,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           <div className="space-y-3">
             {filteredRecords.length === 0 ? (
               <div className="text-center py-10 text-[#7A746B] space-y-2">
-                <FileText className="w-8 h-8 mx-auto text-[#D5CEC2]" />
+                <FileText className="w-8 h-8 mx-auto text-[#B6D6D0]" />
                 <p className="font-semibold text-xs">No medical records match your search criteria.</p>
               </div>
             ) : (
               filteredRecords.map((rec) => (
                 <div
                   key={rec.id}
-                  className="p-4 border border-[#EAE4D9] bg-[#FAF7F2]/60 hover:bg-white hover:border-[#1A1918] transition-all space-y-2.5"
+                  className="p-4 border border-[#D0E5E1] bg-[#F0F7F6]/60 hover:bg-white hover:border-[#1A1918] transition-all space-y-2.5"
                 >
                   <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                     <div className="flex items-center gap-2 flex-wrap">
                       <span className="font-bold text-xs text-[#191817]">{rec.title}</span>
-                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-white border border-[#57477D]/25 text-[#57477D]">
+                      <span className="text-[10px] font-mono font-bold px-2 py-0.5 bg-white border border-[#0F766E]/25 text-[#0F766E]">
                         {rec.category}
                       </span>
                       {rec.isDoctorReviewed && (
@@ -647,20 +647,20 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                   <p className="text-xs text-[#5C574F] leading-relaxed">{rec.summary}</p>
 
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-[#EAE4D9] text-[11px] text-[#5C574F]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-[#D0E5E1] text-[11px] text-[#5C574F]">
                     <div className="flex items-center gap-3 flex-wrap">
                       <span>Submitted by: <strong className="text-[#191817]">{rec.submittedBy}</strong></span>
-                      <span className="text-[#D5CEC2]">•</span>
+                      <span className="text-[#B6D6D0]">•</span>
                       <span>Facility: <strong className="text-[#191817]">{rec.provider}</strong></span>
-                      <span className="text-[#D5CEC2]">•</span>
-                      <span>Patient ID: <span className="font-mono text-[#57477D] font-bold">{currentPatientId}</span></span>
+                      <span className="text-[#B6D6D0]">•</span>
+                      <span>Patient ID: <span className="font-mono text-[#0F766E] font-bold">{currentPatientId}</span></span>
                     </div>
 
                     <div className="flex items-center gap-2">
                       <button
                         type="button"
                         onClick={() => setActiveDetailRecord(rec)}
-                        className="px-3 py-1 bg-white hover:bg-[#FAF7F2] border border-[#D5CEC2] text-[#191817] text-xs font-semibold rounded-none cursor-pointer transition-colors shadow-2xs"
+                        className="px-3 py-1 bg-white hover:bg-[#F0F7F6] border border-[#B6D6D0] text-[#191817] text-xs font-semibold rounded-none cursor-pointer transition-colors shadow-2xs"
                       >
                         Details &amp; Data
                       </button>
@@ -677,25 +677,25 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* TAB 3: DEDICATED LABORATORY REPORTS                                       */}
       {/* ========================================================================= */}
       {activeTab === "labs" && (
-        <div className="p-5 bg-white border border-[#EAE4D9] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
-          <div className="flex items-center justify-between pb-3 border-b border-[#EAE4D9]">
+        <div className="p-5 bg-white border border-[#D0E5E1] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+          <div className="flex items-center justify-between pb-3 border-b border-[#D0E5E1]">
             <div>
               <h2 className="text-base font-editorial-serif font-bold text-[#191817]">Diagnostic Laboratory Reports</h2>
               <p className="text-[11px] text-[#5C574F]">Official laboratory test findings, abnormal flags, and verified PDF reports.</p>
             </div>
-            <span className="text-xs font-mono font-bold bg-[#FAF7F2] text-[#57477D] px-2.5 py-1 border border-[#57477D]/25">
+            <span className="text-xs font-mono font-bold bg-[#F0F7F6] text-[#0F766E] px-2.5 py-1 border border-[#0F766E]/25">
               {labReports.length} Reports
             </span>
           </div>
 
           <div className="space-y-4">
             {labReports.map((report) => (
-              <div key={report.id} className="p-5 border border-[#EAE4D9] bg-[#FAF7F2]/40 space-y-3.5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[#EAE4D9]">
+              <div key={report.id} className="p-5 border border-[#D0E5E1] bg-[#F0F7F6]/40 space-y-3.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[#D0E5E1]">
                   <div>
                     <h3 className="font-editorial-serif font-bold text-sm text-[#191817]">{report.title}</h3>
                     <div className="text-[11px] text-[#5C574F] mt-0.5">
-                      Uploaded by: <strong className="text-[#191817]">{report.provider}</strong> • Tested Date: <span className="font-mono font-bold text-[#57477D]">{report.date}</span>
+                      Uploaded by: <strong className="text-[#191817]">{report.provider}</strong> • Tested Date: <span className="font-mono font-bold text-[#0F766E]">{report.date}</span>
                     </div>
                   </div>
 
@@ -715,10 +715,10 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </div>
 
                 {/* Structured Laboratory Results Table */}
-                <div className="overflow-x-auto border border-[#EAE4D9]">
+                <div className="overflow-x-auto border border-[#D0E5E1]">
                   <table className="w-full text-left border-collapse text-xs bg-white">
                     <thead>
-                      <tr className="bg-[#FAF7F2] border-b border-[#EAE4D9] text-[#7A746B] uppercase font-mono text-[10px]">
+                      <tr className="bg-[#F0F7F6] border-b border-[#D0E5E1] text-[#7A746B] uppercase font-mono text-[10px]">
                         <th className="py-2.5 px-3">Test Parameter</th>
                         <th className="py-2.5 px-3">Result Value</th>
                         <th className="py-2.5 px-3">Units</th>
@@ -726,29 +726,29 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                         <th className="py-2.5 px-3">Abnormal Flag</th>
                       </tr>
                     </thead>
-                    <tbody className="divide-y divide-[#EAE4D9] font-editorial-sans">
-                      <tr className="hover:bg-[#FAF7F2]">
+                    <tbody className="divide-y divide-[#D0E5E1] font-editorial-sans">
+                      <tr className="hover:bg-[#F0F7F6]">
                         <td className="py-2.5 px-3 font-semibold text-[#191817]">Total Cholesterol</td>
                         <td className="py-2.5 px-3 font-mono font-bold text-[#191817]">195</td>
                         <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
                         <td className="py-2.5 px-3 text-[#5C574F]">125 - 200 mg/dL</td>
                         <td className="py-2.5 px-3">{getAbnormalFlagBadge("Normal")}</td>
                       </tr>
-                      <tr className="hover:bg-[#FAF7F2]">
+                      <tr className="hover:bg-[#F0F7F6]">
                         <td className="py-2.5 px-3 font-semibold text-[#191817]">HDL Cholesterol</td>
                         <td className="py-2.5 px-3 font-mono font-bold text-[#191817]">52</td>
                         <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
                         <td className="py-2.5 px-3 text-[#5C574F]">&gt; 40 mg/dL</td>
                         <td className="py-2.5 px-3">{getAbnormalFlagBadge("Normal")}</td>
                       </tr>
-                      <tr className="hover:bg-[#FAF7F2] bg-amber-50/20">
+                      <tr className="hover:bg-[#F0F7F6] bg-amber-50/20">
                         <td className="py-2.5 px-3 font-semibold text-[#191817]">LDL Cholesterol</td>
                         <td className="py-2.5 px-3 font-mono font-bold text-amber-900">118</td>
                         <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
                         <td className="py-2.5 px-3 text-[#5C574F]">&lt; 100 mg/dL</td>
                         <td className="py-2.5 px-3">{getAbnormalFlagBadge("Borderline High")}</td>
                       </tr>
-                      <tr className="hover:bg-[#FAF7F2]">
+                      <tr className="hover:bg-[#F0F7F6]">
                         <td className="py-2.5 px-3 font-semibold text-[#191817]">Triglycerides</td>
                         <td className="py-2.5 px-3 font-mono font-bold text-[#191817]">142</td>
                         <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
@@ -759,7 +759,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </table>
                 </div>
 
-                <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] text-[11px] text-[#5C574F] flex items-center justify-between">
+                <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] text-[11px] text-[#5C574F] flex items-center justify-between">
                   <span>Notes: Specimen lipemic index normal. Tested on calibrated auto-analyzer.</span>
                   <span className="font-semibold text-[#191817]">Technician: Rajesh Kumar (Senior Biochemist)</span>
                 </div>
@@ -773,34 +773,34 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* TAB 4: DEDICATED DOCTOR REPORTS                                           */}
       {/* ========================================================================= */}
       {activeTab === "doctors" && (
-        <div className="p-5 bg-white border border-[#EAE4D9] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
-          <div className="flex items-center justify-between pb-3 border-b border-[#EAE4D9]">
+        <div className="p-5 bg-white border border-[#D0E5E1] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+          <div className="flex items-center justify-between pb-3 border-b border-[#D0E5E1]">
             <div>
               <h2 className="text-base font-editorial-serif font-bold text-[#191817]">Doctor Consultation &amp; Clinical Reports</h2>
               <p className="text-[11px] text-[#5C574F]">Formal medical consultations, diagnoses, clinical notes, and recommendations.</p>
             </div>
-            <span className="text-xs font-mono font-bold bg-[#FAF7F2] text-[#57477D] px-2.5 py-1 border border-[#57477D]/25">
+            <span className="text-xs font-mono font-bold bg-[#F0F7F6] text-[#0F766E] px-2.5 py-1 border border-[#0F766E]/25">
               {doctorReports.length} Reports
             </span>
           </div>
 
           <div className="space-y-4">
             {doctorReports.map((report) => (
-              <div key={report.id} className="p-5 border border-[#EAE4D9] bg-[#FAF7F2]/40 space-y-3.5">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[#EAE4D9]">
+              <div key={report.id} className="p-5 border border-[#D0E5E1] bg-[#F0F7F6]/40 space-y-3.5">
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-2.5 border-b border-[#D0E5E1]">
                   <div>
                     <h3 className="font-editorial-serif font-bold text-sm text-[#191817]">{report.title}</h3>
                     <div className="text-[11px] text-[#5C574F] mt-0.5">
                       Consultant: <strong className="text-[#191817]">{report.submittedBy}</strong> • Hospital: <strong className="text-[#191817]">{report.provider}</strong>
                     </div>
                   </div>
-                  <div className="text-xs font-mono font-bold text-[#57477D] bg-white px-2.5 py-1 border border-[#EAE4D9]">
+                  <div className="text-xs font-mono font-bold text-[#0F766E] bg-white px-2.5 py-1 border border-[#D0E5E1]">
                     {report.date}
                   </div>
                 </div>
 
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-3 text-xs">
-                  <div className="p-3 bg-white border border-[#EAE4D9]">
+                  <div className="p-3 bg-white border border-[#D0E5E1]">
                     <span className="text-[10px] text-[#7A746B] uppercase font-mono font-bold block mb-1">
                       Clinical Findings &amp; Observations
                     </span>
@@ -809,8 +809,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     </p>
                   </div>
 
-                  <div className="p-3 bg-[#FAF7F2] border border-[#57477D]/30">
-                    <span className="text-[10px] text-[#57477D] uppercase font-mono font-bold block mb-1">
+                  <div className="p-3 bg-[#F0F7F6] border border-[#0F766E]/30">
+                    <span className="text-[10px] text-[#0F766E] uppercase font-mono font-bold block mb-1">
                       Formal Clinical Diagnosis
                     </span>
                     <p className="text-[#191817] font-semibold leading-relaxed">
@@ -819,7 +819,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3 bg-white border border-[#EAE4D9] space-y-1">
+                <div className="p-3 bg-white border border-[#D0E5E1] space-y-1">
                   <span className="text-[10px] text-[#7A746B] uppercase font-mono font-bold block">
                     Treatment Plan &amp; Prescriptions
                   </span>
@@ -828,9 +828,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   </p>
                 </div>
 
-                <div className="flex items-center justify-between text-[11px] text-[#5C574F] pt-2.5 border-t border-[#EAE4D9]">
+                <div className="flex items-center justify-between text-[11px] text-[#5C574F] pt-2.5 border-t border-[#D0E5E1]">
                   <span>Recommended Tests: <strong className="text-[#191817]">Lipid Profile, Serum Creatinine</strong></span>
-                  <span className="text-[#57477D] font-semibold hover:underline">Review: 4 Weeks Follow-Up</span>
+                  <span className="text-[#0F766E] font-semibold hover:underline">Review: 4 Weeks Follow-Up</span>
                 </div>
               </div>
             ))}
@@ -842,31 +842,31 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* TAB 5: CHRONOLOGICAL HEALTH TIMELINE                                      */}
       {/* ========================================================================= */}
       {activeTab === "timeline" && (
-        <div className="p-5 bg-white border border-[#EAE4D9] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
-          <div className="flex items-center justify-between pb-3 border-b border-[#EAE4D9]">
+        <div className="p-5 bg-white border border-[#D0E5E1] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+          <div className="flex items-center justify-between pb-3 border-b border-[#D0E5E1]">
             <div>
               <h2 className="text-base font-editorial-serif font-bold text-[#191817]">Chronological Medical Timeline</h2>
               <p className="text-[11px] text-[#5C574F]">Longitudinal unified history combining reports, consultations, prescriptions, and dispensations.</p>
             </div>
           </div>
 
-          <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#EAE4D9]">
+          <div className="relative pl-6 space-y-6 before:absolute before:left-2.5 before:top-2 before:bottom-2 before:w-0.5 before:bg-[#D0E5E1]">
             {allUnifiedRecords.map((item, idx) => (
               <div key={idx} className="relative space-y-1">
                 {/* Timeline Dot */}
-                <div className="absolute -left-6 top-1.5 w-3.5 h-3.5 bg-white border-2 border-[#57477D] rounded-none shadow-2xs" />
+                <div className="absolute -left-6 top-1.5 w-3.5 h-3.5 bg-white border-2 border-[#0F766E] rounded-none shadow-2xs" />
 
-                <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] hover:border-[#1A1918] hover:bg-white transition-all space-y-1.5">
+                <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] hover:border-[#1A1918] hover:bg-white transition-all space-y-1.5">
                   <div className="flex items-center justify-between flex-wrap gap-2">
                     <span className="font-bold text-xs text-[#191817]">{item.title}</span>
-                    <span className="text-[10px] font-mono text-[#5C574F] font-bold bg-white px-2 py-0.5 border border-[#EAE4D9]">
+                    <span className="text-[10px] font-mono text-[#5C574F] font-bold bg-white px-2 py-0.5 border border-[#D0E5E1]">
                       {item.date} • {item.time}
                     </span>
                   </div>
                   <p className="text-xs text-[#5C574F]">{item.summary}</p>
-                  <div className="text-[10px] text-[#7A746B] pt-1.5 border-t border-[#EAE4D9]/60 flex items-center justify-between">
+                  <div className="text-[10px] text-[#7A746B] pt-1.5 border-t border-[#D0E5E1]/60 flex items-center justify-between">
                     <span>Source: <strong className="text-[#191817]">{item.provider}</strong> ({item.submittedBy})</span>
-                    <span className="text-[#57477D] font-semibold hover:underline cursor-pointer" onClick={() => setActiveDetailRecord(item)}>
+                    <span className="text-[#0F766E] font-semibold hover:underline cursor-pointer" onClick={() => setActiveDetailRecord(item)}>
                       View Details →
                     </span>
                   </div>
@@ -881,8 +881,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* TAB 6: HEALTH STATUS OVERVIEW & OBSERVATION CHARTS                         */}
       {/* ========================================================================= */}
       {activeTab === "health-status" && (
-        <div className="p-5 bg-white border border-[#EAE4D9] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
-          <div className="pb-3 border-b border-[#EAE4D9]">
+        <div className="p-5 bg-white border border-[#D0E5E1] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+          <div className="pb-3 border-b border-[#D0E5E1]">
             <h2 className="text-base font-editorial-serif font-bold text-[#191817]">Health Status Overview &amp; Observations</h2>
             <p className="text-[11px] text-[#5C574F]">Measurable observations comparison, active diagnoses, and current medical therapy.</p>
           </div>
@@ -890,7 +890,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           {/* Measurable Observations Comparison Cards */}
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
             {/* BP Card */}
-            <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] space-y-2">
+            <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] space-y-2">
               <div className="flex items-center justify-between text-[#5C574F]">
                 <span className="font-semibold text-xs flex items-center gap-1.5">
                   <Heart className="w-3.5 h-3.5 text-rose-600" />
@@ -907,13 +907,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 Prev: {latestVitals.bp.previous}
               </div>
               {/* Mini Trend SVG */}
-              <svg className="w-full h-8 stroke-[#57477D] fill-none" viewBox="0 0 100 25">
+              <svg className="w-full h-8 stroke-[#0F766E] fill-none" viewBox="0 0 100 25">
                 <path d="M 0,22 Q 30,16 60,14 T 100,6" strokeWidth="2" />
               </svg>
             </div>
 
             {/* Fasting Glucose Card */}
-            <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] space-y-2">
+            <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] space-y-2">
               <div className="flex items-center justify-between text-[#5C574F]">
                 <span className="font-semibold text-xs flex items-center gap-1.5">
                   <Droplet className="w-3.5 h-3.5 text-sky-600" />
@@ -935,7 +935,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Total Cholesterol Card */}
-            <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] space-y-2">
+            <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] space-y-2">
               <div className="flex items-center justify-between text-[#5C574F]">
                 <span className="font-semibold text-xs flex items-center gap-1.5">
                   <FlaskConical className="w-3.5 h-3.5 text-amber-600" />
@@ -957,7 +957,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </div>
 
             {/* Resting Heart Rate */}
-            <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] space-y-2">
+            <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] space-y-2">
               <div className="flex items-center justify-between text-[#5C574F]">
                 <span className="font-semibold text-xs flex items-center gap-1.5">
                   <Activity className="w-3.5 h-3.5 text-emerald-600" />
@@ -981,26 +981,26 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
           {/* Active Diagnoses & Current Medication */}
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5 pt-2">
-            <div className="p-4 bg-white border border-[#EAE4D9] space-y-2.5">
+            <div className="p-4 bg-white border border-[#D0E5E1] space-y-2.5">
               <span className="font-editorial-serif font-bold text-[#191817] block text-xs">Active Conditions &amp; Diagnoses</span>
               <div className="space-y-2">
                 {activeConditions.map((cond, i) => (
-                  <div key={i} className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-between">
+                  <div key={i} className="p-2.5 bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-between">
                     <div>
                       <div className="font-bold text-xs text-[#191817]">{cond.name}</div>
                       <div className="text-[10px] text-[#7A746B]">Diagnosed by {cond.physician} on {cond.diagnosedDate}</div>
                     </div>
-                    <span className="text-[10px] bg-[#57477D]/10 text-[#57477D] border border-[#57477D]/25 font-mono font-bold px-1.5 py-0.5">ACTIVE</span>
+                    <span className="text-[10px] bg-[#0F766E]/10 text-[#0F766E] border border-[#0F766E]/25 font-mono font-bold px-1.5 py-0.5">ACTIVE</span>
                   </div>
                 ))}
               </div>
             </div>
 
-            <div className="p-4 bg-white border border-[#EAE4D9] space-y-2.5">
+            <div className="p-4 bg-white border border-[#D0E5E1] space-y-2.5">
               <span className="font-editorial-serif font-bold text-[#191817] block text-xs">Current Prescriptions</span>
               <div className="space-y-2">
                 {currentPrescriptions.map((rx, i) => (
-                  <div key={i} className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-between">
+                  <div key={i} className="p-2.5 bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-between">
                     <div>
                       <div className="font-bold text-xs text-[#191817]">{rx.name} {rx.dosage}</div>
                       <div className="text-[10px] text-[#7A746B]">{rx.frequency} • {rx.duration}</div>
@@ -1018,8 +1018,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* TAB 7: ACCOUNT SECURITY & IDENTITY                                        */}
       {/* ========================================================================= */}
       {activeTab === "security" && (
-        <div className="p-5 bg-white border border-[#EAE4D9] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
-          <div className="flex items-center justify-between pb-3 border-b border-[#EAE4D9]">
+        <div className="p-5 bg-white border border-[#D0E5E1] space-y-4 animate-fadeIn shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
+          <div className="flex items-center justify-between pb-3 border-b border-[#D0E5E1]">
             <div>
               <h2 className="text-base font-editorial-serif font-bold text-[#191817]">Account Security &amp; Identity Credentials</h2>
               <p className="text-[11px] text-[#5C574F]">Permanent Patient ID, login providers, and password governance.</p>
@@ -1035,14 +1035,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3.5">
-            <div className="p-4 bg-[#FAF7F2] border border-[#D5CEC2] space-y-1.5">
+            <div className="p-4 bg-[#F0F7F6] border border-[#B6D6D0] space-y-1.5">
               <span className="text-[10px] font-mono font-bold text-[#7A746B] uppercase tracking-wider">Unique Patient ID (Permanent)</span>
-              <div className="font-mono text-base font-bold text-[#57477D] flex items-center justify-between">
+              <div className="font-mono text-base font-bold text-[#0F766E] flex items-center justify-between">
                 <span>{currentPatientId}</span>
                 <button
                   type="button"
                   onClick={() => handleCopyPid(currentPatientId)}
-                  className="px-2.5 py-0.5 bg-white text-[#191817] text-xs font-semibold border border-[#D5CEC2] rounded-none cursor-pointer hover:bg-[#FAF7F2]"
+                  className="px-2.5 py-0.5 bg-white text-[#191817] text-xs font-semibold border border-[#B6D6D0] rounded-none cursor-pointer hover:bg-[#F0F7F6]"
                 >
                   {copiedPid ? "Copied" : "Copy"}
                 </button>
@@ -1052,7 +1052,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </p>
             </div>
 
-            <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] space-y-1.5">
+            <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] space-y-1.5">
               <span className="text-[10px] font-mono font-bold text-[#7A746B] uppercase tracking-wider">Authentication Method</span>
               <div className="font-bold text-[#191817] text-sm">
                 {user?.isGoogleLinked || user?.authProviders?.includes("google")
@@ -1064,7 +1064,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   type="button"
                   disabled={googleLinkLoading}
                   onClick={handleLinkGoogle}
-                  className="mt-2 text-xs text-[#57477D] hover:underline font-semibold cursor-pointer block"
+                  className="mt-2 text-xs text-[#0F766E] hover:underline font-semibold cursor-pointer block"
                 >
                   {googleLinkLoading ? "Linking..." : "+ Link Google Account"}
                 </button>
@@ -1087,19 +1087,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           maxWidth="lg"
         >
           <div className="space-y-3.5 font-editorial-sans text-xs">
-            <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] space-y-1 text-[#5C574F]">
+            <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] space-y-1 text-[#5C574F]">
               <div><strong className="text-[#191817]">Submitted By:</strong> {activeDetailRecord.submittedBy}</div>
               <div><strong className="text-[#191817]">Facility:</strong> {activeDetailRecord.provider}</div>
               <div><strong className="text-[#191817]">Date &amp; Time:</strong> {activeDetailRecord.date} {activeDetailRecord.time}</div>
-              <div><strong className="text-[#191817]">Status:</strong> <span className="font-mono uppercase font-bold text-[#57477D]">{activeDetailRecord.status}</span></div>
+              <div><strong className="text-[#191817]">Status:</strong> <span className="font-mono uppercase font-bold text-[#0F766E]">{activeDetailRecord.status}</span></div>
             </div>
 
-            <div className="p-3.5 bg-white border border-[#EAE4D9]">
+            <div className="p-3.5 bg-white border border-[#D0E5E1]">
               <span className="font-bold block mb-1 text-[#191817]">Clinical Summary:</span>
               <p className="text-[#5C574F] leading-relaxed">{activeDetailRecord.summary}</p>
             </div>
 
-            <div className="flex justify-end pt-2 border-t border-[#EAE4D9]">
+            <div className="flex justify-end pt-2 border-t border-[#D0E5E1]">
               <Button
                 type="button"
                 variant="primary"
@@ -1151,7 +1151,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               value={currentPasswordVal}
               onChange={(e) => setCurrentPasswordVal(e.target.value)}
               placeholder="Enter current password"
-              className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#FAF7F2] focus:bg-white text-[#191817]"
+              className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#F0F7F6] focus:bg-white text-[#191817]"
             />
           </div>
 
@@ -1167,7 +1167,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 value={newPasswordVal}
                 onChange={(e) => setNewPasswordVal(e.target.value)}
                 placeholder="Min 8 chars (letter + number)"
-                className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#FAF7F2] focus:bg-white text-[#191817] pr-8"
+                className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#F0F7F6] focus:bg-white text-[#191817] pr-8"
               />
               <button
                 type="button"
@@ -1189,7 +1189,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               value={confirmNewPasswordVal}
               onChange={(e) => setConfirmNewPasswordVal(e.target.value)}
               placeholder="Re-enter new password"
-              className="w-full px-3 py-2 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#FAF7F2] focus:bg-white text-[#191817]"
+              className="w-full px-3 py-2 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#F0F7F6] focus:bg-white text-[#191817]"
             />
           </div>
 

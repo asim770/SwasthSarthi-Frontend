@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import {
   LogIn,
   ArrowUpRight,
@@ -34,6 +34,18 @@ export const LandingView: React.FC<LandingViewProps> = ({
   // Mobile menu toggle
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
+  // Scroll detection to mix navbar with hero image initially and separate on scroll
+  const [isScrolled, setIsScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setIsScrolled(window.scrollY > 30);
+    };
+    window.addEventListener("scroll", handleScroll, { passive: true });
+    handleScroll();
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
+
   // FAQ accordion state
   const [openFaq, setOpenFaq] = useState<number | null>(0);
 
@@ -43,7 +55,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       id: "patient",
       title: "Patient & Citizen",
       badge: "LIFETIME HEALTH VAULT",
-      badgeColor: "text-[#57477D] bg-[#57477D]/10 border-[#57477D]/20",
+      badgeColor: "text-[#0F766E] bg-[#0F766E]/10 border-[#0F766E]/20",
       icon: UserCheck,
       desc: "Every citizen receives a lifelong Patient ID (PID-XXXXXXXX). Store diagnostic reports, view prescription logs, and grant or revoke time-bound doctor access with 1 click.",
       highlights: [
@@ -57,7 +69,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       id: "doctor",
       title: "Doctor & Specialist",
       badge: "CLINICAL WORKSTATION",
-      badgeColor: "text-[#57477D] bg-[#FAF7F2] border-[#EAE4D9]",
+      badgeColor: "text-[#0F766E] bg-[#F0F7F6] border-[#D0E5E1]",
       icon: Stethoscope,
       desc: "Review patient longitudinal medical history across all network facilities. Author FHIR-compliant encounter notes, write digital prescriptions, and order diagnostic labs.",
       highlights: [
@@ -161,10 +173,20 @@ export const LandingView: React.FC<LandingViewProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] text-[#1E1D1B] font-editorial-sans selection:bg-[#57477D]/15 selection:text-[#57477D]">
+    <div className="min-h-screen bg-[#F0F7F6] text-[#1E1D1B] font-editorial-sans selection:bg-[#0F766E]/15 selection:text-[#0F766E]">
       {/* 1. TOP EDITORIAL NAVBAR */}
-      <header className="sticky top-0 z-50 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE4D9]/80 transition-all duration-200">
-        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-20 flex items-center justify-between gap-4">
+      <header
+        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
+          isScrolled
+            ? "bg-[#F0F7F6]/92 backdrop-blur-md border-b border-[#D0E5E1] shadow-[0_8px_30px_rgba(15,118,110,0.08)] py-0"
+            : "bg-transparent border-b border-transparent py-2 sm:py-3"
+        }`}
+      >
+        <div
+          className={`max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 flex items-center justify-between gap-4 transition-all duration-300 ease-in-out ${
+            isScrolled ? "h-16 sm:h-18" : "h-20 sm:h-22"
+          }`}
+        >
           {/* Left: Brand Logo & Stylized Emblem */}
           <div className="flex items-center gap-3">
             <a
@@ -173,8 +195,16 @@ export const LandingView: React.FC<LandingViewProps> = ({
               aria-label="SwaasthSaarthi Home"
             >
               {/* Stylized sharp emblem */}
-              <div className="relative w-10 h-10 rounded-none bg-gradient-to-tr from-[#57477D] via-[#6F5E97] to-[#7EA89B] p-0.5 flex items-center justify-center shadow-xs">
-                <div className="w-full h-full bg-[#FAF7F2] rounded-none flex items-center justify-center overflow-hidden">
+              <div
+                className={`relative w-10 h-10 rounded-none bg-gradient-to-tr from-[#0F766E] via-[#14B8A6] to-[#5EEAD4] p-0.5 flex items-center justify-center transition-all duration-300 ${
+                  isScrolled ? "shadow-xs" : "shadow-md ring-1 ring-white/60"
+                }`}
+              >
+                <div
+                  className={`w-full h-full rounded-none flex items-center justify-center overflow-hidden transition-colors duration-300 ${
+                    isScrolled ? "bg-[#F0F7F6]" : "bg-white/95 backdrop-blur-xs"
+                  }`}
+                >
                   <svg
                     viewBox="0 0 32 32"
                     fill="none"
@@ -183,15 +213,15 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   >
                     <path
                       d="M6 18C6 11.3726 11.3726 6 18 6C18 12.6274 12.6274 18 6 18Z"
-                      fill="#57477D"
+                      fill="#0F766E"
                     />
                     <path
                       d="M26 14C26 20.6274 20.6274 26 14 26C14 19.3726 19.3726 14 26 14Z"
                       fill="#4E8C78"
                       fillOpacity="0.85"
                     />
-                    <circle cx="16" cy="16" r="3.5" fill="#FAF7F2" />
-                    <circle cx="16" cy="2" fill="#57477D" />
+                    <circle cx="16" cy="16" r="3.5" fill="#F0F7F6" />
+                    <circle cx="16" cy="2" fill="#0F766E" />
                   </svg>
                 </div>
               </div>
@@ -208,41 +238,39 @@ export const LandingView: React.FC<LandingViewProps> = ({
           </div>
 
           {/* Center: Editorial Navigation Links (Desktop) */}
-          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-[#2E2C2A]">
+          <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-semibold transition-colors duration-200">
             <a
               href="#ecosystem"
-              className="hover:text-[#57477D] transition-colors py-1 relative group"
+              className="text-[#132E2B] hover:text-[#0F766E] transition-colors py-1 relative group"
             >
               Role Ecosystem
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#0F766E] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
               href="#specialties"
-              className="hover:text-[#57477D] transition-colors py-1 relative group"
+              className="text-[#132E2B] hover:text-[#0F766E] transition-colors py-1 relative group"
             >
               Centres of Care
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#0F766E] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
               href="#architecture"
-              className="hover:text-[#57477D] transition-colors py-1 relative group"
+              className="text-[#132E2B] hover:text-[#0F766E] transition-colors py-1 relative group"
             >
               Architecture
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#0F766E] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
               href="#faq"
-              className="hover:text-[#57477D] transition-colors py-1 relative group"
+              className="text-[#132E2B] hover:text-[#0F766E] transition-colors py-1 relative group"
             >
               FAQ
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
+              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#0F766E] transition-all duration-200 group-hover:w-full" />
             </a>
           </nav>
 
           {/* Right: Sharp Action Button */}
           <div className="flex items-center gap-3 sm:gap-4">
-
-            {/* Sharp Action Button */}
             {isAuthenticated ? (
               <button
                 onClick={onNavigateToDashboard}
@@ -264,7 +292,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             {/* Mobile Navigation Toggle Button */}
             <button
               onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-              className="md:hidden p-2 rounded-none text-[#2E2C2A] hover:bg-[#EAE4D9]/40 transition-colors cursor-pointer"
+              className="md:hidden p-2 rounded-none text-[#2E2C2A] hover:bg-[#D0E5E1]/40 transition-colors cursor-pointer"
               aria-label="Toggle navigation menu"
             >
               {isMobileMenuOpen ? (
@@ -278,32 +306,32 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
         {/* Responsive Mobile Navigation Drawer */}
         {isMobileMenuOpen && (
-          <div className="md:hidden border-t border-[#EAE4D9] bg-[#FAF7F2]/98 backdrop-blur-md px-6 py-4 space-y-3">
+          <div className="md:hidden border-t border-[#D0E5E1] bg-[#F0F7F6]/98 backdrop-blur-md px-6 py-4 space-y-3">
             <a
               href="#ecosystem"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#0F766E] py-1.5"
             >
               Role Ecosystem
             </a>
             <a
               href="#specialties"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#0F766E] py-1.5"
             >
               Centres of Care
             </a>
             <a
               href="#architecture"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#0F766E] py-1.5"
             >
               Architecture
             </a>
             <a
               href="#faq"
               onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#0F766E] py-1.5"
             >
               FAQ
             </a>
@@ -314,16 +342,16 @@ export const LandingView: React.FC<LandingViewProps> = ({
       {/* 2. FULL-BLEED EDITORIAL HERO SECTION */}
       <section
         id="hero"
-        className="relative w-full min-h-[600px] sm:min-h-[660px] lg:min-h-[740px] flex items-center bg-cover bg-no-repeat overflow-hidden border-b border-[#EAE4D9]/80"
+        className="relative w-full min-h-[640px] sm:min-h-[700px] lg:min-h-[780px] flex items-center bg-cover bg-no-repeat overflow-hidden border-b border-[#D0E5E1]/80 pt-20 sm:pt-24"
         style={{
           backgroundImage: `
             linear-gradient(
               90deg,
-              rgba(250, 247, 240, 0.98) 0%,
-              rgba(250, 247, 240, 0.94) 30%,
-              rgba(250, 247, 240, 0.72) 44%,
-              rgba(250, 247, 240, 0.22) 58%,
-              rgba(250, 247, 240, 0.02) 75%
+              rgba(240, 247, 246, 0.98) 0%,
+              rgba(240, 247, 246, 0.94) 30%,
+              rgba(240, 247, 246, 0.72) 44%,
+              rgba(240, 247, 246, 0.22) 58%,
+              rgba(240, 247, 246, 0.02) 75%
             ),
             url('/images/hospital-hero-wide.png')
           `,
@@ -334,16 +362,16 @@ export const LandingView: React.FC<LandingViewProps> = ({
       >
         {/* Soft responsive vertical gradient for mobile screens */}
         <div
-          className="absolute inset-0 pointer-events-none lg:hidden bg-gradient-to-b from-[#FAF7F2]/98 via-[#FAF7F2]/92 to-[#FAF7F2]/45"
+          className="absolute inset-0 pointer-events-none lg:hidden bg-gradient-to-b from-[#F0F7F6]/98 via-[#F0F7F6]/92 to-[#F0F7F6]/45"
           aria-hidden="true"
         />
 
         {/* Content Container */}
-        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 lg:py-28 relative z-10">
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-8 lg:px-12 pt-8 pb-16 sm:pt-12 sm:pb-24 lg:pt-16 lg:pb-28 relative z-10">
           <div className="max-w-[520px] flex flex-col justify-center">
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 mb-4 sm:mb-6">
-              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#716B82] uppercase">
+              <span className="text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#0F766E] uppercase">
                 SWAASTHSAARTHI HEALTHCARE NETWORK
               </span>
             </div>
@@ -351,7 +379,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             {/* Main Headline: Bold Modern Sans + Elegant Purple Italic Serif */}
             <h1 className="font-editorial-sans text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-[#191817] leading-[1.08] tracking-tight">
               Small moments.
-              <span className="block font-editorial-serif italic font-normal text-[#57477D] mt-1 sm:mt-1.5 text-4xl sm:text-5xl lg:text-[60px]">
+              <span className="block font-editorial-serif italic font-normal text-[#0F766E] mt-1 sm:mt-1.5 text-4xl sm:text-5xl lg:text-[60px]">
                 A little more you.
               </span>
             </h1>
@@ -373,29 +401,29 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
               <a
                 href="#ecosystem"
-                className="px-6 py-4 rounded-none border border-[#1A1918] text-[#1A1918] hover:bg-[#EAE4D9]/40 transition-colors font-medium text-sm sm:text-base cursor-pointer"
+                className="px-6 py-4 rounded-none border border-[#1A1918] text-[#1A1918] hover:bg-[#D0E5E1]/40 transition-colors font-medium text-sm sm:text-base cursor-pointer"
               >
                 Explore Care Ecosystem
               </a>
             </div>
 
             {/* Genuine Healthcare Credibility Specs Row */}
-            <div className="mt-10 sm:mt-14 pt-6 border-t border-[#EAE4D9]/80 flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm font-medium text-[#6B655B]">
+            <div className="mt-10 sm:mt-14 pt-6 border-t border-[#D0E5E1]/80 flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm font-medium text-[#6B655B]">
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                 Lifelong Patient ID (PID)
               </span>
-              <span className="text-[#BDB6A8]">/</span>
+              <span className="text-[#A5C7C0]">/</span>
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-[#4E8C78]" />
                 ABDM M1-M3 Certified
               </span>
-              <span className="text-[#BDB6A8]">/</span>
+              <span className="text-[#A5C7C0]">/</span>
               <span className="flex items-center gap-1.5">
-                <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                 HL7 FHIR R4 Standardized
               </span>
-              <span className="text-[#BDB6A8]">/</span>
+              <span className="text-[#A5C7C0]">/</span>
               <span className="flex items-center gap-1.5">
                 <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
                 Zero-Knowledge Consent
@@ -405,7 +433,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
 
         {/* Subtle Architectural Corner Badge over hospital building */}
-        <div className="hidden xl:flex absolute bottom-8 right-12 z-10 bg-[#FAF7F2]/90 backdrop-blur-md px-4 py-2.5 rounded-none border border-[#1A1918]/15 shadow-xs items-center gap-2.5 text-xs text-[#1A1918]">
+        <div className="hidden xl:flex absolute bottom-8 right-12 z-10 bg-[#F0F7F6]/90 backdrop-blur-md px-4 py-2.5 rounded-none border border-[#1A1918]/15 shadow-xs items-center gap-2.5 text-xs text-[#1A1918]">
           <div className="w-2 h-2 rounded-none bg-emerald-500 animate-pulse" />
           <span className="font-semibold">SwaasthSaarthi</span>
           <span className="text-[#7A746B]">· Integrated Healthcare Network</span>
@@ -413,12 +441,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
       </section>
 
       {/* 3. ROLE-BASED HEALTHCARE ECOSYSTEM SECTION */}
-      <section id="ecosystem" className="py-16 sm:py-24 bg-white border-b border-[#EAE4D9]">
+      <section id="ecosystem" className="scroll-mt-20 sm:scroll-mt-24 py-16 sm:py-24 bg-white border-b border-[#D0E5E1]">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#EAE4D9]">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#D0E5E1]">
             <div>
-              <span className="text-xs font-semibold tracking-[0.25em] text-[#716B82] uppercase">
+              <span className="text-xs font-semibold tracking-[0.25em] text-[#0F766E] uppercase">
                 ROLE-BASED HEALTHCARE ECOSYSTEM
               </span>
               <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
@@ -437,19 +465,19 @@ export const LandingView: React.FC<LandingViewProps> = ({
               return (
                 <div
                   key={role.id}
-                  className="group bg-[#FAF7F2] rounded-none p-6 sm:p-7 border border-[#EAE4D9] hover:border-[#1A1918] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(26,25,24,0.06)] flex flex-col justify-between"
+                  className="group bg-[#F0F7F6] rounded-none p-6 sm:p-7 border border-[#D0E5E1] hover:border-[#1A1918] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(26,25,24,0.06)] flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-4">
                       <span className={`text-[10px] font-semibold tracking-wider px-2.5 py-1 rounded-none border ${role.badgeColor}`}>
                         {role.badge}
                       </span>
-                      <div className="w-10 h-10 rounded-none bg-white border border-[#EAE4D9] flex items-center justify-center text-[#1A1918] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-colors duration-200">
+                      <div className="w-10 h-10 rounded-none bg-white border border-[#D0E5E1] flex items-center justify-center text-[#1A1918] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-colors duration-200">
                         <Icon className="w-5 h-5" />
                       </div>
                     </div>
 
-                    <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-[#191817] mb-2.5 group-hover:text-[#57477D] transition-colors">
+                    <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-[#191817] mb-2.5 group-hover:text-[#0F766E] transition-colors">
                       {role.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#615C54] leading-relaxed mb-5 font-normal">
@@ -467,10 +495,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
                     </div>
                   </div>
 
-                  <div className="pt-4 border-t border-[#EAE4D9]/80">
+                  <div className="pt-4 border-t border-[#D0E5E1]/80">
                     <button
                       onClick={onOpenLogin}
-                      className="w-full py-2.5 px-3 rounded-none bg-white border border-[#D5CEC2] text-xs font-medium text-[#1A1918] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-2xs"
+                      className="w-full py-2.5 px-3 rounded-none bg-white border border-[#B6D6D0] text-xs font-medium text-[#1A1918] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-2xs"
                     >
                       <span>{role.actionText}</span>
                       <ArrowRight className="w-3.5 h-3.5" />
@@ -484,12 +512,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
       </section>
 
       {/* 4. CENTRES OF CLINICAL EXCELLENCE */}
-      <section id="specialties" className="py-16 sm:py-24 border-b border-[#EAE4D9] bg-[#FAF7F2]">
+      <section id="specialties" className="scroll-mt-20 sm:scroll-mt-24 py-16 sm:py-24 border-b border-[#D0E5E1] bg-[#F0F7F6]">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
           {/* Section Header */}
-          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#EAE4D9]">
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#D0E5E1]">
             <div>
-              <span className="text-xs font-semibold tracking-[0.25em] text-[#716B82] uppercase">
+              <span className="text-xs font-semibold tracking-[0.25em] text-[#0F766E] uppercase">
                 CENTRES OF CLINICAL EXCELLENCE
               </span>
               <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
@@ -508,19 +536,19 @@ export const LandingView: React.FC<LandingViewProps> = ({
               return (
                 <div
                   key={item.id}
-                  className="group bg-white rounded-none p-6 sm:p-7 border border-[#EAE4D9] hover:border-[#1A1918] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(26,25,24,0.06)] flex flex-col justify-between"
+                  className="group bg-white rounded-none p-6 sm:p-7 border border-[#D0E5E1] hover:border-[#1A1918] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(26,25,24,0.06)] flex flex-col justify-between"
                 >
                   <div>
                     <div className="flex items-center justify-between mb-4">
-                      <span className="text-[10px] font-semibold tracking-wider text-[#57477D] bg-[#57477D]/8 px-2.5 py-1 rounded-none border border-[#57477D]/15">
+                      <span className="text-[10px] font-semibold tracking-wider text-[#0F766E] bg-[#0F766E]/8 px-2.5 py-1 rounded-none border border-[#0F766E]/15">
                         {item.tag}
                       </span>
-                      <div className="w-9 h-9 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-colors duration-200">
+                      <div className="w-9 h-9 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-colors duration-200">
                         <Icon className="w-4 h-4" />
                       </div>
                     </div>
 
-                    <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-[#191817] mb-2.5 group-hover:text-[#57477D] transition-colors">
+                    <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-[#191817] mb-2.5 group-hover:text-[#0F766E] transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#615C54] leading-relaxed mb-6 font-normal">
@@ -528,14 +556,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
                     </p>
                   </div>
 
-                  <div className="pt-4 border-t border-[#F0ECE1] flex items-center justify-between text-xs">
+                  <div className="pt-4 border-t border-[#E1EFEA] flex items-center justify-between text-xs">
                     <div>
                       <div className="font-semibold text-[#191817]">{item.stat}</div>
                       <div className="text-[#8A8479]">{item.doctors}</div>
                     </div>
                     <button
                       onClick={onOpenLogin}
-                      className="p-2 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] text-[#191817] group-hover:bg-[#191817] group-hover:text-white group-hover:border-[#1A1918] transition-all cursor-pointer"
+                      className="p-2 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] text-[#191817] group-hover:bg-[#191817] group-hover:text-white group-hover:border-[#1A1918] transition-all cursor-pointer"
                       title="Explore department"
                     >
                       <ArrowUpRight className="w-4 h-4" />
@@ -549,10 +577,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
       </section>
 
       {/* 5. PLATFORM ARCHITECTURE & STANDARDS */}
-      <section id="architecture" className="py-20 sm:py-28 max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
+      <section id="architecture" className="scroll-mt-20 sm:scroll-mt-24 py-20 sm:py-28 max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
-            <span className="text-xs font-semibold tracking-[0.22em] text-[#716B82] uppercase">
+            <span className="text-xs font-semibold tracking-[0.22em] text-[#0F766E] uppercase">
               PLATFORM ARCHITECTURE & STANDARDS
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-5xl text-[#191817] font-normal mt-2 mb-6 leading-tight">
@@ -565,21 +593,21 @@ export const LandingView: React.FC<LandingViewProps> = ({
               Whether you are an outpatient visiting a local clinic, undergoing specialized surgery, or receiving lab diagnostics, your longitudinal record remains continuous, encrypted, and completely under your control.
             </p>
 
-            <div className="grid grid-cols-2 gap-6 pt-4 border-t border-[#EAE4D9]">
+            <div className="grid grid-cols-2 gap-6 pt-4 border-t border-[#D0E5E1]">
               <div>
-                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#57477D]">50+</div>
+                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#0F766E]">50+</div>
                 <div className="text-xs text-[#7A746B] mt-1">Network Care Facilities</div>
               </div>
               <div>
-                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#57477D]">100%</div>
+                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#0F766E]">100%</div>
                 <div className="text-xs text-[#7A746B] mt-1">FHIR R4 & ABDM Integrated</div>
               </div>
             </div>
           </div>
 
           <div className="lg:col-span-7 grid sm:grid-cols-2 gap-6">
-            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
-              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
+            <div className="bg-white p-7 rounded-none border border-[#D0E5E1] space-y-3">
+              <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <Layers className="w-5 h-5" />
               </div>
               <h3 className="font-editorial-serif text-xl text-[#191817]">HL7 FHIR R4 Standards</h3>
@@ -588,8 +616,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </p>
             </div>
 
-            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
-              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
+            <div className="bg-white p-7 rounded-none border border-[#D0E5E1] space-y-3">
+              <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <ShieldCheck className="w-5 h-5" />
               </div>
               <h3 className="font-editorial-serif text-xl text-[#191817]">ABDM Ayushman Bharat</h3>
@@ -598,8 +626,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </p>
             </div>
 
-            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
-              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
+            <div className="bg-white p-7 rounded-none border border-[#D0E5E1] space-y-3">
+              <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <Lock className="w-5 h-5" />
               </div>
               <h3 className="font-editorial-serif text-xl text-[#191817]">Zero-Knowledge Consent</h3>
@@ -608,8 +636,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </p>
             </div>
 
-            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
-              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
+            <div className="bg-white p-7 rounded-none border border-[#D0E5E1] space-y-3">
+              <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <Clock className="w-5 h-5" />
               </div>
               <h3 className="font-editorial-serif text-xl text-[#191817]">24/7 Rapid Emergency</h3>
@@ -622,10 +650,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
       </section>
 
       {/* 7. FREQUENTLY ASKED QUESTIONS */}
-      <section id="faq" className="py-20 bg-[#F4EFE6] border-t border-[#EAE4D9]">
+      <section id="faq" className="scroll-mt-20 sm:scroll-mt-24 py-20 bg-[#E4F1EE] border-t border-[#D0E5E1]">
         <div className="max-w-[960px] mx-auto px-4 sm:px-8">
           <div className="text-center mb-12">
-            <span className="text-xs font-semibold tracking-[0.25em] text-[#716B82] uppercase">
+            <span className="text-xs font-semibold tracking-[0.25em] text-[#0F766E] uppercase">
               HELP & GUIDANCE
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
@@ -639,21 +667,21 @@ export const LandingView: React.FC<LandingViewProps> = ({
               return (
                 <div
                   key={idx}
-                  className="bg-white rounded-none border border-[#EAE4D9] overflow-hidden transition-all duration-200"
+                  className="bg-white rounded-none border border-[#D0E5E1] overflow-hidden transition-all duration-200"
                 >
                   <button
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
-                    className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#FAF7F2]/50"
+                    className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#F0F7F6]/50"
                   >
                     <span className="font-editorial-serif text-base sm:text-lg text-[#191817] font-medium">
                       {faq.q}
                     </span>
-                    <span className={`text-xl font-light text-[#57477D] transition-transform duration-200 ${isOpen ? "rotate-45" : ""}`}>
+                    <span className={`text-xl font-light text-[#0F766E] transition-transform duration-200 ${isOpen ? "rotate-45" : ""}`}>
                       +
                     </span>
                   </button>
                   {isOpen && (
-                    <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-[#615C54] leading-relaxed border-t border-[#F0ECE1]">
+                    <div className="px-6 pb-6 pt-1 text-xs sm:text-sm text-[#615C54] leading-relaxed border-t border-[#E1EFEA]">
                       {faq.a}
                     </div>
                   )}
@@ -665,15 +693,15 @@ export const LandingView: React.FC<LandingViewProps> = ({
       </section>
 
       {/* 8. CLEAN BLACK FOOTER */}
-      <footer className="bg-[#0D0C0B] text-[#E8E4DC] border-t border-[#222120] pt-16 pb-12">
+      <footer className="bg-[#0D0C0B] text-[#D4E7E3] border-t border-[#222120] pt-16 pb-12">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#222120]">
             {/* Brand column */}
             <div className="lg:col-span-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#7B66A8] to-[#4E8C78] flex items-center justify-center p-0.5">
+                <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#0D9488] to-[#4E8C78] flex items-center justify-center p-0.5">
                   <div className="w-full h-full bg-[#0D0C0B] rounded-none flex items-center justify-center">
-                    <div className="w-3.5 h-3.5 rounded-none bg-[#A48CD1]" />
+                    <div className="w-3.5 h-3.5 rounded-none bg-[#5EEAD4]" />
                   </div>
                 </div>
                 <span className="font-editorial-serif text-xl font-bold text-white tracking-tight">

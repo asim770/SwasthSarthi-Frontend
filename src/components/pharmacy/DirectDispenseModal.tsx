@@ -123,7 +123,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#F0F7F6] border border-[#D0E5E1]">
           <div>
             <label className="block text-[#1A1918] font-semibold mb-1">
               Prescription ID <span className="text-red-500">*</span>
@@ -134,7 +134,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
               value={prescriptionId}
               onChange={(e) => setPrescriptionId(e.target.value)}
               placeholder="e.g. RX-2026-..."
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -147,7 +147,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
               placeholder="e.g. SS-PAT-000001"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -163,7 +163,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
               value={medicineName}
               onChange={(e) => setMedicineName(e.target.value)}
               placeholder="e.g. Telmisartan 40mg Tablets"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -177,7 +177,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
               min={1}
               value={quantity}
               onChange={(e) => setQuantity(Number(e.target.value))}
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -193,7 +193,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
               value={batchNumber}
               onChange={(e) => setBatchNumber(e.target.value)}
               placeholder="e.g. BATCH-2026-X1"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-mono text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -206,7 +206,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
               value={pharmacistName}
               onChange={(e) => setPharmacistName(e.target.value)}
               placeholder="e.g. R.Ph Name"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -219,7 +219,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
             <select
               value={dispenseStatus}
               onChange={(e) => setDispenseStatus(e.target.value as "COMPLETE" | "PARTIAL")}
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] font-semibold focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] font-semibold focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             >
               <option value="COMPLETE">Complete Dispensation (Full Quantity)</option>
               <option value="PARTIAL">Partial Dispensation (Partial Supply)</option>
@@ -235,7 +235,7 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
               value={substitutionInfo}
               onChange={(e) => setSubstitutionInfo(e.target.value)}
               placeholder="None or Generic Equivalent..."
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -249,11 +249,11 @@ export const DirectDispenseModal: React.FC<DirectDispenseModalProps> = ({
             value={notes}
             onChange={(e) => setNotes(e.target.value)}
             placeholder="Special dosage counselling or administration instructions..."
-            className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+            className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
           />
         </div>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-[#EAE4D9]">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#D0E5E1]">
           <Button
             type="button"
             variant="secondary"

@@ -18,10 +18,10 @@ export const PageHeader: React.FC<PageHeaderProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-5 border-b border-[#EAE4D9] mb-6 ${className}`}>
+    <div className={`flex flex-col md:flex-row md:items-center md:justify-between gap-4 pb-5 border-b border-[#D0E5E1] mb-6 ${className}`}>
       <div>
         {breadcrumb && (
-          <p className="text-[11px] font-mono font-bold text-[#57477D] mb-1 tracking-wider uppercase">
+          <p className="text-[11px] font-mono font-bold text-[#0F766E] mb-1 tracking-wider uppercase">
             {breadcrumb}
           </p>
         )}

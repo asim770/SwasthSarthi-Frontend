@@ -168,7 +168,7 @@ export default function App() {
 
   if (currentRoute === "landing") {
     return (
-      <div className="min-h-screen bg-[#FAF7F2] font-editorial-sans text-[#1E1D1B]">
+      <div className="min-h-screen bg-[#F0F7F6] font-editorial-sans text-[#1E1D1B]">
         <LandingView
           onOpenLogin={handleOpenLogin}
           onNavigateToDashboard={() => setCurrentRoute("dashboard")}
@@ -194,7 +194,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#FAF7F2] font-editorial-sans flex flex-col text-[#191817] selection:bg-[#57477D]/15 selection:text-[#57477D]">
+    <div className="min-h-screen bg-[#F0F7F6] font-editorial-sans flex flex-col text-[#191817] selection:bg-[#0F766E]/15 selection:text-[#0F766E]">
       {/* 1. Horizontal Glass Top Navbar (Replaces permanent vertical sidebar) */}
       <GlassNavbar
         currentRoute={currentRoute}

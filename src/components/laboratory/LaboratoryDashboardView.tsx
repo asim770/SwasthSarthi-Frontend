@@ -196,10 +196,10 @@ export const LaboratoryDashboardView: React.FC = () => {
 
       {/* Patient Search & Quick Upload Card for Labs */}
       {isLab && (
-        <Card className="border-[#EAE4D9] rounded-none bg-white shadow-none">
+        <Card className="border-[#D0E5E1] rounded-none bg-white shadow-none">
           <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
             <div className="flex items-center gap-2">
-              <FlaskConical className="w-4 h-4 text-[#57477D]" />
+              <FlaskConical className="w-4 h-4 text-[#0F766E]" />
               <span className="font-bold text-[#1A1918]">Find Patient by Patient ID:</span>
             </div>
             <form onSubmit={handleLabPatientLookup} className="flex items-center gap-2 max-w-md w-full">
@@ -210,7 +210,7 @@ export const LaboratoryDashboardView: React.FC = () => {
                   placeholder="Enter Patient ID (e.g. SS-PAT-000001)..."
                   value={patientLookupId}
                   onChange={(e) => setPatientLookupId(e.target.value)}
-                  className="w-full pl-9 pr-3 py-1.5 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none text-xs font-mono font-bold text-[#1A1918] placeholder-[#7A746B] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+                  className="w-full pl-9 pr-3 py-1.5 bg-[#F0F7F6] border border-[#B6D6D0] rounded-none text-xs font-mono font-bold text-[#1A1918] placeholder-[#7A746B] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
                 />
               </div>
               <Button
@@ -234,9 +234,9 @@ export const LaboratoryDashboardView: React.FC = () => {
       )}
 
       {/* Facility Notice Strip */}
-      <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
-          <FlaskConical className="w-4 h-4 text-[#57477D] shrink-0" />
+          <FlaskConical className="w-4 h-4 text-[#0F766E] shrink-0" />
           <span className="text-[#5C574F]">
             <strong className="text-[#1A1918]">Facility Scope:</strong>{" "}
             {user?.facility ? (
@@ -250,7 +250,7 @@ export const LaboratoryDashboardView: React.FC = () => {
           </span>
         </div>
         <div className="flex items-center gap-2">
-          <span className="px-2 py-0.5 rounded-none bg-white text-[#57477D] font-mono text-[10px] font-semibold border border-[#EAE4D9]">
+          <span className="px-2 py-0.5 rounded-none bg-white text-[#0F766E] font-mono text-[10px] font-semibold border border-[#D0E5E1]">
             FHIR R4 ServiceRequest
           </span>
           <span className="px-2 py-0.5 rounded-none bg-emerald-50 text-emerald-800 font-mono text-[10px] font-semibold border border-emerald-300">
@@ -260,7 +260,7 @@ export const LaboratoryDashboardView: React.FC = () => {
       </div>
 
       {/* Navigation Tabs */}
-      <div className="flex items-center gap-2 border-b border-[#EAE4D9]">
+      <div className="flex items-center gap-2 border-b border-[#D0E5E1]">
         <button
           onClick={() => setActiveTab("orders")}
           className={`pb-3 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors rounded-none ${
@@ -269,9 +269,9 @@ export const LaboratoryDashboardView: React.FC = () => {
               : "border-transparent text-[#69655E] hover:text-[#1A1918]"
           }`}
         >
-          <Activity className="w-4 h-4 text-[#57477D]" />
+          <Activity className="w-4 h-4 text-[#0F766E]" />
           Assigned Test Orders
-          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] text-[10px] font-mono">
+          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
             {orders.length}
           </span>
         </button>
@@ -284,9 +284,9 @@ export const LaboratoryDashboardView: React.FC = () => {
               : "border-transparent text-[#69655E] hover:text-[#1A1918]"
           }`}
         >
-          <FileCheck2 className="w-4 h-4 text-[#57477D]" />
+          <FileCheck2 className="w-4 h-4 text-[#0F766E]" />
           Submitted Reports Repository
-          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] text-[10px] font-mono">
+          <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
             {reports.length}
           </span>
         </button>
@@ -310,7 +310,7 @@ export const LaboratoryDashboardView: React.FC = () => {
                 placeholder="Search by test name, order ID, or patient..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2] text-[#1A1918]"
+                className="w-full pl-9 pr-3 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6] text-[#1A1918]"
               />
             </div>
 
@@ -323,7 +323,7 @@ export const LaboratoryDashboardView: React.FC = () => {
                   className={`px-2.5 py-1 text-xs font-mono font-medium rounded-none whitespace-nowrap transition-colors cursor-pointer ${
                     statusFilter === st
                       ? "bg-[#1A1918] text-white"
-                      : "bg-white text-[#5C574F] border border-[#EAE4D9] hover:bg-[#FAF7F2] hover:text-[#1A1918]"
+                      : "bg-white text-[#5C574F] border border-[#D0E5E1] hover:bg-[#F0F7F6] hover:text-[#1A1918]"
                   }`}
                 >
                   {st}
@@ -334,13 +334,13 @@ export const LaboratoryDashboardView: React.FC = () => {
 
           {/* Orders Table */}
           {loading ? (
-            <div className="p-12 text-center text-xs text-[#7A746B] bg-white border border-[#EAE4D9] rounded-none font-mono">
-              <RefreshCw className="w-5 h-5 text-[#57477D] animate-spin mx-auto mb-2" />
+            <div className="p-12 text-center text-xs text-[#7A746B] bg-white border border-[#D0E5E1] rounded-none font-mono">
+              <RefreshCw className="w-5 h-5 text-[#0F766E] animate-spin mx-auto mb-2" />
               Fetching assigned diagnostic orders...
             </div>
           ) : filteredOrders.length === 0 ? (
-            <div className="p-12 text-center text-xs text-[#69655E] bg-white border border-[#EAE4D9] rounded-none">
-              <FlaskConical className="w-8 h-8 text-[#D5CEC2] mx-auto mb-3" />
+            <div className="p-12 text-center text-xs text-[#69655E] bg-white border border-[#D0E5E1] rounded-none">
+              <FlaskConical className="w-8 h-8 text-[#B6D6D0] mx-auto mb-3" />
               <p className="font-editorial-serif font-bold text-sm text-[#1A1918]">No test orders found</p>
               <p className="text-[#69655E] mt-1 max-w-sm mx-auto">
                 {statusFilter !== "ALL"
@@ -351,10 +351,10 @@ export const LaboratoryDashboardView: React.FC = () => {
               </p>
             </div>
           ) : (
-            <div className="bg-white border border-[#EAE4D9] rounded-none overflow-hidden">
+            <div className="bg-white border border-[#D0E5E1] rounded-none overflow-hidden">
               <div className="overflow-x-auto">
                 <table className="w-full text-left text-xs">
-                  <thead className="bg-[#FAF7F2] border-b border-[#EAE4D9] text-[#69655E] font-mono uppercase text-[10px] tracking-wider">
+                  <thead className="bg-[#F0F7F6] border-b border-[#D0E5E1] text-[#69655E] font-mono uppercase text-[10px] tracking-wider">
                     <tr>
                       <th className="py-3 px-4">Order ID & Date</th>
                       <th className="py-3 px-4">Test Details</th>
@@ -365,11 +365,11 @@ export const LaboratoryDashboardView: React.FC = () => {
                       <th className="py-3 px-4 text-right">Actions</th>
                     </tr>
                   </thead>
-                  <tbody className="divide-y divide-[#EAE4D9]">
+                  <tbody className="divide-y divide-[#D0E5E1]">
                     {filteredOrders.map((ord) => (
-                      <tr key={ord.orderId} className="hover:bg-[#FAF7F2]/60 transition-colors">
+                      <tr key={ord.orderId} className="hover:bg-[#F0F7F6]/60 transition-colors">
                         <td className="py-3 px-4">
-                          <div className="font-mono font-bold text-[#57477D]">{ord.orderId}</div>
+                          <div className="font-mono font-bold text-[#0F766E]">{ord.orderId}</div>
                           <div className="text-[10px] text-[#7A746B] mt-0.5 font-mono">
                             {new Date(ord.orderedAt).toLocaleDateString()}
                           </div>
@@ -426,8 +426,8 @@ export const LaboratoryDashboardView: React.FC = () => {
       {activeTab === "reports" && (
         <div className="space-y-4">
           {reports.length === 0 ? (
-            <div className="p-12 text-center text-xs text-[#69655E] bg-white border border-[#EAE4D9] rounded-none">
-              <FileCheck2 className="w-8 h-8 text-[#D5CEC2] mx-auto mb-3" />
+            <div className="p-12 text-center text-xs text-[#69655E] bg-white border border-[#D0E5E1] rounded-none">
+              <FileCheck2 className="w-8 h-8 text-[#B6D6D0] mx-auto mb-3" />
               <p className="font-editorial-serif font-bold text-sm text-[#1A1918]">No submitted diagnostic reports</p>
               <p className="text-[#69655E] mt-1 max-w-sm mx-auto">
                 Submitted reports are held at the source laboratory and shared securely through the
@@ -437,11 +437,11 @@ export const LaboratoryDashboardView: React.FC = () => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               {reports.map((rep, idx) => (
-                <Card key={idx} className="border-[#EAE4D9] rounded-none bg-white">
+                <Card key={idx} className="border-[#D0E5E1] rounded-none bg-white">
                   <CardContent className="p-4 space-y-3">
                     <div className="flex items-start justify-between">
                       <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] text-[#57477D] flex items-center justify-center font-mono font-bold text-xs">
+                        <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] flex items-center justify-center font-mono font-bold text-xs">
                           FHIR
                         </div>
                         <div>
@@ -460,7 +460,7 @@ export const LaboratoryDashboardView: React.FC = () => {
                       {String(rep.summary || "Complete laboratory analysis.")}
                     </p>
 
-                    <div className="pt-2 border-t border-[#EAE4D9] flex items-center justify-between text-[10px] text-[#69655E]">
+                    <div className="pt-2 border-t border-[#D0E5E1] flex items-center justify-between text-[10px] text-[#69655E]">
                       <span>Source: {String(rep.sourceInstitution || "Diagnostic Center")}</span>
                       <span className="font-mono">{String(rep.date || "")}</span>
                     </div>

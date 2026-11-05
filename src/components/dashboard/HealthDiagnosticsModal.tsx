@@ -49,12 +49,12 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
     >
       <div className="space-y-4 text-xs font-editorial-sans">
         {/* Endpoint info */}
-        <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between">
+        <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none flex items-center justify-between">
           <div>
             <span className="text-[10px] text-[#7A746B] font-mono font-semibold uppercase block">
               REST Health Endpoint
             </span>
-            <code className="text-xs text-[#57477D] font-mono font-bold">
+            <code className="text-xs text-[#0F766E] font-mono font-bold">
               {API_BASE_URL}/health
             </code>
           </div>
@@ -83,9 +83,9 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
         {/* Services Status Cards */}
         <div className="space-y-2.5">
           {/* API Gateway */}
-          <div className="p-3.5 bg-white border border-[#EAE4D9] rounded-none flex items-center justify-between shadow-2xs">
+          <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#D5CEC2] text-[#57477D] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#B6D6D0] text-[#0F766E] flex items-center justify-center">
                 <Server className="w-4 h-4" />
               </div>
               <div>
@@ -99,7 +99,7 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
           </div>
 
           {/* MongoDB */}
-          <div className="p-3.5 bg-white border border-[#EAE4D9] rounded-none flex items-center justify-between shadow-2xs">
+          <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-3">
               <div className="w-8 h-8 rounded-none bg-emerald-50 border border-emerald-200 text-emerald-800 flex items-center justify-center">
                 <Database className="w-4 h-4" />
@@ -125,9 +125,9 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
           </div>
 
           {/* Redis / BullMQ */}
-          <div className="p-3.5 bg-white border border-[#EAE4D9] rounded-none flex items-center justify-between shadow-2xs">
+          <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none flex items-center justify-between shadow-2xs">
             <div className="flex items-center gap-3">
-              <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#D5CEC2] text-[#57477D] flex items-center justify-center">
+              <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#B6D6D0] text-[#0F766E] flex items-center justify-center">
                 <Activity className="w-4 h-4" />
               </div>
               <div>

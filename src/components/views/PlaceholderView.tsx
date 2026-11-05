@@ -228,7 +228,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
               from reading patient clinical records, FHIR bundles, diagnostic reports, or prescriptions.
               Administrative privileges grant operational oversight and user governance only.
             </p>
-            <div className="flex items-center gap-2 p-3 bg-[#FAF7F2] border border-red-200 rounded-none max-w-md text-left text-xs text-red-800 mb-6 font-mono">
+            <div className="flex items-center gap-2 p-3 bg-[#F0F7F6] border border-red-200 rounded-none max-w-md text-left text-xs text-red-800 mb-6 font-mono">
               <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
               <span>
                 Backend policy assertion <code>assertDenyAdminClinicalAccess()</code> enforces this restriction on every API call.
@@ -267,26 +267,26 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
         <div className="space-y-6">
           {adminOverview && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+              <div className="p-4 bg-white border border-[#D0E5E1] rounded-none">
                 <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Total Users</span>
                 <span className="text-2xl font-editorial-serif font-bold text-[#1A1918]">{adminOverview.totalUsers}</span>
               </div>
-              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+              <div className="p-4 bg-white border border-[#D0E5E1] rounded-none">
                 <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Active Sessions</span>
                 <span className="text-2xl font-editorial-serif font-bold text-emerald-700">{adminOverview.activeSessions}</span>
               </div>
-              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+              <div className="p-4 bg-white border border-[#D0E5E1] rounded-none">
                 <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Total Consents</span>
                 <span className="text-2xl font-editorial-serif font-bold text-[#1A1918]">{adminOverview.totalConsents}</span>
               </div>
-              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+              <div className="p-4 bg-white border border-[#D0E5E1] rounded-none">
                 <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Granted Consents</span>
-                <span className="text-2xl font-editorial-serif font-bold text-[#57477D]">{adminOverview.grantedConsents}</span>
+                <span className="text-2xl font-editorial-serif font-bold text-[#0F766E]">{adminOverview.grantedConsents}</span>
               </div>
             </div>
           )}
 
-          <Card className="rounded-none border-[#EAE4D9]">
+          <Card className="rounded-none border-[#D0E5E1]">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-4">
                 <h4 className="text-base font-editorial-serif font-bold text-[#1A1918]">Security Audit Trail (DAL Verified)</h4>
@@ -295,7 +295,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
               {dataLoading ? (
                 <div className="py-8 text-center text-xs text-[#69655E]">Loading audit trail...</div>
               ) : auditLogs.length > 0 ? (
-                <div className="divide-y divide-[#EAE4D9] overflow-x-auto">
+                <div className="divide-y divide-[#D0E5E1] overflow-x-auto">
                   {(auditLogs as Array<{
                     _id: string;
                     action: string;
@@ -339,7 +339,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* Authorized Laboratory View: Test Orders */}
       {!isLabBlocked && user?.role === "laboratory" && route === "labs" && (
-        <Card className="rounded-none border-[#EAE4D9]">
+        <Card className="rounded-none border-[#D0E5E1]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-base font-editorial-serif font-bold text-[#1A1918]">
@@ -350,7 +350,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
             {dataLoading ? (
               <div className="py-8 text-center text-xs text-[#69655E]">Loading test orders...</div>
             ) : labOrders.length > 0 ? (
-              <div className="divide-y divide-[#EAE4D9]">
+              <div className="divide-y divide-[#D0E5E1]">
                 {(labOrders as Array<{
                   orderId: string;
                   patientName: string;
@@ -384,7 +384,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* Authorized Pharmacy View: Prescriptions */}
       {!isPharmacyBlocked && user?.role === "pharmacy" && route === "prescriptions" && (
-        <Card className="rounded-none border-[#EAE4D9]">
+        <Card className="rounded-none border-[#D0E5E1]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
               <h4 className="text-base font-editorial-serif font-bold text-[#1A1918]">
@@ -395,7 +395,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
             {dataLoading ? (
               <div className="py-8 text-center text-xs text-[#69655E]">Loading prescriptions...</div>
             ) : prescriptions.length > 0 ? (
-              <div className="divide-y divide-[#EAE4D9]">
+              <div className="divide-y divide-[#D0E5E1]">
                 {(prescriptions as Array<{
                   prescriptionId: string;
                   patientName: string;
@@ -425,9 +425,9 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* Default Architecture Preview for other screens */}
       {!isAdminBlocked && !isLabBlocked && !isPharmacyBlocked && !(user?.role === "admin" && route === "access") && !(user?.role === "laboratory" && route === "labs") && !(user?.role === "pharmacy" && route === "prescriptions") && (
-        <Card className="rounded-none border-[#EAE4D9]">
+        <Card className="rounded-none border-[#D0E5E1]">
           <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] mb-4">
+            <div className="w-14 h-14 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E] mb-4">
               <Icon className="w-6 h-6" />
             </div>
 
@@ -438,8 +438,8 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
               {config.details}
             </p>
 
-            <div className="flex items-center gap-2 p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none max-w-lg text-left text-xs text-[#5C574F] mb-6">
-              <Info className="w-4 h-4 text-[#57477D] shrink-0" />
+            <div className="flex items-center gap-2 p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none max-w-lg text-left text-xs text-[#5C574F] mb-6">
+              <Info className="w-4 h-4 text-[#0F766E] shrink-0" />
               <span>
                 Backend authorization policies are active. You are authenticated as{" "}
                 <strong className="text-[#1A1918]">{user ? `${user.name} (${user.role})` : "Guest"}</strong>.

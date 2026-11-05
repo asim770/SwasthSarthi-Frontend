@@ -123,7 +123,7 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#F0F7F6] border border-[#D0E5E1]">
           <div>
             <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
               Patient ID <span className="text-red-700">*</span>
@@ -134,7 +134,7 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
               placeholder="e.g. SS-PAT-000001"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -146,7 +146,7 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
               type="date"
               value={nextReviewDate}
               onChange={(e) => setNextReviewDate(e.target.value)}
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -161,7 +161,7 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
             value={assessment}
             onChange={(e) => setAssessment(e.target.value)}
             placeholder="Evaluative summary of current health status..."
-            className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+            className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
           />
         </div>
 
@@ -174,7 +174,7 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
             value={observations}
             onChange={(e) => setObservations(e.target.value)}
             placeholder="Measurable findings, comparative vitals, observations..."
-            className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+            className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
           />
         </div>
 
@@ -188,7 +188,7 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
               value={treatmentProgress}
               onChange={(e) => setTreatmentProgress(e.target.value)}
               placeholder="Adherence, response to medications..."
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -201,12 +201,12 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
               value={recommendations}
               onChange={(e) => setRecommendations(e.target.value)}
               placeholder="Recommended actions or adjustments..."
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-[#EAE4D9]">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#D0E5E1]">
           <Button
             type="button"
             variant="secondary"

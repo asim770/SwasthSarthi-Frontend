@@ -325,9 +325,9 @@ export const ConsentManagementView: React.FC = () => {
 
       {/* Role Context Notification Banner */}
       {user?.role === "patient" && (
-        <div className="p-3.5 bg-white border border-[#EAE4D9] flex items-center justify-between gap-3 text-xs text-[#191817]">
+        <div className="p-3.5 bg-white border border-[#D0E5E1] flex items-center justify-between gap-3 text-xs text-[#191817]">
           <div className="flex items-center gap-2.5">
-            <ShieldCheck className="w-4 h-4 text-[#57477D] shrink-0" />
+            <ShieldCheck className="w-4 h-4 text-[#0F766E] shrink-0" />
             <span className="text-[#5C574F]">
               Your health data is protected. Healthcare providers can only access records with your active, explicit consent.
             </span>
@@ -336,8 +336,8 @@ export const ConsentManagementView: React.FC = () => {
       )}
 
       {user?.role === "doctor" && (
-        <div className="p-3.5 bg-white border border-[#EAE4D9] flex items-center gap-2.5 text-xs text-[#5C574F]">
-          <Lock className="w-4 h-4 text-[#57477D] shrink-0" />
+        <div className="p-3.5 bg-white border border-[#D0E5E1] flex items-center gap-2.5 text-xs text-[#5C574F]">
+          <Lock className="w-4 h-4 text-[#0F766E] shrink-0" />
           <span>
             Consent requests sent to patients must be approved before medical records become accessible.
           </span>
@@ -354,7 +354,7 @@ export const ConsentManagementView: React.FC = () => {
       )}
 
       {/* Tabs Filter Bar */}
-      <div className="flex items-center gap-1.5 border-b border-[#EAE4D9] overflow-x-auto pb-1 text-xs">
+      <div className="flex items-center gap-1.5 border-b border-[#D0E5E1] overflow-x-auto pb-1 text-xs">
         {[
           { key: "ALL", label: "All Consents", count: counts.ALL },
           { key: "PENDING", label: "Pending", count: counts.PENDING },
@@ -369,7 +369,7 @@ export const ConsentManagementView: React.FC = () => {
             className={`flex items-center gap-2 px-3.5 py-2 rounded-none font-medium transition-colors cursor-pointer shrink-0 border-b-2 -mb-1 ${
               activeTab === tab.key
                 ? "border-[#1A1918] text-[#1A1918] bg-white font-semibold shadow-none"
-                : "border-transparent text-[#69655E] hover:text-[#1A1918] hover:bg-[#FAF7F2]/60"
+                : "border-transparent text-[#69655E] hover:text-[#1A1918] hover:bg-[#F0F7F6]/60"
             }`}
           >
             <span>{tab.label}</span>
@@ -377,8 +377,8 @@ export const ConsentManagementView: React.FC = () => {
               <span
                 className={`px-1.5 py-0.2 rounded-none text-[10px] font-mono ${
                   activeTab === tab.key
-                    ? "bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] font-bold"
-                    : "bg-[#FAF7F2] text-[#8C877D] border border-[#EAE4D9]"
+                    ? "bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] font-bold"
+                    : "bg-[#F0F7F6] text-[#8C877D] border border-[#D0E5E1]"
                 }`}
               >
                 {tab.count}
@@ -391,7 +391,7 @@ export const ConsentManagementView: React.FC = () => {
       {/* Consent Cards List */}
       {loading ? (
         <div className="py-16 text-center text-xs text-[#69655E] flex flex-col items-center justify-center gap-2">
-          <RefreshCw className="w-5 h-5 text-[#57477D] animate-spin" />
+          <RefreshCw className="w-5 h-5 text-[#0F766E] animate-spin" />
           <span>Loading consent permissions...</span>
         </div>
       ) : error ? (
@@ -414,7 +414,7 @@ export const ConsentManagementView: React.FC = () => {
                 : "No consent requests match this status filter."
               : "No practitioner consent artifacts exist under this category."
           }
-          icon={<ShieldCheck className="w-5 h-5 text-[#57477D]" />}
+          icon={<ShieldCheck className="w-5 h-5 text-[#0F766E]" />}
           action={
             user?.role === "doctor" ? (
               <Button
@@ -439,13 +439,13 @@ export const ConsentManagementView: React.FC = () => {
             return (
               <Card
                 key={consent.consentId}
-                className="hover:border-[#D5CEC2] transition-all shadow-none overflow-hidden rounded-none border-[#EAE4D9]"
+                className="hover:border-[#B6D6D0] transition-all shadow-none overflow-hidden rounded-none border-[#D0E5E1]"
               >
                 <div className="p-5 flex flex-col md:flex-row md:items-start justify-between gap-4">
                   <div className="space-y-3 flex-1 min-w-0">
                     {/* Header line: ID, Status, Version */}
                     <div className="flex flex-wrap items-center gap-2.5">
-                      <span className="font-mono text-xs font-bold text-[#1A1918] bg-[#FAF7F2] px-2.5 py-1 rounded-none border border-[#EAE4D9]">
+                      <span className="font-mono text-xs font-bold text-[#1A1918] bg-[#F0F7F6] px-2.5 py-1 rounded-none border border-[#D0E5E1]">
                         {consent.consentId}
                       </span>
                       {renderStatusBadge(consent)}
@@ -499,7 +499,7 @@ export const ConsentManagementView: React.FC = () => {
                         ).map((cat) => (
                           <span
                             key={cat}
-                            className="px-2.5 py-0.5 rounded-none text-[11px] font-medium bg-[#FAF7F2] text-[#1A1918] border border-[#EAE4D9]"
+                            className="px-2.5 py-0.5 rounded-none text-[11px] font-medium bg-[#F0F7F6] text-[#1A1918] border border-[#D0E5E1]"
                           >
                             {cat}
                           </span>
@@ -541,7 +541,7 @@ export const ConsentManagementView: React.FC = () => {
                   </div>
 
                   {/* Actions Column */}
-                  <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-start gap-2 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#EAE4D9]">
+                  <div className="flex flex-row md:flex-col items-center md:items-end justify-between md:justify-start gap-2 shrink-0 pt-2 md:pt-0 border-t md:border-t-0 border-[#D0E5E1]">
                     {/* Patient Actions */}
                     {user?.role === "patient" && isPending && (
                       <Button
@@ -624,7 +624,7 @@ export const ConsentManagementView: React.FC = () => {
         >
           <div className="space-y-4 text-xs">
             {/* Requester Info */}
-            <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none space-y-1.5">
+            <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none space-y-1.5">
               <div className="flex justify-between">
                 <span className="text-[#69655E]">Requesting Doctor:</span>
                 <span className="font-bold text-[#1A1918]">
@@ -639,7 +639,7 @@ export const ConsentManagementView: React.FC = () => {
               </div>
               <div className="flex justify-between">
                 <span className="text-[#69655E]">Clinical Purpose:</span>
-                <span className="font-semibold text-[#57477D] font-editorial-serif">{selectedConsent.purpose}</span>
+                <span className="font-semibold text-[#0F766E] font-editorial-serif">{selectedConsent.purpose}</span>
               </div>
             </div>
 
@@ -653,13 +653,13 @@ export const ConsentManagementView: React.FC = () => {
                   You can deselect any categories you do not wish to disclose.
                 </span>
               </div>
-              <div className="space-y-2 border border-[#EAE4D9] rounded-none p-3 bg-white">
+              <div className="space-y-2 border border-[#D0E5E1] rounded-none p-3 bg-white">
                 {selectedConsent.hiTypes.map((type) => {
                   const isChecked = selectedApprovedTypes.includes(type);
                   return (
                     <label
                       key={type}
-                      className="flex items-center justify-between p-2 rounded-none hover:bg-[#FAF7F2] cursor-pointer"
+                      className="flex items-center justify-between p-2 rounded-none hover:bg-[#F0F7F6] cursor-pointer"
                     >
                       <div className="flex items-center gap-2.5">
                         <input
@@ -686,7 +686,7 @@ export const ConsentManagementView: React.FC = () => {
             </div>
 
             {/* Date bounds */}
-            <div className="grid grid-cols-2 gap-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+            <div className="grid grid-cols-2 gap-3 p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
               <div>
                 <span className="text-[#69655E] block mb-0.5 font-mono text-[11px]">Records Date Range:</span>
                 <span className="font-semibold text-[#1A1918] font-mono">
@@ -696,7 +696,7 @@ export const ConsentManagementView: React.FC = () => {
               </div>
               <div>
                 <span className="text-[#69655E] block mb-0.5 font-mono text-[11px]">Access Expiry:</span>
-                <span className="font-semibold text-[#57477D] font-mono">
+                <span className="font-semibold text-[#0F766E] font-mono">
                   {new Date(selectedConsent.expiresAt).toLocaleDateString()}
                 </span>
               </div>
@@ -793,7 +793,7 @@ export const ConsentManagementView: React.FC = () => {
             ) : decisionHistory.length === 0 ? (
               <div className="py-8 text-center text-[#69655E]">No decision events recorded.</div>
             ) : (
-              <div className="divide-y divide-[#EAE4D9]">
+              <div className="divide-y divide-[#D0E5E1]">
                 {decisionHistory.map((entry, idx) => (
                   <div key={idx} className="py-3 flex items-start gap-3">
                     <div
@@ -803,7 +803,7 @@ export const ConsentManagementView: React.FC = () => {
                           : entry.action === "DENIED"
                           ? "bg-red-100 text-red-800"
                           : entry.action === "REVOKED"
-                          ? "bg-[#FAF7F2] text-[#1A1918] border border-[#EAE4D9]"
+                          ? "bg-[#F0F7F6] text-[#1A1918] border border-[#D0E5E1]"
                           : "bg-purple-100 text-purple-800"
                       }`}
                     >
@@ -820,14 +820,14 @@ export const ConsentManagementView: React.FC = () => {
                         Actor: <strong className="text-[#1A1918]">{entry.actorName}</strong> ({entry.actorRole})
                       </p>
                       {entry.note && (
-                        <p className="text-[#5C574F] italic mt-1 bg-[#FAF7F2] p-2 rounded-none border border-[#EAE4D9]">
+                        <p className="text-[#5C574F] italic mt-1 bg-[#F0F7F6] p-2 rounded-none border border-[#D0E5E1]">
                           &quot;{entry.note}&quot;
                         </p>
                       )}
                       {entry.approvedHiTypes && entry.approvedHiTypes.length > 0 && (
                         <div className="mt-1 flex flex-wrap gap-1">
                           {entry.approvedHiTypes.map((t) => (
-                            <span key={t} className="px-1.5 py-0.2 bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] rounded-none text-[10px] font-mono">
+                            <span key={t} className="px-1.5 py-0.2 bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] rounded-none text-[10px] font-mono">
                               {t}
                             </span>
                           ))}
@@ -840,7 +840,7 @@ export const ConsentManagementView: React.FC = () => {
             )}
 
             {selectedConsent.signature && (
-              <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none font-mono text-[10px] text-[#69655E] break-all">
+              <div className="p-2.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none font-mono text-[10px] text-[#69655E] break-all">
                 <span className="font-bold block text-[#1A1918]">Digital Consent Signature:</span>
                 {selectedConsent.signature}
               </div>
@@ -893,7 +893,7 @@ export const ConsentManagementView: React.FC = () => {
             <select
               value={selectedPatientId}
               onChange={(e) => setSelectedPatientId(e.target.value)}
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none text-xs bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none text-xs bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
               required
             >
               {discoverablePatients.map((p) => (
@@ -928,12 +928,12 @@ export const ConsentManagementView: React.FC = () => {
                     setRequestHiTypes(ALL_HI_TYPES.map((t) => t.id));
                   }
                 }}
-                className="text-[11px] text-[#57477D] hover:underline cursor-pointer font-mono"
+                className="text-[11px] text-[#0F766E] hover:underline cursor-pointer font-mono"
               >
                 {requestHiTypes.length === ALL_HI_TYPES.length ? "Deselect All" : "Select All"}
               </button>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-[#EAE4D9] rounded-none p-3 bg-[#FAF7F2]">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 border border-[#D0E5E1] rounded-none p-3 bg-[#F0F7F6]">
               {ALL_HI_TYPES.map((t) => (
                 <label key={t.id} className="flex items-center gap-2 cursor-pointer">
                   <input
@@ -990,7 +990,7 @@ export const ConsentManagementView: React.FC = () => {
                   className={`px-3 py-1.5 rounded-none border text-xs font-semibold cursor-pointer ${
                     requestValidityDays === d
                       ? "bg-[#1A1918] text-white border-[#1A1918]"
-                      : "bg-[#FAF7F2] text-[#69655E] border-[#D5CEC2] hover:bg-[#EAE4D9]"
+                      : "bg-[#F0F7F6] text-[#69655E] border-[#B6D6D0] hover:bg-[#D0E5E1]"
                   }`}
                 >
                   {d} Days
@@ -1000,8 +1000,8 @@ export const ConsentManagementView: React.FC = () => {
           </div>
 
           {/* Disclaimer */}
-          <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-[#5C574F] flex items-start gap-2">
-            <Lock className="w-4 h-4 text-[#57477D] shrink-0 mt-0.5" />
+          <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-[#5C574F] flex items-start gap-2">
+            <Lock className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
             <p className="leading-relaxed text-[11px]">
               Submitting this request does <strong>not</strong> grant immediate access. A pending consent
               artifact will be placed in the patient’s inbox for verification and approval.

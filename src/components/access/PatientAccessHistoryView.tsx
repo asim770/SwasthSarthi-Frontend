@@ -118,20 +118,20 @@ export function PatientAccessHistoryView() {
           </span>
         </div>
 
-        <div className="bg-white rounded-none border border-[#EAE4D9] shadow-[0_4px_20px_rgba(26,25,24,0.04)] overflow-hidden">
+        <div className="bg-white rounded-none border border-[#D0E5E1] shadow-[0_4px_20px_rgba(26,25,24,0.04)] overflow-hidden">
           {loading ? (
             <div className="p-12 text-center text-[#7A746B] text-xs space-y-2">
-              <RefreshCw className="w-5 h-5 animate-spin mx-auto text-[#57477D]" />
+              <RefreshCw className="w-5 h-5 animate-spin mx-auto text-[#0F766E]" />
               <p>Loading access history...</p>
             </div>
           ) : events.length === 0 ? (
             <EmptyState
               title="No Access Events Recorded"
               description="Events will appear here when healthcare practitioners or medical facilities request consent or access your clinical timeline."
-              icon={<Clock className="w-5 h-5 text-[#57477D]" />}
+              icon={<Clock className="w-5 h-5 text-[#0F766E]" />}
             />
           ) : (
-            <div className="divide-y divide-[#EAE4D9]">
+            <div className="divide-y divide-[#D0E5E1]">
               {events.map((evt) => {
                 const actor = evt.actorName || evt.accessorName;
                 const role = evt.actorRole || evt.accessorRole;
@@ -141,7 +141,7 @@ export function PatientAccessHistoryView() {
                 return (
                   <div
                     key={evt.eventId}
-                    className="p-4 sm:p-5 hover:bg-[#FAF7F2] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
+                    className="p-4 sm:p-5 hover:bg-[#F0F7F6] transition-colors flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs"
                   >
                     <div className="space-y-1.5 max-w-xl">
                       <div className="flex items-center gap-2 flex-wrap">
@@ -176,7 +176,7 @@ export function PatientAccessHistoryView() {
                         )}
                         {resource && resource.trim().length > 0 && (
                           <span className="text-[#7A746B]">
-                            Scope: <span className="font-mono text-[#57477D] font-semibold">{resource}</span>
+                            Scope: <span className="font-mono text-[#0F766E] font-semibold">{resource}</span>
                           </span>
                         )}
                       </div>
@@ -212,8 +212,8 @@ export function PatientAccessHistoryView() {
       </div>
 
       {/* Security Guarantee Footer */}
-      <div className="p-3.5 bg-white border border-[#EAE4D9] text-xs text-[#5C574F] flex items-center gap-2.5">
-        <ShieldCheck className="w-4 h-4 text-[#57477D] shrink-0" />
+      <div className="p-3.5 bg-white border border-[#D0E5E1] text-xs text-[#5C574F] flex items-center gap-2.5">
+        <ShieldCheck className="w-4 h-4 text-[#0F766E] shrink-0" />
         <span>
           All clinical record access inquiries and consent authorizations are immutably logged in real time. Your medical data cannot be accessed without explicit electronic permission.
         </span>

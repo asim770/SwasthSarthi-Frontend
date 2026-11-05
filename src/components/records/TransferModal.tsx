@@ -187,10 +187,10 @@ export const TransferModal: React.FC<TransferModalProps> = ({
       <div className="space-y-4 py-1">
         {/* Active Consent Context Banner */}
         {activeConsent ? (
-          <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs space-y-1.5 shadow-none">
+          <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs space-y-1.5 shadow-none">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-1.5 font-semibold text-[#1A1918]">
-                <ShieldCheck className="w-4 h-4 text-[#57477D]" />
+                <ShieldCheck className="w-4 h-4 text-[#0F766E]" />
                 <span>Authorized under Consent #{activeConsent.consentId}</span>
               </div>
               <Badge variant="success" size="sm">ACTIVE &amp; VALID</Badge>
@@ -236,8 +236,8 @@ export const TransferModal: React.FC<TransferModalProps> = ({
                 onClick={() => setSelectedHipId(hip.id)}
                 className={`p-3 rounded-none border text-left transition-all cursor-pointer ${
                   selectedHipId === hip.id
-                    ? "border-[#1A1918] bg-[#FAF7F2] shadow-none ring-1 ring-[#1A1918]"
-                    : "border-[#EAE4D9] hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/60 bg-white"
+                    ? "border-[#1A1918] bg-[#F0F7F6] shadow-none ring-1 ring-[#1A1918]"
+                    : "border-[#D0E5E1] hover:border-[#B6D6D0] hover:bg-[#F0F7F6]/60 bg-white"
                 }`}
               >
                 <div className="flex items-center justify-between mb-1">
@@ -266,7 +266,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({
             </span>
             {loadingContexts && (
               <span className="flex items-center gap-1 text-[11px] text-[#69655E] font-mono">
-                <Loader2 className="w-3 h-3 animate-spin text-[#57477D]" />
+                <Loader2 className="w-3 h-3 animate-spin text-[#0F766E]" />
                 Discovering care contexts...
               </span>
             )}
@@ -277,18 +277,18 @@ export const TransferModal: React.FC<TransferModalProps> = ({
               {relevantContexts.map((ctx) => (
                 <div
                   key={ctx.careContextId}
-                  className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs flex items-center justify-between shadow-none"
+                  className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs flex items-center justify-between shadow-none"
                 >
                   <div>
                     <div className="font-semibold text-[#1A1918] flex items-center gap-2">
                       <span>{ctx.description}</span>
-                      <code className="text-[10px] text-[#57477D] bg-white border border-[#EAE4D9] px-1.5 py-0.5 rounded-none font-mono">
+                      <code className="text-[10px] text-[#0F766E] bg-white border border-[#D0E5E1] px-1.5 py-0.5 rounded-none font-mono">
                         {ctx.careContextId}
                       </code>
                     </div>
                     <div className="text-[11px] text-[#5C574F] flex items-center gap-3 mt-1.5 font-mono">
                       <span className="flex items-center gap-1">
-                        <Layers className="w-3 h-3 text-[#57477D]" />
+                        <Layers className="w-3 h-3 text-[#0F766E]" />
                         {ctx.resourceCount} records ({ctx.availableHiTypes.join(", ")})
                       </span>
                       <span className="flex items-center gap-1">
@@ -302,7 +302,7 @@ export const TransferModal: React.FC<TransferModalProps> = ({
               ))}
             </div>
           ) : (
-            <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#69655E] text-center font-mono">
+            <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs text-[#69655E] text-center font-mono">
               {loadingContexts
                 ? "Probing simulated ABDM network..."
                 : `Care contexts registered under ${selectedHipId} for ${patientName}.`}

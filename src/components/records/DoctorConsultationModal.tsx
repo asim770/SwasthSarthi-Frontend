@@ -206,7 +206,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
         )}
 
         {/* Patient ID and Consultation Date */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#F0F7F6] border border-[#D0E5E1]">
           <div>
             <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
               Patient ID <span className="text-red-700">*</span>
@@ -217,7 +217,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
               placeholder="e.g. SS-PAT-000001"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -230,7 +230,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               required
               value={consultationDate}
               onChange={(e) => setConsultationDate(e.target.value)}
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -247,7 +247,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
               placeholder="Patient reported symptoms..."
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -261,7 +261,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={clinicalFindings}
               onChange={(e) => setClinicalFindings(e.target.value)}
               placeholder="Physical examination, vitals, observations..."
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -278,7 +278,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={diagnosis}
               onChange={(e) => setDiagnosis(e.target.value)}
               placeholder="e.g. Stage 1 Essential Hypertension"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -292,22 +292,22 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={treatmentPlan}
               onChange={(e) => setTreatmentPlan(e.target.value)}
               placeholder="e.g. Diet modification and pharmacological therapy"
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
         {/* Prescribed Medicines Section */}
-        <div className="border border-[#EAE4D9] p-3 bg-white space-y-2.5">
-          <div className="flex items-center justify-between pb-1.5 border-b border-[#EAE4D9]">
+        <div className="border border-[#D0E5E1] p-3 bg-white space-y-2.5">
+          <div className="flex items-center justify-between pb-1.5 border-b border-[#D0E5E1]">
             <div className="flex items-center gap-1.5 font-bold text-[#1A1918]">
-              <Pill className="w-3.5 h-3.5 text-[#57477D]" />
+              <Pill className="w-3.5 h-3.5 text-[#0F766E]" />
               <span className="font-mono uppercase tracking-wider text-[11px]">Prescribed Medications (E-Prescription)</span>
             </div>
             <button
               type="button"
               onClick={handleAddMedicine}
-              className="flex items-center gap-1 px-2.5 py-1 bg-[#FAF7F2] hover:bg-[#EAE4D9] text-[#57477D] border border-[#EAE4D9] font-mono text-[10px] font-semibold cursor-pointer"
+              className="flex items-center gap-1 px-2.5 py-1 bg-[#F0F7F6] hover:bg-[#D0E5E1] text-[#0F766E] border border-[#D0E5E1] font-mono text-[10px] font-semibold cursor-pointer"
             >
               <Plus className="w-3 h-3" />
               <span>Add Medicine</span>
@@ -317,7 +317,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
           {medicines.map((med, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-[#FAF7F2] border border-[#EAE4D9] items-center"
+              className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-[#F0F7F6] border border-[#D0E5E1] items-center"
             >
               <div className="sm:col-span-3">
                 <input
@@ -325,7 +325,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Medicine Name"
                   value={med.name}
                   onChange={(e) => handleMedicineChange(index, "name", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white font-semibold text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white font-semibold text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -334,7 +334,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Dosage (40mg)"
                   value={med.dosage}
                   onChange={(e) => handleMedicineChange(index, "dosage", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-3">
@@ -343,7 +343,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Frequency (OD / BD)"
                   value={med.frequency}
                   onChange={(e) => handleMedicineChange(index, "frequency", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-3">
@@ -352,7 +352,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Instructions"
                   value={med.instructions}
                   onChange={(e) => handleMedicineChange(index, "instructions", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-1 text-center">
@@ -370,10 +370,10 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
         </div>
 
         {/* Recommended Laboratory Tests */}
-        <div className="border border-[#EAE4D9] p-3 bg-white space-y-2">
-          <div className="flex items-center justify-between pb-1.5 border-b border-[#EAE4D9]">
+        <div className="border border-[#D0E5E1] p-3 bg-white space-y-2">
+          <div className="flex items-center justify-between pb-1.5 border-b border-[#D0E5E1]">
             <div className="flex items-center gap-1.5 font-bold text-[#1A1918]">
-              <FlaskConical className="w-3.5 h-3.5 text-[#57477D]" />
+              <FlaskConical className="w-3.5 h-3.5 text-[#0F766E]" />
               <span className="font-mono uppercase tracking-wider text-[11px]">Recommended Diagnostic Orders</span>
             </div>
           </div>
@@ -390,7 +390,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   handleAddTest();
                 }
               }}
-              className="flex-1 px-3 py-1.5 text-xs border border-[#D5CEC2] bg-[#FAF7F2] text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+              className="flex-1 px-3 py-1.5 text-xs border border-[#B6D6D0] bg-[#F0F7F6] text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
             />
             <Button
               type="button"
@@ -407,13 +407,13 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
             {tests.map((testName, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#FAF7F2] border border-[#EAE4D9] text-[#57477D] font-mono text-xs font-semibold"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] font-mono text-xs font-semibold"
               >
                 <span>{testName}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveTest(i)}
-                  className="text-[#57477D] hover:text-red-700 cursor-pointer font-bold"
+                  className="text-[#0F766E] hover:text-red-700 cursor-pointer font-bold"
                 >
                   ×
                 </button>
@@ -432,7 +432,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               type="date"
               value={followUpDate}
               onChange={(e) => setFollowUpDate(e.target.value)}
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
@@ -445,12 +445,12 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={clinicalNotes}
               onChange={(e) => setClinicalNotes(e.target.value)}
               placeholder="Special instructions or precautions..."
-              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+              className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-[#F0F7F6] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-[#EAE4D9]">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#D0E5E1]">
           <Button
             type="button"
             variant="secondary"

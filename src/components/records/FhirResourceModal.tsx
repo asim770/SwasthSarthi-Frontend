@@ -94,7 +94,7 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
     >
       <div className="space-y-3">
         {/* Tab navigation */}
-        <div className="flex items-center gap-1 border-b border-[#EAE4D9] text-xs font-semibold pt-1">
+        <div className="flex items-center gap-1 border-b border-[#D0E5E1] text-xs font-semibold pt-1">
           <button
             onClick={() => setActiveTab("clinical")}
             className={`pb-2.5 px-3.5 border-b-2 transition-colors cursor-pointer ${
@@ -134,7 +134,7 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
           {activeTab === "clinical" && (
             <div className="space-y-4 text-xs">
               {/* Summary Block */}
-              <div className="p-4 bg-[#FAF7F2] rounded-none border border-[#EAE4D9]">
+              <div className="p-4 bg-[#F0F7F6] rounded-none border border-[#D0E5E1]">
                 <span className="text-[11px] font-bold uppercase tracking-wider text-[#69655E] block mb-1 font-mono">
                   Clinical Summary & Observations
                 </span>
@@ -145,8 +145,8 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
 
               {/* Attributes Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
-                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
+                <div className="p-3 bg-white border border-[#D0E5E1] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E] shrink-0">
                     <Calendar className="w-4 h-4" />
                   </div>
                   <div>
@@ -155,8 +155,8 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
-                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
+                <div className="p-3 bg-white border border-[#D0E5E1] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E] shrink-0">
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div>
@@ -167,8 +167,8 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
-                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
+                <div className="p-3 bg-white border border-[#D0E5E1] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E] shrink-0">
                     <User className="w-4 h-4" />
                   </div>
                   <div>
@@ -177,8 +177,8 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
                   </div>
                 </div>
 
-                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
-                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
+                <div className="p-3 bg-white border border-[#D0E5E1] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E] shrink-0">
                     <ShieldCheck className="w-4 h-4" />
                   </div>
                   <div>
@@ -190,13 +190,13 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
 
               {/* Extra details if available */}
               {record.details && Object.keys(record.details).length > 0 && (
-                <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+                <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none">
                   <span className="text-[11px] font-bold text-[#1A1918] block mb-2 font-mono uppercase tracking-wider">
                     Extracted Diagnostic Metrics
                   </span>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {Object.entries(record.details).map(([k, v]) => (
-                      <div key={k} className="p-2.5 bg-white rounded-none border border-[#EAE4D9] text-[11px] shadow-none">
+                      <div key={k} className="p-2.5 bg-white rounded-none border border-[#D0E5E1] text-[11px] shadow-none">
                         <span className="text-[#69655E] block text-[10px] font-mono">{k}</span>
                         <span className="font-semibold text-[#1A1918] font-mono">{String(v ?? "—")}</span>
                       </div>
@@ -221,7 +221,7 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
                 </Button>
               </div>
 
-              <div className="bg-[#1A1918] text-emerald-400 p-4 rounded-none font-mono text-xs overflow-x-auto max-h-[360px] shadow-none leading-relaxed border border-[#EAE4D9]">
+              <div className="bg-[#1A1918] text-emerald-400 p-4 rounded-none font-mono text-xs overflow-x-auto max-h-[360px] shadow-none leading-relaxed border border-[#D0E5E1]">
                 <pre>{JSON.stringify(fhirPayload, null, 2)}</pre>
               </div>
             </div>
@@ -229,15 +229,15 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
 
           {activeTab === "provenance" && (
             <div className="space-y-3 text-xs">
-              <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#57477D] font-semibold font-mono">
-                  <Sparkles className="w-4 h-4 text-[#57477D]" />
+              <div className="p-3.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none flex items-center justify-between">
+                <div className="flex items-center gap-2 text-[#0F766E] font-semibold font-mono">
+                  <Sparkles className="w-4 h-4 text-[#0F766E]" />
                   <span>Synthetic Demonstration Resource</span>
                 </div>
                 <Badge variant="purple" size="sm">Mock ABDM Gateway</Badge>
               </div>
 
-              <div className="divide-y divide-[#EAE4D9] border border-[#EAE4D9] rounded-none bg-white overflow-hidden text-[#5C574F]">
+              <div className="divide-y divide-[#D0E5E1] border border-[#D0E5E1] rounded-none bg-white overflow-hidden text-[#5C574F]">
                 <div className="p-3 flex justify-between items-center">
                   <span className="text-[#69655E] font-mono">Resource Identifier</span>
                   <code className="font-mono text-[#1A1918]">{record.recordId}</code>

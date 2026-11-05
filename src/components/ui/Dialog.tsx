@@ -59,10 +59,10 @@ export const Dialog: React.FC<DialogProps> = ({
         role="dialog"
         aria-modal="true"
         aria-labelledby="dialog-title"
-        className={`relative w-full ${maxWidthStyles[maxWidth]} bg-white rounded-none shadow-[0_16px_48px_rgba(26,25,24,0.14)] border border-[#EAE4D9] z-10 overflow-hidden transform transition-all`}
+        className={`relative w-full ${maxWidthStyles[maxWidth]} bg-white rounded-none shadow-[0_16px_48px_rgba(26,25,24,0.14)] border border-[#D0E5E1] z-10 overflow-hidden transform transition-all`}
       >
         {/* Header */}
-        <div className="flex items-start justify-between p-5 pb-4 border-b border-[#EAE4D9]">
+        <div className="flex items-start justify-between p-5 pb-4 border-b border-[#D0E5E1]">
           <div>
             <h2 id="dialog-title" className="text-base font-editorial-serif font-bold text-[#191817]">
               {title}
@@ -76,7 +76,7 @@ export const Dialog: React.FC<DialogProps> = ({
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="text-[#7A746B] hover:text-[#191817] rounded-none p-1 hover:bg-[#FAF7F2] transition-colors cursor-pointer border border-transparent hover:border-[#EAE4D9]"
+            className="text-[#7A746B] hover:text-[#191817] rounded-none p-1 hover:bg-[#F0F7F6] transition-colors cursor-pointer border border-transparent hover:border-[#D0E5E1]"
           >
             <X className="w-4 h-4" />
           </button>
@@ -89,7 +89,7 @@ export const Dialog: React.FC<DialogProps> = ({
 
         {/* Footer */}
         {footer && (
-          <div className="p-4 bg-[#FAF7F2] border-t border-[#EAE4D9] flex items-center justify-end gap-2.5">
+          <div className="p-4 bg-[#F0F7F6] border-t border-[#D0E5E1] flex items-center justify-end gap-2.5">
             {footer}
           </div>
         )}

@@ -127,10 +127,10 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Order Context Strip */}
-        <div className="bg-[#FAF7F2] border border-[#EAE4D9] rounded-none p-3 text-xs text-[#5C574F] flex flex-wrap gap-x-6 gap-y-2">
+        <div className="bg-[#F0F7F6] border border-[#D0E5E1] rounded-none p-3 text-xs text-[#5C574F] flex flex-wrap gap-x-6 gap-y-2">
           <div>
             <span className="text-[#69655E] font-mono">Order ID:</span>{" "}
-            <span className="font-mono font-bold text-[#57477D]">{order.orderId}</span>
+            <span className="font-mono font-bold text-[#0F766E]">{order.orderId}</span>
           </div>
           <div>
             <span className="text-[#69655E] font-mono">Patient:</span>{" "}
@@ -148,7 +148,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                   ? "bg-rose-100 text-rose-800 border border-rose-300"
                   : order.priority === "URGENT"
                   ? "bg-amber-100 text-amber-800 border border-amber-300"
-                  : "bg-white text-[#57477D] border border-[#EAE4D9]"
+                  : "bg-white text-[#0F766E] border border-[#D0E5E1]"
               }`}
             >
               {order.priority}
@@ -180,7 +180,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
+            className="w-full px-3.5 py-2.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#F0F7F6]"
           />
         </div>
 
@@ -188,13 +188,13 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
         <div>
           <div className="flex items-center justify-between mb-2">
             <label className="text-xs font-semibold text-[#1A1918] flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-[#57477D]" />
+              <Activity className="w-3.5 h-3.5 text-[#0F766E]" />
               Discrete FHIR Observations / Measured Values ({observations.length})
             </label>
             <button
               type="button"
               onClick={handleAddObservation}
-              className="inline-flex items-center gap-1 text-xs text-[#57477D] hover:text-[#1A1918] font-mono font-semibold cursor-pointer"
+              className="inline-flex items-center gap-1 text-xs text-[#0F766E] hover:text-[#1A1918] font-mono font-semibold cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" /> Add Observation
             </button>
@@ -204,7 +204,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
             {observations.map((obs, idx) => (
               <div
                 key={idx}
-                className="p-3 bg-white border border-[#EAE4D9] rounded-none text-xs space-y-2"
+                className="p-3 bg-white border border-[#D0E5E1] rounded-none text-xs space-y-2"
               >
                 <div className="grid grid-cols-12 gap-2">
                   <div className="col-span-5">
@@ -214,7 +214,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                       value={obs.name}
                       onChange={(e) => handleObservationChange(idx, "name", e.target.value)}
                       placeholder="e.g. HbA1c"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#F0F7F6]"
                     />
                   </div>
                   <div className="col-span-3">
@@ -224,7 +224,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                       value={obs.code}
                       onChange={(e) => handleObservationChange(idx, "code", e.target.value)}
                       placeholder="4548-4"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono text-[#1A1918] bg-[#FAF7F2]"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono text-[#1A1918] bg-[#F0F7F6]"
                     />
                   </div>
                   <div className="col-span-2">
@@ -234,7 +234,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                       value={obs.value}
                       onChange={(e) => handleObservationChange(idx, "value", e.target.value)}
                       placeholder="6.2"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono font-semibold text-[#1A1918] bg-[#FAF7F2]"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono font-semibold text-[#1A1918] bg-[#F0F7F6]"
                     />
                   </div>
                   <div className="col-span-2">
@@ -244,7 +244,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                       value={obs.unit || ""}
                       onChange={(e) => handleObservationChange(idx, "unit", e.target.value)}
                       placeholder="%"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#F0F7F6]"
                     />
                   </div>
                 </div>
@@ -257,7 +257,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                       value={obs.referenceRange || ""}
                       onChange={(e) => handleObservationChange(idx, "referenceRange", e.target.value)}
                       placeholder="< 5.7 % (Normal)"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#F0F7F6]"
                     />
                   </div>
                   <div className="col-span-4">
@@ -265,7 +265,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                     <select
                       value={obs.interpretation || "NORMAL"}
                       onChange={(e) => handleObservationChange(idx, "interpretation", e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#FAF7F2] text-[#1A1918] font-mono"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#F0F7F6] text-[#1A1918] font-mono"
                     >
                       <option value="NORMAL">NORMAL</option>
                       <option value="HIGH">HIGH</option>
@@ -302,15 +302,15 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
             rows={3}
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
+            className="w-full px-3.5 py-2.5 text-xs border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#F0F7F6]"
             placeholder="Document laboratory pathologist's final conclusion and diagnostic impression..."
           />
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#EAE4D9]">
+        <div className="flex items-center justify-between pt-3 border-t border-[#D0E5E1]">
           <div className="text-[11px] text-[#69655E] flex items-center gap-1.5">
-            <FlaskConical className="w-3.5 h-3.5 text-[#57477D]" />
+            <FlaskConical className="w-3.5 h-3.5 text-[#0F766E]" />
             <span>Stores FHIR DiagnosticReport into facility records for ABDM discovery.</span>
           </div>
           <div className="flex gap-2">

@@ -25,23 +25,23 @@ export const Badge: React.FC<BadgeProps> = ({
   const variantStyles = {
     success: "bg-emerald-50 text-emerald-800 border-emerald-200",
     warning: "bg-amber-50 text-amber-800 border-amber-200",
-    info: "bg-[#FAF7F2] text-[#57477D] border-[#57477D]/25 font-mono",
-    neutral: "bg-[#FAF7F2] text-[#5C574F] border-[#EAE4D9]",
+    info: "bg-[#F0F7F6] text-[#0F766E] border-[#0F766E]/25 font-mono",
+    neutral: "bg-[#F0F7F6] text-[#5C574F] border-[#D0E5E1]",
     danger: "bg-red-50 text-red-700 border-red-200",
-    teal: "bg-[#57477D]/10 text-[#57477D] border-[#57477D]/30",
-    purple: "bg-[#57477D]/10 text-[#57477D] border-[#57477D]/30",
-    royal: "bg-[#57477D]/10 text-[#57477D] border-[#57477D]/30",
+    teal: "bg-[#0F766E]/10 text-[#0F766E] border-[#0F766E]/30",
+    purple: "bg-[#0F766E]/10 text-[#0F766E] border-[#0F766E]/30",
+    royal: "bg-[#0F766E]/10 text-[#0F766E] border-[#0F766E]/30",
   };
 
   const dotStyles = {
     success: "bg-emerald-600",
     warning: "bg-amber-600",
-    info: "bg-[#57477D]",
+    info: "bg-[#0F766E]",
     neutral: "bg-[#7A746B]",
     danger: "bg-red-600",
-    teal: "bg-[#57477D]",
-    purple: "bg-[#57477D]",
-    royal: "bg-[#57477D]",
+    teal: "bg-[#0F766E]",
+    purple: "bg-[#0F766E]",
+    royal: "bg-[#0F766E]",
   };
 
   return (

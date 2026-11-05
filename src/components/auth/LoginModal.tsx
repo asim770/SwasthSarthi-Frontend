@@ -771,7 +771,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       <div className="space-y-4 font-sans">
         {/* Top Tab Mode Switcher: Sign In vs Sign Up */}
         {!registeredPatient && !registeredPendingApproval && modalMode !== "EMAIL_VERIFICATION" && modalMode !== "DEMO_OTP" && modalMode !== "RESET_PASSWORD" && (
-          <div className="flex p-1 bg-[#FAF7F2] rounded-none border border-[#EAE4D9]">
+          <div className="flex p-1 bg-[#F0F7F6] rounded-none border border-[#D0E5E1]">
             <button
               type="button"
               onClick={() => {
@@ -852,7 +852,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   type="button"
                   disabled={isGoogleLoading}
                   onClick={() => handleGoogleOAuthFallback("login")}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-[#D5CEC2] bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
+                  className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-[#B6D6D0] bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
                 >
                   <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                     <path
@@ -879,11 +879,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
             {/* DIVIDER: OR */}
             <div className="relative flex py-1 items-center">
-              <div className="flex-grow border-t border-[#D5CEC2]"></div>
+              <div className="flex-grow border-t border-[#B6D6D0]"></div>
               <span className="flex-shrink mx-3 text-slate-400 text-xs font-bold uppercase tracking-wider">
                 OR
               </span>
-              <div className="flex-grow border-t border-[#D5CEC2]"></div>
+              <div className="flex-grow border-t border-[#B6D6D0]"></div>
             </div>
 
             {/* OPTION B: PATIENT ID OR EMAIL + PASSWORD FORM */}
@@ -902,7 +902,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     value={passwordIdentifier}
                     onChange={(e) => setPasswordIdentifier(e.target.value)}
                     placeholder="Enter Patient ID or registered email"
-                    className="w-full pl-9 pr-3 py-2 text-xs text-[#1A1918] border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2] font-mono"
+                    className="w-full pl-9 pr-3 py-2 text-xs text-[#1A1918] border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6] font-mono"
                   />
                 </div>
               </div>
@@ -921,7 +921,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     value={loginPasswordValue}
                     onChange={(e) => setLoginPasswordValue(e.target.value)}
                     placeholder="Enter password"
-                    className="w-full pl-9 pr-10 py-2 text-xs text-[#1A1918] border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2]"
+                    className="w-full pl-9 pr-10 py-2 text-xs text-[#1A1918] border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#F0F7F6]"
                   />
                   <button
                     type="button"
@@ -940,7 +940,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     type="checkbox"
                     checked={rememberMe}
                     onChange={(e) => setRememberMe(e.target.checked)}
-                    className="rounded-none border-[#D5CEC2] text-[#57477D] focus:ring-[#1A1918]"
+                    className="rounded-none border-[#B6D6D0] text-[#0F766E] focus:ring-[#1A1918]"
                   />
                   <span>Remember me</span>
                 </label>
@@ -952,7 +952,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     setModalMode("FORGOT_PASSWORD");
                     setErrorMessage(null);
                   }}
-                  className="text-[#57477D] hover:text-[#453763] font-semibold hover:underline cursor-pointer"
+                  className="text-[#0F766E] hover:text-[#0D655E] font-semibold hover:underline cursor-pointer"
                 >
                   Forgot Password?
                 </button>
@@ -986,8 +986,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     onClick={() => setSignupRole("patient")}
                     className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
                       signupRole === "patient"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -995,7 +995,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
                           signupRole === "patient"
                             ? "bg-[#1A1918] text-white"
-                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
                         }`}
                       >
                         <User className="w-4 h-4" />
@@ -1004,7 +1004,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-xs text-[#191817]">Patient</span>
                           {signupRole === "patient" && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                           )}
                         </div>
                         <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
@@ -1019,8 +1019,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     onClick={() => setSignupRole("doctor")}
                     className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
                       signupRole === "doctor"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -1028,7 +1028,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
                           signupRole === "doctor"
                             ? "bg-[#1A1918] text-white"
-                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
                         }`}
                       >
                         <Stethoscope className="w-4 h-4" />
@@ -1037,7 +1037,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-xs text-[#191817]">Doctor</span>
                           {signupRole === "doctor" && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                           )}
                         </div>
                         <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
@@ -1052,8 +1052,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     onClick={() => setSignupRole("laboratory")}
                     className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
                       signupRole === "laboratory"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -1061,7 +1061,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
                           signupRole === "laboratory"
                             ? "bg-[#1A1918] text-white"
-                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
                         }`}
                       >
                         <FlaskConical className="w-4 h-4" />
@@ -1070,7 +1070,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-xs text-[#191817]">Laboratory</span>
                           {signupRole === "laboratory" && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                           )}
                         </div>
                         <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
@@ -1085,8 +1085,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     onClick={() => setSignupRole("pharmacy")}
                     className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
                       signupRole === "pharmacy"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
                     }`}
                   >
                     <div className="flex items-start gap-3">
@@ -1094,7 +1094,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
                           signupRole === "pharmacy"
                             ? "bg-[#1A1918] text-white"
-                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
                         }`}
                       >
                         <Pill className="w-4 h-4" />
@@ -1103,7 +1103,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         <div className="flex items-center justify-between">
                           <span className="font-semibold text-xs text-[#191817]">Pharmacy</span>
                           {signupRole === "pharmacy" && (
-                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E]" />
                           )}
                         </div>
                         <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
@@ -1132,7 +1132,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   <button
                     type="button"
                     onClick={() => setRoleSelectionStep(true)}
-                    className="flex items-center gap-1.5 text-xs font-medium text-[#57477D] hover:text-[#453763] transition-colors cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-medium text-[#0F766E] hover:text-[#0D655E] transition-colors cursor-pointer"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
                     <span>Choose different role</span>
@@ -1149,7 +1149,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           type="button"
                           disabled={isGoogleLoading}
                           onClick={() => handleGoogleOAuthFallback("register")}
-                          className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-[#EAE4D9] bg-white hover:bg-[#FAF7F2] text-[#191817] text-xs font-semibold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
+                          className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-[#D0E5E1] bg-white hover:bg-[#F0F7F6] text-[#191817] text-xs font-semibold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
                         >
                           <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                             <path
@@ -1176,11 +1176,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
                     {/* DIVIDER: OR REGISTER MANUALLY */}
                     <div className="relative flex py-1 items-center">
-                      <div className="flex-grow border-t border-[#EAE4D9]"></div>
+                      <div className="flex-grow border-t border-[#D0E5E1]"></div>
                       <span className="flex-shrink mx-3 text-[#7A746B] text-[10px] font-medium uppercase tracking-wider">
                         OR REGISTER WITH EMAIL
                       </span>
-                      <div className="flex-grow border-t border-[#EAE4D9]"></div>
+                      <div className="flex-grow border-t border-[#D0E5E1]"></div>
                     </div>
 
                     {/* MANUAL PATIENT REGISTRATION FORM */}
@@ -1195,7 +1195,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
                           placeholder="Full name"
-                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                         />
                       </div>
 
@@ -1209,7 +1209,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
                           placeholder="Enter Your Email"
-                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                         />
                       </div>
 
@@ -1226,7 +1226,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                               value={signupPassword}
                               onChange={(e) => setSignupPassword(e.target.value)}
                               placeholder="Password"
-                              className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white pr-8 transition-colors"
+                              className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white pr-8 transition-colors"
                             />
                             <button
                               type="button"
@@ -1249,7 +1249,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             value={signupConfirmPassword}
                             onChange={(e) => setSignupConfirmPassword(e.target.value)}
                             placeholder="Confirm password"
-                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                           />
                         </div>
                       </div>
@@ -1264,7 +1264,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             value={signupPhone}
                             onChange={(e) => setSignupPhone(e.target.value)}
                             placeholder="Enter Mobile number"
-                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                           />
                         </div>
 
@@ -1276,7 +1276,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             type="date"
                             value={signupDob}
                             onChange={(e) => setSignupDob(e.target.value)}
-                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                           />
                         </div>
                       </div>
@@ -1293,7 +1293,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                               onClick={() => setSignupGender(g)}
                               className={`py-1.5 px-3 text-xs border rounded-none transition-all cursor-pointer text-center ${signupGender === g
                                 ? "border-[#1A1918] bg-[#1A1918] text-white font-medium shadow-2xs"
-                                : "border-[#EAE4D9] bg-white text-[#5C574F] hover:bg-[#FAF7F2] hover:text-[#191817]"
+                                : "border-[#D0E5E1] bg-white text-[#5C574F] hover:bg-[#F0F7F6] hover:text-[#191817]"
                                 }`}
                             >
                               {g}
@@ -1334,7 +1334,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
                           placeholder="e.g. Dr. Vikram Seth"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
 
@@ -1348,7 +1348,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
                           placeholder="e.g. dr.vikram@hospital.org"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1364,7 +1364,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={docQualification}
                           onChange={(e) => setDocQualification(e.target.value)}
                           placeholder="e.g. MBBS, MD (Medicine)"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
 
@@ -1378,7 +1378,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={docSpecialization}
                           onChange={(e) => setDocSpecialization(e.target.value)}
                           placeholder="e.g. Cardiology, Internal Medicine"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1394,7 +1394,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={docRegNumber}
                           onChange={(e) => setDocRegNumber(e.target.value)}
                           placeholder="e.g. MCI-2024-8841"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                         />
                       </div>
 
@@ -1408,7 +1408,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={docHospital}
                           onChange={(e) => setDocHospital(e.target.value)}
                           placeholder="e.g. Apollo Care Hospital"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1424,7 +1424,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
                           placeholder="+91 Mobile number"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                         />
                       </div>
 
@@ -1437,7 +1437,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={docAddress}
                           onChange={(e) => setDocAddress(e.target.value)}
                           placeholder="City, State"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1454,7 +1454,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupPassword}
                           onChange={(e) => setSignupPassword(e.target.value)}
                           placeholder="Min 8 chars"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
 
@@ -1468,7 +1468,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
                           placeholder="Re-enter password"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1503,7 +1503,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         value={labOrgName}
                         onChange={(e) => setLabOrgName(e.target.value)}
                         placeholder="e.g. Metropolis Diagnostics Hub"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                       />
                     </div>
 
@@ -1518,7 +1518,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={labRepName}
                           onChange={(e) => setLabRepName(e.target.value)}
                           placeholder="e.g. Dr. Rajesh Kumar"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
 
@@ -1532,7 +1532,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
                           placeholder="e.g. lab@metropolis.com"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1548,7 +1548,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={labRegNumber}
                           onChange={(e) => setLabRegNumber(e.target.value)}
                           placeholder="e.g. NABL-2024-5512"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                         />
                       </div>
 
@@ -1562,7 +1562,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
                           placeholder="+91-80-23000000"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                         />
                       </div>
                     </div>
@@ -1576,7 +1576,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         value={labAddress}
                         onChange={(e) => setLabAddress(e.target.value)}
                         placeholder="Street, City, Pincode"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                       />
                     </div>
 
@@ -1592,7 +1592,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupPassword}
                           onChange={(e) => setSignupPassword(e.target.value)}
                           placeholder="Min 8 chars"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
 
@@ -1606,7 +1606,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
                           placeholder="Re-enter password"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1641,7 +1641,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         value={pharmOrgName}
                         onChange={(e) => setPharmOrgName(e.target.value)}
                         placeholder="e.g. Apollo Care Pharmacy"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                       />
                     </div>
 
@@ -1656,7 +1656,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={pharmRepName}
                           onChange={(e) => setPharmRepName(e.target.value)}
                           placeholder="e.g. Pooja Sharma, R.Ph"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
 
@@ -1670,7 +1670,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
                           placeholder="e.g. rx@apollocare.org"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1686,7 +1686,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={pharmRegNumber}
                           onChange={(e) => setPharmRegNumber(e.target.value)}
                           placeholder="e.g. DL-2024-9912"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                         />
                       </div>
 
@@ -1700,7 +1700,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
                           placeholder="+91-80-26000000"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                         />
                       </div>
                     </div>
@@ -1714,7 +1714,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         value={pharmAddress}
                         onChange={(e) => setPharmAddress(e.target.value)}
                         placeholder="Street, City, Pincode"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                       />
                     </div>
 
@@ -1730,7 +1730,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupPassword}
                           onChange={(e) => setSignupPassword(e.target.value)}
                           placeholder="Min 8 chars"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
 
@@ -1744,7 +1744,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
                           placeholder="Re-enter password"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                         />
                       </div>
                     </div>
@@ -1841,8 +1841,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {/* ========================================================================= */}
         {modalMode === "EMAIL_VERIFICATION" && !registeredPatient && (
           <form onSubmit={handleVerifyEmail} className="space-y-4 animate-fadeIn">
-            <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#1A1918] flex items-start gap-2.5">
-              <Mail className="w-4 h-4 text-[#57477D] shrink-0 mt-0.5" />
+            <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs text-[#1A1918] flex items-start gap-2.5">
+              <Mail className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
               <div>
                 <span className="font-semibold block mb-0.5">Verification Code Sent</span>
                 <span>
@@ -1862,23 +1862,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 placeholder="• • • • • •"
                 value={emailOtp}
                 onChange={(e) => setEmailOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                className="w-full text-center text-2xl tracking-[0.4em] font-mono font-bold py-3 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white text-slate-900"
+                className="w-full text-center text-2xl tracking-[0.4em] font-mono font-bold py-3 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white text-slate-900"
               />
             </div>
 
             {devEmailOtp && (
-              <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between text-xs">
+              <div className="p-2.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none flex items-center justify-between text-xs">
                 <div className="flex items-center gap-2 text-[#69655E]">
-                  <Zap className="w-4 h-4 text-[#57477D]" />
+                  <Zap className="w-4 h-4 text-[#0F766E]" />
                   <span>Dev Simulation Code:</span>
-                  <span className="font-mono font-bold text-[#57477D] text-sm">
+                  <span className="font-mono font-bold text-[#0F766E] text-sm">
                     {devEmailOtp}
                   </span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setEmailOtp(devEmailOtp)}
-                  className="px-2.5 py-1 bg-white border border-[#D5CEC2] rounded-none text-xs font-semibold text-[#1A1918] hover:bg-[#FAF7F2] cursor-pointer"
+                  className="px-2.5 py-1 bg-white border border-[#B6D6D0] rounded-none text-xs font-semibold text-[#1A1918] hover:bg-[#F0F7F6] cursor-pointer"
                 >
                   Auto-Fill
                 </button>
@@ -1930,7 +1930,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {modalMode === "FORGOT_PASSWORD" && (
           <form onSubmit={handleForgotPasswordSubmit} className="space-y-4 animate-fadeIn">
             <div className="p-3 bg-slate-50 border border-slate-200 rounded-none text-xs text-slate-700 flex items-start gap-2.5">
-              <HelpCircle className="w-4 h-4 text-[#57477D] shrink-0 mt-0.5" />
+              <HelpCircle className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
               <span>
                 Enter your unique <strong>Patient ID (SS-PAT-XXXXXX)</strong> or registered email address. We will dispatch a 6-digit verification code to reset your password.
               </span>
@@ -1951,7 +1951,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={forgotIdentifier}
                   onChange={(e) => setForgotIdentifier(e.target.value)}
                   placeholder="Enter Patient ID or registered email"
-                  className="w-full pl-9 pr-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                  className="w-full pl-9 pr-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                 />
               </div>
             </div>
@@ -1985,8 +1985,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {/* ========================================================================= */}
         {modalMode === "RESET_PASSWORD" && (
           <form onSubmit={handleResetPasswordSubmit} className="space-y-3.5 animate-fadeIn">
-            <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#1A1918] flex items-start gap-2.5">
-              <Mail className="w-4 h-4 text-[#57477D] shrink-0 mt-0.5" />
+            <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs text-[#1A1918] flex items-start gap-2.5">
+              <Mail className="w-4 h-4 text-[#0F766E] shrink-0 mt-0.5" />
               <div>
                 <span className="font-semibold block mb-0.5">Reset Code Sent</span>
                 <span>
@@ -2007,17 +2007,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 placeholder="• • • • • •"
                 value={forgotOtp}
                 onChange={(e) => setForgotOtp(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                className="w-full text-center text-xl tracking-[0.4em] font-mono font-bold py-2.5 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white text-slate-900"
+                className="w-full text-center text-xl tracking-[0.4em] font-mono font-bold py-2.5 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white text-slate-900"
               />
             </div>
 
             {devForgotOtp && (
-              <div className="p-2 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between text-xs">
-                <span className="text-[#69655E] font-mono">Dev Code: <strong className="text-[#57477D]">{devForgotOtp}</strong></span>
+              <div className="p-2 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none flex items-center justify-between text-xs">
+                <span className="text-[#69655E] font-mono">Dev Code: <strong className="text-[#0F766E]">{devForgotOtp}</strong></span>
                 <button
                   type="button"
                   onClick={() => setForgotOtp(devForgotOtp)}
-                  className="px-2 py-0.5 bg-white border border-[#D5CEC2] rounded-none text-xs font-semibold text-[#1A1918] hover:bg-[#FAF7F2]"
+                  className="px-2 py-0.5 bg-white border border-[#B6D6D0] rounded-none text-xs font-semibold text-[#1A1918] hover:bg-[#F0F7F6]"
                 >
                   Auto-fill
                 </button>
@@ -2037,7 +2037,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     value={newPassword}
                     onChange={(e) => setNewPassword(e.target.value)}
                     placeholder="Min 8 chars"
-                    className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white pr-8"
+                    className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white pr-8"
                   />
                   <button
                     type="button"
@@ -2059,7 +2059,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   value={confirmNewPassword}
                   onChange={(e) => setConfirmNewPassword(e.target.value)}
                   placeholder="Re-enter password"
-                  className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                  className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
                 />
               </div>
             </div>
@@ -2107,24 +2107,24 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             </div>
 
             {/* Sharp Patient ID Display Card */}
-            <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-left">
+            <div className="p-4 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-left">
               <div className="flex items-center justify-between mb-2">
                 <span className="text-[11px] font-bold text-[#1A1918] uppercase tracking-wider font-mono">
                   Assigned Patient ID
                 </span>
-                <span className="text-[10px] bg-[#FAF7F2] text-[#57477D] font-mono font-bold px-2 py-0.5 rounded-none border border-[#EAE4D9]">
+                <span className="text-[10px] bg-[#F0F7F6] text-[#0F766E] font-mono font-bold px-2 py-0.5 rounded-none border border-[#D0E5E1]">
                   Immutable Account Identifier
                 </span>
               </div>
 
-              <div className="flex items-center justify-between gap-3 bg-white p-3 rounded-none border border-[#EAE4D9]">
-                <span className="text-2xl font-mono font-extrabold text-[#57477D] tracking-wide">
+              <div className="flex items-center justify-between gap-3 bg-white p-3 rounded-none border border-[#D0E5E1]">
+                <span className="text-2xl font-mono font-extrabold text-[#0F766E] tracking-wide">
                   {registeredPatient.patientId}
                 </span>
                 <button
                   type="button"
                   onClick={() => copyPatientIdToClipboard(registeredPatient.patientId)}
-                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#FAF7F2] hover:bg-[#EAE4D9] text-[#1A1918] text-xs font-mono font-bold rounded-none border border-[#D5CEC2] transition-colors cursor-pointer"
+                  className="flex items-center gap-1.5 px-3 py-1.5 bg-[#F0F7F6] hover:bg-[#D0E5E1] text-[#1A1918] text-xs font-mono font-bold rounded-none border border-[#B6D6D0] transition-colors cursor-pointer"
                 >
                   {copiedPatientId ? (
                     <>
@@ -2176,9 +2176,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {/* ========================================================================= */}
         {modalMode === "DEMO_OTP" && (
           <form onSubmit={handleVerifyDemoOtp} className="space-y-4 animate-fadeIn">
-            <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#1A1918] flex items-center justify-between">
+            <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none text-xs text-[#1A1918] flex items-center justify-between">
               <span>Code sent to <strong className="font-mono">{demoChallenge?.maskedDestination || demoChallenge?.maskedIdentifier}</strong></span>
-              <span className="font-mono font-bold text-[#57477D]">{Math.floor(demoOtpSecondsRemaining / 60)}:{(demoOtpSecondsRemaining % 60).toString().padStart(2, "0")}</span>
+              <span className="font-mono font-bold text-[#0F766E]">{Math.floor(demoOtpSecondsRemaining / 60)}:{(demoOtpSecondsRemaining % 60).toString().padStart(2, "0")}</span>
             </div>
 
             <div>
@@ -2192,17 +2192,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 placeholder="• • • • • •"
                 value={demoOtpValue}
                 onChange={(e) => setDemoOtpValue(e.target.value.replace(/\D/g, "").slice(0, 6))}
-                className="w-full text-center text-2xl tracking-[0.4em] font-mono font-bold py-3 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white text-slate-900"
+                className="w-full text-center text-2xl tracking-[0.4em] font-mono font-bold py-3 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white text-slate-900"
               />
             </div>
 
             {mockDevOtp && (
-              <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between text-xs">
-                <span className="text-[#69655E] font-mono">Demo Auto-Fill: <strong className="text-[#57477D]">{mockDevOtp}</strong></span>
+              <div className="p-2.5 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none flex items-center justify-between text-xs">
+                <span className="text-[#69655E] font-mono">Demo Auto-Fill: <strong className="text-[#0F766E]">{mockDevOtp}</strong></span>
                 <button
                   type="button"
                   onClick={() => setDemoOtpValue(mockDevOtp)}
-                  className="px-2.5 py-1 bg-white border border-[#D5CEC2] rounded-none text-xs font-bold text-[#1A1918] hover:bg-[#FAF7F2]"
+                  className="px-2.5 py-1 bg-white border border-[#B6D6D0] rounded-none text-xs font-bold text-[#1A1918] hover:bg-[#F0F7F6]"
                 >
                   Auto-Fill
                 </button>
