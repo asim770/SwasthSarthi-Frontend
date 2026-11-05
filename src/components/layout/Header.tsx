@@ -114,7 +114,7 @@ export const Header: React.FC<HeaderProps> = ({
 
         <div className="flex items-center gap-2">
           <nav className="hidden sm:flex items-center gap-1.5 text-xs text-slate-400 font-normal">
-            <span>SwasthSaarthi</span>
+            <span>SwaasthSaarthi</span>
             <span className="text-slate-300">/</span>
           </nav>
           <h1 className="text-sm sm:text-base font-semibold text-slate-900 tracking-tight">

@@ -18,6 +18,8 @@ import {
   Building2,
   Award,
   Users,
+  Menu,
+  X,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { fetchPatientComprehensiveInfo } from "../../api/client";
@@ -32,6 +34,9 @@ export const LandingView: React.FC<LandingViewProps> = ({
   onNavigateToDashboard,
 }) => {
   const { isAuthenticated } = useAuth();
+
+  // Mobile menu toggle
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   // Wishlist heart toggle
   const [isSaved, setIsSaved] = useState(false);
@@ -124,7 +129,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       id: "vault",
       tag: "DIGITAL HEALTH & ABDM",
       title: "Longitudinal Health Vault",
-      desc: "FHIR R4 standardized diagnostic reports, prescriptions, and encrypted consent-driven data exchange with SwasthSaarthi.",
+      desc: "FHIR R4 standardized diagnostic reports, prescriptions, and encrypted consent-driven data exchange with SwaasthSaarthi.",
       icon: FileText,
       stat: "Instant FHIR Sync",
       doctors: "Ayushman Bharat Certified",
@@ -134,19 +139,19 @@ export const LandingView: React.FC<LandingViewProps> = ({
   const faqs = [
     {
       q: "How is my unique Patient ID (PID) assigned upon registration?",
-      a: "When you sign up at Kim's American Hospital / SwasthSaarthi with your email address, our system automatically generates a unique identifier (formatted as PID-XXXXXXXX). This ID serves as your permanent clinical key to link test results, inpatient admissions, and ABDM health records.",
+      a: "When you sign up on SwaasthSaarthi with your email address, our system automatically generates a unique identifier (formatted as PID-XXXXXXXX). This ID serves as your permanent clinical key to link test results, inpatient admissions, and ABDM health records.",
     },
     {
       q: "Can I log in using either my Patient ID or my registered email?",
       a: "Yes! Our dual-credential authentication gateway allows you to log in securely with either your Patient ID (e.g. PID-10000001) or your email address along with your chosen password. You can also utilize instant demo OTP verification for quick evaluations.",
     },
     {
-      q: "How does SwasthSaarthi safeguard my medical privacy?",
+      q: "How does SwaasthSaarthi safeguard my medical privacy?",
       a: "All diagnostic reports and encounter notes are stored conforming to HL7 FHIR R4 specifications. Third-party doctors or diagnostic labs cannot view your longitudinal history without your explicit, time-bounded, OTP-verified ABDM consent.",
     },
     {
       q: "What should I do in an emergency situation?",
-      a: "Our Emergency & Trauma Centre is staffed 24/7 with emergency physicians, critical care nurses, and on-call trauma surgeons. You can reach our rapid hotline at +91 (800) 456-7890 or walk directly into our Main Hospital Campus at any hour.",
+      a: "Our Emergency & Trauma Centre network is staffed 24/7 with emergency physicians, critical care nurses, and on-call trauma surgeons. You can reach our rapid hotline at +91 (800) 456-7890 or walk directly into any network hospital campus at any hour.",
     },
   ];
 
@@ -160,7 +165,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             <a
               href="#hero"
               className="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-[1.01]"
-              aria-label="Kim's American Hospital Home"
+              aria-label="SwaasthSaarthi Home"
             >
               {/* Stylized sharp emblem matching screenshot palette */}
               <div className="relative w-10 h-10 rounded-none bg-gradient-to-tr from-[#57477D] via-[#6F5E97] to-[#7EA89B] p-0.5 flex items-center justify-center shadow-xs">
@@ -188,10 +193,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
               <div className="flex flex-col">
                 <span className="font-editorial-serif text-lg sm:text-xl font-bold tracking-tight text-[#1A1918] leading-none">
-                  Kim's American Hospital
+                  SwaasthSaarthi
                 </span>
                 <span className="text-[10px] sm:text-[11px] font-medium tracking-wider text-[#69655E] uppercase mt-0.5">
-                  SwasthSaarthi Network
+                  Unified Healthcare Network
                 </span>
               </div>
             </a>
@@ -281,29 +286,105 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 <span>Patient Portal</span>
               </button>
             )}
+
+            {/* Mobile Navigation Toggle Button */}
+            <button
+              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+              className="md:hidden p-2 rounded-none text-[#2E2C2A] hover:bg-[#EAE4D9]/40 transition-colors cursor-pointer"
+              aria-label="Toggle navigation menu"
+            >
+              {isMobileMenuOpen ? (
+                <X className="w-5 h-5" />
+              ) : (
+                <Menu className="w-5 h-5" />
+              )}
+            </button>
           </div>
         </div>
+
+        {/* Responsive Mobile Navigation Drawer */}
+        {isMobileMenuOpen && (
+          <div className="md:hidden border-t border-[#EAE4D9] bg-[#FAF7F2]/98 backdrop-blur-md px-6 py-4 space-y-3">
+            <a
+              href="#specialties"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+            >
+              Specialties
+            </a>
+            <a
+              href="#care-edit"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+            >
+              The Care Edit
+            </a>
+            <a
+              href="#records-lookup"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+            >
+              Health Records
+            </a>
+            <a
+              href="#our-story"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+            >
+              Our Story
+            </a>
+            <a
+              href="#faq"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+            >
+              FAQ
+            </a>
+          </div>
+        )}
       </header>
 
-      {/* 2. HERO SECTION (With New Sunset Hospital Image & Sharp Edges) */}
+      {/* 2. FULL-BLEED EDITORIAL HERO SECTION */}
       <section
         id="hero"
-        className="relative overflow-hidden pt-6 pb-14 sm:py-16 lg:py-20 max-w-[1440px] mx-auto px-4 sm:px-8 lg:px-12"
+        className="relative w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] flex items-center bg-cover bg-no-repeat overflow-hidden border-b border-[#EAE4D9]/80"
+        style={{
+          backgroundImage: `
+            linear-gradient(
+              90deg,
+              rgba(250, 247, 240, 0.98) 0%,
+              rgba(250, 247, 240, 0.94) 28%,
+              rgba(250, 247, 240, 0.72) 42%,
+              rgba(250, 247, 240, 0.22) 58%,
+              rgba(250, 247, 240, 0.02) 75%
+            ),
+            url('/images/hospital-hero-wide.png')
+          `,
+          backgroundPosition: "right center",
+          backgroundSize: "cover",
+          backgroundRepeat: "no-repeat",
+        }}
       >
-        <div className="grid lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          {/* Left Column: Eyebrow, Dual-Font Headline, Description, Sharp Dark Button, Slash Specs */}
-          <div className="lg:col-span-6 xl:col-span-5 flex flex-col justify-center z-10">
-            {/* Eyebrow Tag: 'POCKET DIARIES BY CUMID' style */}
+        {/* Soft responsive vertical gradient for mobile screens */}
+        <div
+          className="absolute inset-0 pointer-events-none lg:hidden bg-gradient-to-b from-[#FAF7F2]/98 via-[#FAF7F2]/90 to-[#FAF7F2]/40"
+          aria-hidden="true"
+        />
+
+        {/* Content Container */}
+        <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 lg:py-28 relative z-10">
+          <div className="max-w-[500px] flex flex-col justify-center">
+            {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 mb-4 sm:mb-6">
               <span className="text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#716B82] uppercase">
-                KIM'S AMERICAN HOSPITAL & SWASTH SAARTHI
+                SWAASTHSAARTHI HEALTHCARE NETWORK
               </span>
             </div>
 
-            {/* Main Headline: Bold Modern Sans + Elegant Italic Serif */}
-            <h1 className="font-editorial-sans text-4xl sm:text-6xl lg:text-[64px] font-extrabold text-[#191817] leading-[1.06] tracking-tight">
-              Small diaries.
-              <span className="block font-editorial-serif italic font-normal text-[#57477D] mt-1 sm:mt-2 text-4xl sm:text-6xl lg:text-[68px]">
+            {/* Main Headline: Bold Modern Sans + Elegant Purple Italic Serif */}
+            <h1 className="font-editorial-sans text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-[#191817] leading-[1.08] tracking-tight">
+              Small moments.
+              <span className="block font-editorial-serif italic font-normal text-[#57477D] mt-1 sm:mt-1.5 text-4xl sm:text-5xl lg:text-[60px]">
                 A little more you.
               </span>
             </h1>
@@ -342,29 +423,13 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <span>ABDM & FHIR R4 Ready</span>
             </div>
           </div>
+        </div>
 
-          {/* Right Column: New Hospital Entrance at Sunset with Sharp Architectural Frame */}
-          <div className="lg:col-span-6 xl:col-span-7 relative">
-            <div className="relative rounded-none overflow-hidden shadow-[0_16px_40px_rgba(40,32,24,0.12)] border border-[#EAE4D9] bg-[#EAE4D9]/30">
-              {/* Left & Ambient Gradient Overlays for Natural Blend */}
-              <div className="absolute inset-0 z-10 pointer-events-none hidden lg:block bg-gradient-to-r from-[#FAF7F2] via-[#FAF7F2]/25 to-transparent w-1/4" />
-              <div className="absolute inset-0 z-10 pointer-events-none bg-gradient-to-t from-[#FAF7F2]/30 via-transparent to-transparent h-1/4 bottom-0" />
-
-              {/* Modern Hospital Entrance at Sunset Photograph */}
-              <img
-                src="/hospital.png"
-                alt="Kim's American Hospital Modern Entrance at Sunset"
-                className="w-full h-[380px] sm:h-[480px] lg:h-[540px] object-cover object-center transform hover:scale-[1.01] transition-transform duration-700"
-              />
-
-              {/* Sharp Architectural Corner Badge */}
-              <div className="absolute bottom-4 left-4 sm:bottom-6 sm:left-6 z-20 bg-[#FAF7F2]/95 backdrop-blur-md px-4 py-2.5 rounded-none border border-[#1A1918]/15 shadow-xs flex items-center gap-2.5 text-xs sm:text-sm text-[#1A1918]">
-                <div className="w-2 h-2 rounded-none bg-emerald-500 animate-pulse" />
-                <span className="font-semibold">Kim's American Hospital</span>
-                <span className="text-[#7A746B] hidden sm:inline">· Sunset Entrance Pavilion</span>
-              </div>
-            </div>
-          </div>
+        {/* Subtle Architectural Corner Badge over hospital building */}
+        <div className="hidden xl:flex absolute bottom-8 right-12 z-10 bg-[#FAF7F2]/90 backdrop-blur-md px-4 py-2.5 rounded-none border border-[#1A1918]/15 shadow-xs items-center gap-2.5 text-xs text-[#1A1918]">
+          <div className="w-2 h-2 rounded-none bg-emerald-500 animate-pulse" />
+          <span className="font-semibold">SwaasthSaarthi</span>
+          <span className="text-[#7A746B]">· Integrated Healthcare Network</span>
         </div>
       </section>
 
@@ -447,7 +512,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   Inspect records using your Patient ID.
                 </h2>
                 <p className="text-xs sm:text-sm text-[#615C54] leading-relaxed mb-6">
-                  Every patient registered at Kim's American Hospital receives a unique identifier
+                  Every patient registered on SwaasthSaarthi receives a unique identifier
                   (like <code className="font-mono font-semibold text-[#57477D]">PID-10000001</code>).
                   Test the real-time lookup below to verify how clinical data is retrieved.
                 </p>
@@ -599,8 +664,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </h2>
             <p className="text-sm sm:text-base text-[#615C54] leading-relaxed mb-6 font-normal">
               Founded on the belief that healthcare should feel calm, humane, and deeply personal,
-              Kim's American Hospital integrates international medical standards with modern
-              digital health infrastructure powered by SwasthSaarthi.
+              SwaasthSaarthi integrates international medical standards with modern
+              digital health infrastructure.
             </p>
             <p className="text-sm sm:text-base text-[#615C54] leading-relaxed mb-8 font-normal">
               Whether you are here for preventive cardiology, outpatient pediatric wellness,
@@ -720,17 +785,17 @@ export const LandingView: React.FC<LandingViewProps> = ({
                   </div>
                 </div>
                 <span className="font-editorial-serif text-xl font-bold text-[#191817]">
-                  Kim's American Hospital
+                  SwaasthSaarthi
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-[#6E685F] leading-relaxed max-w-sm">
                 Excellence in clinical care, modern patient hospitality, and secure longitudinal health
-                records powered by the SwasthSaarthi platform.
+                records powered by the SwaasthSaarthi platform.
               </p>
               <div className="flex items-center gap-3 text-xs text-[#7A746B] pt-2">
                 <span className="flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[#57477D]" />
-                  Main Campus, Healthcare Boulevard
+                  Central Digital Health Network
                 </span>
               </div>
             </div>
@@ -792,7 +857,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
           <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8A8479]">
             <div>
-              © 2026 Kim's American Hospital & SwasthSaarthi. All rights reserved.
+              © 2026 SwaasthSaarthi. All rights reserved.
             </div>
             <div className="flex items-center gap-6">
               <span>FHIR R4 Standardized</span>

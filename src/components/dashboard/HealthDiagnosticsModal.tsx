@@ -27,7 +27,7 @@ export const HealthDiagnosticsModal: React.FC<HealthDiagnosticsModalProps> = ({
     <Dialog
       isOpen={isOpen}
       onClose={onClose}
-      title="SwasthSaarthi System Diagnostics"
+      title="SwaasthSaarthi System Diagnostics"
       description="Real-time health telemetry from the Next.js REST API Gateway and micro-services."
       maxWidth="md"
       footer={

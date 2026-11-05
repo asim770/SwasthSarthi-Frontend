@@ -189,7 +189,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           title: r.title,
           category: r.resourceType,
           submittedBy: r.doctorName || r.providerFacility || "Healthcare Provider",
-          provider: r.providerFacility || "SwasthSaarthi Network",
+          provider: r.providerFacility || "SwaasthSaarthi Network",
           date: r.date ? new Date(r.date).toISOString().split("T")[0] : "2026-11-05",
           time: r.date ? new Date(r.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "10:30 AM",
           status: r.status || "final",

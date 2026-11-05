@@ -87,7 +87,7 @@ export const Sidebar: React.FC<SidebarProps> = ({
           {!isCollapsed && (
             <div className="flex flex-col truncate">
               <span className="font-semibold text-slate-900 tracking-tight text-sm leading-tight">
-                SwasthSaarthi
+                SwaasthSaarthi
               </span>
               <span className="text-[10px] text-teal-700/80 font-medium tracking-wide">
                 ABDM · FHIR R4

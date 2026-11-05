@@ -838,7 +838,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     if (modalMode === "FORGOT_PASSWORD") return "Reset Account Password";
     if (modalMode === "RESET_PASSWORD") return "Set New Password";
     if (modalMode === "DEMO_OTP") return "Enter 6-Digit Verification Code";
-    return "Sign in to SwasthSaarthi";
+    return "Sign in to SwaasthSaarthi";
   };
 
   const getDescription = () => {
@@ -2403,7 +2403,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-400">
           <div className="flex items-center gap-1.5">
             <ShieldCheck className="w-3.5 h-3.5 text-teal-600" />
-            <span>SwasthSaarthi Security Architecture</span>
+            <span>SwaasthSaarthi Security Architecture</span>
           </div>
           <span>Sharp Aesthetic Theme</span>
         </div>

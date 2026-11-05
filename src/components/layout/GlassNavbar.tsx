@@ -199,7 +199,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                   </div>
                   <div className="flex flex-col shrink-0">
                     <span className="font-semibold text-slate-900 tracking-tight text-sm leading-tight group-hover:text-teal-700 transition-colors">
-                      SwasthSaarthi
+                      SwaasthSaarthi
                     </span>
                     <span className="text-[10px] text-teal-700 font-medium tracking-wide">
                       ABDM · FHIR R4
@@ -558,7 +558,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                       </div>
                       <div>
                         <span className="font-semibold text-slate-900 text-sm leading-tight block">
-                          SwasthSaarthi
+                          SwaasthSaarthi
                         </span>
                         <span className="text-[10px] text-teal-700 font-medium">ABDM · FHIR R4</span>
                       </div>

@@ -43,9 +43,9 @@ const ROUTE_CONFIG: Record<
   }
 > = {
   landing: {
-    title: "Hospital Landing",
-    breadcrumb: "Portal / Hospital Landing",
-    description: "Kim's American Hospital public showcase and patient onboarding.",
+    title: "SwaasthSaarthi Showcase",
+    breadcrumb: "Portal / Showcase",
+    description: "SwaasthSaarthi public showcase and patient onboarding.",
     milestone: "Active",
     icon: Building2,
     details: "Editorial landing page showcasing clinical excellence and patient care.",
