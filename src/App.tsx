@@ -204,9 +204,9 @@ export default function App() {
         onOpenLogin={handleOpenLogin}
       />
 
-      {/* 2. Main Page Content (Balanced single-column container) */}
-      <main className="flex-1 px-4 py-6 sm:px-6 lg:px-8">
-        <div className="max-w-6xl mx-auto w-full">
+      {/* 2. Main Page Content */}
+      <main className="flex-1 px-3 sm:px-4 lg:px-6 py-5 w-full">
+        <div className="max-w-[1400px] mx-auto w-full">
           {currentRoute === "dashboard" ? (
             <DashboardView
               onOpenUpload={() => setIsUploadModalOpen(true)}

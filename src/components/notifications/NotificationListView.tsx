@@ -309,13 +309,7 @@ export function NotificationListView() {
         )}
       </div>
 
-      {/* Security & Privacy Footer Note */}
-      {/* <div className="p-3.5 bg-white border border-[#EAE4D9] text-xs text-[#5C574F] flex items-center gap-2.5">
-        <ShieldCheck className="w-4 h-4 text-[#57477D] shrink-0" />
-        <span>
-          Notifications contain summary alerts only. Detailed clinical reports and test findings remain encrypted within your medical records.
-        </span>
-      </div> */}
+
     </div>
   );
 }

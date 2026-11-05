@@ -200,31 +200,30 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
   const getNavItemsForRole = (role?: string): NavItem[] => {
     const baseItems = NAV_ITEMS.filter((item) => {
       if (item.id === "settings") return false;
-      if (isAuthenticated && item.id === "landing") return false;
       return true;
     });
     if (role === "laboratory") {
       return baseItems.filter((item) =>
-        ["dashboard", "labs", "records", "access", "notifications"].includes(item.id)
+        ["landing", "dashboard", "labs", "records", "access", "notifications"].includes(item.id)
       );
     }
     if (role === "pharmacy") {
       return baseItems.filter((item) =>
-        ["dashboard", "prescriptions", "records", "access", "notifications"].includes(item.id)
+        ["landing", "dashboard", "prescriptions", "records", "access", "notifications"].includes(item.id)
       );
     }
     if (role === "admin") {
       return baseItems.filter((item) =>
-        ["dashboard", "access", "records", "consents", "notifications"].includes(item.id)
+        ["landing", "dashboard", "access", "records", "consents", "notifications"].includes(item.id)
       );
     }
     return baseItems;
   };
 
   const navItems = getNavItemsForRole(user?.role);
-  // Split: First 4 items (Dashboard, Records, Consent, Rx) are primary desktop items.
+  // Split: First 5 items (Home, Dashboard, Records, Consent, Rx) are primary desktop items.
   // Remaining items (Labs, History, Alerts) are secondary on tighter viewports.
-  const secondaryNavItems = navItems.slice(4);
+  const secondaryNavItems = navItems.slice(5);
 
   const handleSelectRoute = (route: NavigationRoute) => {
     onNavigate(route);
@@ -254,8 +253,8 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
   return (
     <>
       {/* Floating Compact Rounded-Rectangle Glass Navbar */}
-      <header className="sticky top-3 sm:top-4 z-40 px-4 sm:px-6 lg:px-8 w-full flex justify-center pointer-events-none box-border">
-        <div className="pointer-events-auto w-full max-w-6xl box-border">
+      <header className="sticky top-2 sm:top-3 z-40 px-3 sm:px-4 lg:px-6 w-full flex justify-center pointer-events-none box-border">
+        <div className="pointer-events-auto w-full max-w-[1400px] box-border">
           <GlassSurface
             width="100%"
             height={68}
@@ -314,7 +313,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                 {navItems.map((item, index) => {
                   const Icon = item.icon;
                   const isActive = currentRoute === item.id;
-                  const isSecondary = index >= 4;
+                  const isSecondary = index >= 5;
 
                   return (
                     <button
