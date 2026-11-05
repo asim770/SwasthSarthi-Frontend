@@ -21,7 +21,7 @@ import { GlassSurface } from "../ui/GlassSurface";
 interface GlassNavbarProps {
   currentRoute: NavigationRoute;
   onNavigate: (route: NavigationRoute) => void;
-  healthData: HealthCheckData | null;
+  healthData?: HealthCheckData | null;
   onOpenHealthModal: () => void;
   onOpenLogin: () => void;
 }
@@ -29,7 +29,7 @@ interface GlassNavbarProps {
 export const GlassNavbar: React.FC<GlassNavbarProps> = ({
   currentRoute,
   onNavigate,
-  healthData,
+  healthData: _healthData,
   onOpenHealthModal,
   onOpenLogin,
 }) => {
@@ -296,30 +296,8 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                 )}
               </nav>
 
-              {/* Right Section: System Indicator, Alerts & Profile */}
+              {/* Right Section: Alerts & Profile */}
               <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                {/* System Health Status Pill */}
-                <button
-                  onClick={onOpenHealthModal}
-                  className="flex items-center gap-1.5 px-2.5 py-1 rounded-none text-xs font-medium border transition-all duration-150 bg-[#FAF7F2] hover:bg-white border-[#EAE4D9] text-[#5C574F] hover:text-[#191817] cursor-pointer shadow-2xs shrink-0"
-                  title="System Diagnostics: ABDM Live"
-                  aria-label="View system status"
-                >
-                  <span
-                    className={`w-2 h-2 rounded-full shrink-0 ${
-                      healthData?.status === "healthy"
-                        ? "bg-emerald-500 animate-pulse"
-                        : healthData
-                        ? "bg-amber-500"
-                        : "bg-emerald-500 animate-pulse"
-                    }`}
-                  />
-                  <span className="text-[11px] font-medium hidden xl:inline text-[#5C574F]">
-                    {healthData?.status === "healthy"
-                      ? "ABDM Live Gateway"
-                      : "ABDM Gateway Live"}
-                  </span>
-                </button>
 
                 {/* Notifications / Alerts Dropdown */}
                 <div className="relative shrink-0" ref={notifRef}>
@@ -463,7 +441,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                                 className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-950 hover:bg-slate-100/70 rounded-lg transition-colors text-left cursor-pointer"
                               >
                                 <UserRound className="w-3.5 h-3.5 text-slate-500" />
-                                <span>Switch Demo Persona</span>
+                                <span>Switch Account</span>
                               </button>
 
                               {/* System Diagnostics */}

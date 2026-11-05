@@ -6,14 +6,7 @@ import {
   Activity,
   FileText,
   Stethoscope,
-  Phone,
   Clock,
-  MapPin,
-  ChevronRight,
-  Copy,
-  Check,
-  Search,
-  Sparkles,
   Menu,
   X,
   FlaskConical,
@@ -26,7 +19,6 @@ import {
   HeartPulse,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
-import { fetchPatientComprehensiveInfo } from "../../api/client";
 
 interface LandingViewProps {
   onOpenLogin: () => void;
@@ -42,61 +34,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
   // Mobile menu toggle
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
-  // Quick Patient ID lookup state
-  const [lookupPid, setLookupPid] = useState("PID-10000001");
-  const [isSearching, setIsSearching] = useState(false);
-  const [patientLookupResult, setPatientLookupResult] = useState<any | null>(null);
-  const [lookupError, setLookupError] = useState<string | null>(null);
-  const [copiedPid, setCopiedPid] = useState(false);
-
   // FAQ accordion state
   const [openFaq, setOpenFaq] = useState<number | null>(0);
-
-  const handleLookupPatient = async (pidToFetch?: string) => {
-    const target = pidToFetch || lookupPid;
-    if (!target.trim()) return;
-
-    setIsSearching(true);
-    setLookupError(null);
-    setPatientLookupResult(null);
-
-    try {
-      const data = await fetchPatientComprehensiveInfo(target.trim());
-      setPatientLookupResult(data);
-    } catch {
-      // If unauthenticated on the public landing page, provide verified demo preview for PID-10000001
-      if (target.trim().toUpperCase() === "PID-10000001") {
-        setPatientLookupResult({
-          patient: {
-            id: "6724cb111111111111111111",
-            patientId: "PID-10000001",
-            name: "Rahul Verma",
-            email: "rahul.verma@synthetic.demo",
-            phone: "+91-9876543210",
-            gender: "Male",
-            abhaAddress: "rahul.verma@abdm",
-          },
-          stats: {
-            careContextCount: 3,
-            healthRecordCount: 12,
-            activeConsentCount: 2,
-            prescriptionCount: 4,
-            labOrderCount: 5,
-          },
-        });
-      } else {
-        setLookupError("Patient records require authentication or valid Patient ID.");
-      }
-    } finally {
-      setIsSearching(false);
-    }
-  };
-
-  const copyToClipboard = (text: string) => {
-    navigator.clipboard.writeText(text);
-    setCopiedPid(true);
-    setTimeout(() => setCopiedPid(false), 2000);
-  };
 
   // 4 Core Roles in SwaasthSaarthi
   const platformRoles = [
@@ -205,7 +144,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
     },
     {
       q: "Can I log in using either my Patient ID or my registered email?",
-      a: "Yes! Our dual-credential authentication gateway allows you to log in securely with either your Patient ID (e.g. PID-10000001) or your email address along with your chosen password. You can also utilize instant demo OTP verification for quick evaluations.",
+      a: "Yes! Our dual-credential authentication gateway allows you to log in securely with either your Patient ID or your registered email address along with your chosen password.",
     },
     {
       q: "How do doctors, laboratories, and pharmacies collaborate?",
@@ -285,13 +224,6 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
-              href="#records-lookup"
-              className="hover:text-[#57477D] transition-colors py-1 relative group"
-            >
-              Verify Patient ID
-              <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
-            </a>
-            <a
               href="#architecture"
               className="hover:text-[#57477D] transition-colors py-1 relative group"
             >
@@ -307,13 +239,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </a>
           </nav>
 
-          {/* Right: Live Network Badge and Sharp Action Button */}
+          {/* Right: Sharp Action Button */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Live Gateway indicator */}
-            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-[#FAF7F2] border border-[#EAE4D9] text-xs font-medium text-[#57477D]">
-              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
-              <span>ABDM Gateway Live</span>
-            </div>
 
             {/* Sharp Action Button */}
             {isAuthenticated ? (
@@ -365,13 +292,6 @@ export const LandingView: React.FC<LandingViewProps> = ({
               className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
             >
               Centres of Care
-            </a>
-            <a
-              href="#records-lookup"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
-            >
-              Verify Patient ID
             </a>
             <a
               href="#architecture"
@@ -452,10 +372,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </button>
 
               <a
-                href="#records-lookup"
+                href="#ecosystem"
                 className="px-6 py-4 rounded-none border border-[#1A1918] text-[#1A1918] hover:bg-[#EAE4D9]/40 transition-colors font-medium text-sm sm:text-base cursor-pointer"
               >
-                Verify by Patient ID
+                Explore Care Ecosystem
               </a>
             </div>
 
@@ -628,161 +548,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
       </section>
 
-      {/* 5. INTERACTIVE PATIENT ID & RECORD LOOKUP WIDGET */}
-      <section id="records-lookup" className="py-16 sm:py-20 bg-[#F4EFE6] border-b border-[#EAE4D9]">
-        <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
-          <div className="bg-white rounded-none p-6 sm:p-10 lg:p-12 border border-[#E4DDD0] shadow-[0_12px_32px_rgba(40,32,24,0.05)]">
-            <div className="grid lg:grid-cols-12 gap-8 items-start">
-              {/* Left Column: Context & Patient ID Explanation */}
-              <div className="lg:col-span-5">
-                <span className="text-[11px] font-semibold tracking-[0.2em] text-[#57477D] uppercase">
-                  UNIFIED PATIENT ACCESS
-                </span>
-                <h2 className="font-editorial-serif text-2xl sm:text-3xl text-[#191817] font-medium mt-1 mb-3">
-                  Inspect records using your Patient ID.
-                </h2>
-                <p className="text-xs sm:text-sm text-[#615C54] leading-relaxed mb-6">
-                  Every patient registered on SwaasthSaarthi receives a unique identifier
-                  (like <code className="font-mono font-semibold text-[#57477D]">PID-10000001</code>).
-                  Test the real-time lookup below to verify how clinical data is retrieved.
-                </p>
-
-                <div className="p-4 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] text-xs space-y-2">
-                  <div className="flex items-center gap-2 text-[#57477D] font-medium">
-                    <Sparkles className="w-4 h-4 shrink-0" />
-                    <span>Instant Demo Key Available</span>
-                  </div>
-                  <p className="text-[#6E685F]">
-                    Click to load Rahul Verma's verified ABDM clinical timeline and record count:
-                  </p>
-                  <button
-                    onClick={() => {
-                      setLookupPid("PID-10000001");
-                      handleLookupPatient("PID-10000001");
-                    }}
-                    className="inline-flex items-center gap-1.5 px-3.5 py-2 rounded-none bg-[#57477D] text-white font-medium hover:bg-[#483969] transition-colors cursor-pointer text-xs"
-                  >
-                    <span>Load Demo PID-10000001</span>
-                    <ArrowUpRight className="w-3.5 h-3.5" />
-                  </button>
-                </div>
-              </div>
-
-              {/* Right Column: Sharp Live Search Form & Live Results */}
-              <div className="lg:col-span-7">
-                <div className="flex flex-col sm:flex-row gap-3 mb-4">
-                  <div className="relative flex-1">
-                    <Search className="w-4 h-4 text-[#8A8479] absolute left-3.5 top-1/2 -translate-y-1/2" />
-                    <input
-                      type="text"
-                      value={lookupPid}
-                      onChange={(e) => setLookupPid(e.target.value)}
-                      placeholder="e.g. PID-10000001"
-                      className="w-full pl-10 pr-4 py-3 rounded-none border border-[#D5CEC2] bg-[#FAF7F2] text-sm text-[#191817] focus:outline-none focus:border-[#1A1918] focus:ring-1 focus:ring-[#1A1918] font-mono"
-                    />
-                  </div>
-                  <button
-                    onClick={() => handleLookupPatient()}
-                    disabled={isSearching}
-                    className="px-6 py-3 rounded-none bg-[#1A1918] text-white hover:bg-[#2E2C2A] transition-colors font-medium text-sm flex items-center justify-center gap-2 disabled:opacity-50 cursor-pointer"
-                  >
-                    {isSearching ? (
-                      <>
-                        <div className="w-4 h-4 border-2 border-white/30 border-t-white rounded-none animate-spin" />
-                        <span>Fetching...</span>
-                      </>
-                    ) : (
-                      <>
-                        <span>Verify & Fetch Info</span>
-                        <ChevronRight className="w-4 h-4" />
-                      </>
-                    )}
-                  </button>
-                </div>
-
-                {/* Error Banner */}
-                {lookupError && (
-                  <div className="p-4 rounded-none bg-amber-50 border border-amber-200 text-amber-800 text-xs mb-4">
-                    {lookupError}
-                  </div>
-                )}
-
-                {/* Results Card with Sharp Edges */}
-                {patientLookupResult && (
-                  <div className="p-5 sm:p-6 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] space-y-4 animate-in fade-in duration-200">
-                    <div className="flex flex-wrap items-center justify-between gap-3 pb-3 border-b border-[#EAE4D9]">
-                      <div className="flex items-center gap-3">
-                        <div className="w-10 h-10 rounded-none bg-[#57477D]/15 text-[#57477D] font-bold text-sm flex items-center justify-center border border-[#57477D]/20">
-                          {patientLookupResult.patient?.name?.[0] || "P"}
-                        </div>
-                        <div>
-                          <h4 className="font-medium text-sm text-[#191817]">
-                            {patientLookupResult.patient?.name}
-                          </h4>
-                          <div className="text-xs text-[#7A746B] flex items-center gap-2">
-                            <span>{patientLookupResult.patient?.gender || "Male"}</span>
-                            <span>·</span>
-                            <span>{patientLookupResult.patient?.email}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="flex items-center gap-2">
-                        <span className="font-mono text-xs font-semibold px-2.5 py-1 rounded-none bg-[#57477D]/10 text-[#57477D] border border-[#57477D]/20">
-                          {patientLookupResult.patient?.patientId}
-                        </span>
-                        <button
-                          onClick={() => copyToClipboard(patientLookupResult.patient?.patientId)}
-                          className="p-1.5 text-[#7A746B] hover:text-[#191817] cursor-pointer"
-                          title="Copy Patient ID"
-                        >
-                          {copiedPid ? <Check className="w-3.5 h-3.5 text-emerald-600" /> : <Copy className="w-3.5 h-3.5" />}
-                        </button>
-                      </div>
-                    </div>
-
-                    {/* Stats Row with Sharp Corners */}
-                    <div className="grid grid-cols-3 gap-3">
-                      <div className="bg-white p-3 rounded-none border border-[#EAE4D9] text-center">
-                        <div className="text-xs text-[#7A746B]">ABDM Care Contexts</div>
-                        <div className="font-bold text-base text-[#191817] mt-0.5">
-                          {patientLookupResult.stats?.careContextCount ?? 3}
-                        </div>
-                      </div>
-                      <div className="bg-white p-3 rounded-none border border-[#EAE4D9] text-center">
-                        <div className="text-xs text-[#7A746B]">Verified Reports</div>
-                        <div className="font-bold text-base text-[#191817] mt-0.5">
-                          {patientLookupResult.stats?.healthRecordCount ?? 12}
-                        </div>
-                      </div>
-                      <div className="bg-white p-3 rounded-none border border-[#EAE4D9] text-center">
-                        <div className="text-xs text-[#7A746B]">Active Consents</div>
-                        <div className="font-bold text-base text-[#57477D] mt-0.5">
-                          {patientLookupResult.stats?.activeConsentCount ?? 2}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="flex items-center justify-between pt-2">
-                      <span className="text-[11px] text-[#7A746B]">
-                        ABDM Health ID (ABHA): {patientLookupResult.patient?.abhaAddress || "91-9876543210@abdm"}
-                      </span>
-                      <button
-                        onClick={onOpenLogin}
-                        className="text-xs font-medium text-[#57477D] hover:underline flex items-center gap-1 cursor-pointer"
-                      >
-                        Sign in to view full history →
-                      </button>
-                    </div>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* 6. PLATFORM ARCHITECTURE & STANDARDS */}
+      {/* 5. PLATFORM ARCHITECTURE & STANDARDS */}
       <section id="architecture" className="py-20 sm:py-28 max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
@@ -898,90 +664,88 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
       </section>
 
-      {/* 8. EDITORIAL FOOTER */}
-      <footer className="bg-[#FAF7F2] border-t border-[#EAE4D9] pt-16 pb-12">
+      {/* 8. CLEAN BLACK FOOTER */}
+      <footer className="bg-[#0D0C0B] text-[#E8E4DC] border-t border-[#222120] pt-16 pb-12">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
-          <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#EAE4D9]">
+          <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#222120]">
             {/* Brand column */}
-            <div className="lg:col-span-5 space-y-4">
+            <div className="lg:col-span-6 space-y-4">
               <div className="flex items-center gap-3">
-                <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#57477D] to-[#7EA89B] flex items-center justify-center p-0.5">
-                  <div className="w-full h-full bg-[#FAF7F2] rounded-none flex items-center justify-center">
-                    <div className="w-3.5 h-3.5 rounded-none bg-[#57477D]" />
+                <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#7B66A8] to-[#4E8C78] flex items-center justify-center p-0.5">
+                  <div className="w-full h-full bg-[#0D0C0B] rounded-none flex items-center justify-center">
+                    <div className="w-3.5 h-3.5 rounded-none bg-[#A48CD1]" />
                   </div>
                 </div>
-                <span className="font-editorial-serif text-xl font-bold text-[#191817]">
+                <span className="font-editorial-serif text-xl font-bold text-white tracking-tight">
                   SwaasthSaarthi
                 </span>
               </div>
-              <p className="text-xs sm:text-sm text-[#6E685F] leading-relaxed max-w-sm">
+              <p className="text-xs sm:text-sm text-[#9E988F] leading-relaxed max-w-md">
                 India's next-generation unified healthcare network and longitudinal records platform. Empowering patients, physicians, laboratories, and pharmacies through open ABDM standards.
               </p>
-              <div className="flex items-center gap-3 text-xs text-[#7A746B] pt-2">
-                <span className="flex items-center gap-1.5">
-                  <MapPin className="w-3.5 h-3.5 text-[#57477D]" />
-                  Central Digital Health Network · Ayushman Bharat Ready
-                </span>
-              </div>
             </div>
 
             {/* Links column: Role Portals */}
-            <div className="lg:col-span-2 space-y-3">
-              <h5 className="text-xs font-semibold tracking-wider text-[#191817] uppercase">
+            <div className="lg:col-span-3 space-y-3">
+              <h5 className="text-xs font-semibold tracking-wider text-white uppercase">
                 Role Portals
               </h5>
-              <ul className="text-xs sm:text-sm text-[#6E685F] space-y-2">
-                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Patient Portal</button></li>
-                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Doctor Workstation</button></li>
-                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Diagnostic Laboratory</button></li>
-                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Pharmacy Dispensation</button></li>
-                <li><a href="#records-lookup" className="hover:text-[#57477D]">Patient ID Verification</a></li>
+              <ul className="text-xs sm:text-sm text-[#9E988F] space-y-2.5">
+                <li>
+                  <button onClick={onOpenLogin} className="hover:text-white transition-colors text-left cursor-pointer">
+                    Patient Portal
+                  </button>
+                </li>
+                <li>
+                  <button onClick={onOpenLogin} className="hover:text-white transition-colors text-left cursor-pointer">
+                    Doctor Workstation
+                  </button>
+                </li>
+                <li>
+                  <button onClick={onOpenLogin} className="hover:text-white transition-colors text-left cursor-pointer">
+                    Diagnostic Laboratory
+                  </button>
+                </li>
+                <li>
+                  <button onClick={onOpenLogin} className="hover:text-white transition-colors text-left cursor-pointer">
+                    Pharmacy Dispensation
+                  </button>
+                </li>
               </ul>
             </div>
 
-            {/* Links column: Care Divisions */}
-            <div className="lg:col-span-2 space-y-3">
-              <h5 className="text-xs font-semibold tracking-wider text-[#191817] uppercase">
-                Centres of Care
-              </h5>
-              <ul className="text-xs sm:text-sm text-[#6E685F] space-y-2">
-                <li><a href="#specialties" className="hover:text-[#57477D]">Cardiovascular</a></li>
-                <li><a href="#specialties" className="hover:text-[#57477D]">Oncology</a></li>
-                <li><a href="#specialties" className="hover:text-[#57477D]">Neurosciences</a></li>
-                <li><a href="#specialties" className="hover:text-[#57477D]">Health Vault & ABDM</a></li>
-                <li><a href="#faq" className="hover:text-[#57477D]">Consent Privacy</a></li>
-              </ul>
-            </div>
-
-            {/* Emergency & Support Column */}
+            {/* Links column: Platform Navigation */}
             <div className="lg:col-span-3 space-y-3">
-              <h5 className="text-xs font-semibold tracking-wider text-[#191817] uppercase">
-                24/7 Helpline & Concierge
+              <h5 className="text-xs font-semibold tracking-wider text-white uppercase">
+                Platform
               </h5>
-              <p className="text-xs text-[#6E685F]">
-                Reach our emergency response coordination team or WhatsApp concierge:
-              </p>
-              <div className="pt-1">
-                <a
-                  href="tel:+918004567890"
-                  className="inline-flex items-center gap-2 text-sm font-semibold text-[#191817] hover:text-[#57477D]"
-                >
-                  <Phone className="w-4 h-4 text-[#57477D]" />
-                  <span>+91 (800) 456-7890</span>
-                </a>
-              </div>
-              <div className="pt-2">
-                <button
-                  onClick={onOpenLogin}
-                  className="w-full py-3 px-4 rounded-none border border-[#1A1918] bg-[#1A1918] text-white text-xs font-medium hover:bg-[#2E2C2A] transition-colors cursor-pointer"
-                >
-                  Sign In / Register Portal
-                </button>
-              </div>
+              <ul className="text-xs sm:text-sm text-[#9E988F] space-y-2.5">
+                <li>
+                  <a href="#ecosystem" className="hover:text-white transition-colors">
+                    Role Ecosystem
+                  </a>
+                </li>
+                <li>
+                  <a href="#specialties" className="hover:text-white transition-colors">
+                    Centres of Care
+                  </a>
+                </li>
+                <li>
+                  <a href="#architecture" className="hover:text-white transition-colors">
+                    System Architecture
+                  </a>
+                </li>
+                <li>
+                  <a href="#faq" className="hover:text-white transition-colors">
+                    Frequently Asked Questions
+                  </a>
+                </li>
+              </ul>
             </div>
           </div>
 
-          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#8A8479]">
+          {/* Bottom Bar */}
+          <div className="pt-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[#7A746B]">
             <div>
               © 2026 SwaasthSaarthi. All rights reserved.
             </div>

@@ -9,7 +9,6 @@ import {
   Stethoscope,
   FlaskConical,
   Pill,
-  ShieldAlert,
   Zap,
   CheckCircle2,
   ArrowRight,
@@ -27,9 +26,7 @@ import {
   Clock,
 } from "lucide-react";
 import {
-  createAuthChallenge,
   verifyAuthOtp,
-  fetchMockDevOtp,
   fetchDeliveryChannels,
   fetchGoogleConfig,
   authenticateWithGoogle,
@@ -81,70 +78,6 @@ interface LoginModalProps {
   onSuccessfulLogin?: (role?: string) => void;
 }
 
-interface PersonaInfo {
-  role: "patient" | "doctor" | "laboratory" | "pharmacy" | "admin";
-  name: string;
-  id: string;
-  badge: string;
-  subtitle: string;
-  defaultPhone: string;
-  defaultEmail: string;
-  icon: React.ComponentType<{ className?: string }>;
-}
-
-const DEMO_PERSONAS: PersonaInfo[] = [
-  {
-    role: "patient",
-    name: "Rahul Verma",
-    id: "PID-10000001",
-    badge: "Patient",
-    subtitle: "Self-directed health records & consent",
-    defaultPhone: "+91-9876543210",
-    defaultEmail: "rahul.verma@synthetic.demo",
-    icon: User,
-  },
-  {
-    role: "doctor",
-    name: "Dr. Ananya Sharma",
-    id: "dr.ananya@hpr.sbx",
-    badge: "Doctor",
-    subtitle: "Cardiology • Apollo Clinics",
-    defaultPhone: "+91-9876543211",
-    defaultEmail: "dr.ananya@synthetic.demo",
-    icon: Stethoscope,
-  },
-  {
-    role: "laboratory",
-    name: "Max Diagnostic Lab",
-    id: "max.lab@hfr.sbx",
-    badge: "Lab",
-    subtitle: "Pathology • Max Super Speciality",
-    defaultPhone: "+91-9876543212",
-    defaultEmail: "max.lab@synthetic.demo",
-    icon: FlaskConical,
-  },
-  {
-    role: "pharmacy",
-    name: "Apollo Pharmacy",
-    id: "apollo.rx@hfr.sbx",
-    badge: "Pharmacy",
-    subtitle: "Dispensation • Apollo Health City",
-    defaultPhone: "+91-9876543213",
-    defaultEmail: "apollo.rx@synthetic.demo",
-    icon: Pill,
-  },
-  {
-    role: "admin",
-    name: "Neha Kapoor",
-    id: "admin.neha@swasth.sbx",
-    badge: "Admin",
-    subtitle: "Facility Audit & Verification (SHA)",
-    defaultPhone: "+91-9876543214",
-    defaultEmail: "admin.neha@synthetic.demo",
-    icon: ShieldAlert,
-  },
-];
-
 export const LoginModal: React.FC<LoginModalProps> = ({
   isOpen,
   onClose,
@@ -159,35 +92,34 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   >("SIGN_IN");
 
   // Sign In with Password State
-  const [passwordIdentifier, setPasswordIdentifier] = useState<string>("PID-10000001");
-  const [loginPasswordValue, setLoginPasswordValue] = useState<string>("Password123!");
+  const [passwordIdentifier, setPasswordIdentifier] = useState<string>("");
+  const [loginPasswordValue, setLoginPasswordValue] = useState<string>("");
   const [showLoginPassword, setShowLoginPassword] = useState<boolean>(false);
   const [rememberMe, setRememberMe] = useState<boolean>(true);
   const [isPasswordLoginLoading, setIsPasswordLoginLoading] = useState<boolean>(false);
-  const [showDemoOtpOptions, setShowDemoOtpOptions] = useState<boolean>(false);
 
   // Role Selection State for Sign Up
   const [signupRole, setSignupRole] = useState<"patient" | "doctor" | "laboratory" | "pharmacy">("patient");
   const [roleSelectionStep, setRoleSelectionStep] = useState<boolean>(true);
 
   // Doctor Professional Registration Fields
-  const [docQualification, setDocQualification] = useState<string>("MBBS, MD Cardiology");
-  const [docSpecialization, setDocSpecialization] = useState<string>("Cardiology");
-  const [docRegNumber, setDocRegNumber] = useState<string>("MCI-2024-8841");
-  const [docHospital, setDocHospital] = useState<string>("Apollo Care Hospital");
-  const [docAddress, setDocAddress] = useState<string>("Indiranagar, Bangalore");
+  const [docQualification, setDocQualification] = useState<string>("");
+  const [docSpecialization, setDocSpecialization] = useState<string>("");
+  const [docRegNumber, setDocRegNumber] = useState<string>("");
+  const [docHospital, setDocHospital] = useState<string>("");
+  const [docAddress, setDocAddress] = useState<string>("");
 
   // Laboratory Organization Registration Fields
-  const [labOrgName, setLabOrgName] = useState<string>("Metropolis Diagnostics");
-  const [labRepName, setLabRepName] = useState<string>("Dr. Rajesh Verma");
-  const [labRegNumber, setLabRegNumber] = useState<string>("NABL-2024-5512");
-  const [labAddress, setLabAddress] = useState<string>("Koramangala, Bangalore");
+  const [labOrgName, setLabOrgName] = useState<string>("");
+  const [labRepName, setLabRepName] = useState<string>("");
+  const [labRegNumber, setLabRegNumber] = useState<string>("");
+  const [labAddress, setLabAddress] = useState<string>("");
 
   // Pharmacy Organization Registration Fields
-  const [pharmOrgName, setPharmOrgName] = useState<string>("Apollo Care Pharmacy");
-  const [pharmRepName, setPharmRepName] = useState<string>("Pooja Sharma");
-  const [pharmRegNumber, setPharmRegNumber] = useState<string>("DL-2024-9912");
-  const [pharmAddress, setPharmAddress] = useState<string>("Jayanagar, Bangalore");
+  const [pharmOrgName, setPharmOrgName] = useState<string>("");
+  const [pharmRepName, setPharmRepName] = useState<string>("");
+  const [pharmRegNumber, setPharmRegNumber] = useState<string>("");
+  const [pharmAddress, setPharmAddress] = useState<string>("");
 
   // Registration Pending Approval Display (Doctor, Laboratory, Pharmacy)
   const [registeredPendingApproval, setRegisteredPendingApproval] = useState<{
@@ -204,7 +136,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [signupConfirmPassword, setSignupConfirmPassword] = useState<string>("");
   const [signupPhone, setSignupPhone] = useState<string>("");
   const [signupGender, setSignupGender] = useState<"Male" | "Female" | "Other">("Male");
-  const [signupDob, setSignupDob] = useState<string>("1995-05-15");
+  const [signupDob, setSignupDob] = useState<string>("");
   const [showSignupPassword, setShowSignupPassword] = useState<boolean>(false);
   const [isSignupLoading, setIsSignupLoading] = useState<boolean>(false);
 
@@ -239,12 +171,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [isResetLoading, setIsResetLoading] = useState<boolean>(false);
   const [resetSuccessMessage, setResetSuccessMessage] = useState<string | null>(null);
 
-  // Demo Persona OTP Authentication State
-  const [selectedPersona, setSelectedPersona] = useState<PersonaInfo>(DEMO_PERSONAS[0]);
-  const [selectedChannel, setSelectedChannel] = useState<OtpDeliveryChannel>("mock");
+  // Demo OTP Authentication State
+  const [_selectedChannel, setSelectedChannel] = useState<OtpDeliveryChannel>("mock");
   const [demoChallenge, setDemoChallenge] = useState<AuthChallengeResponse | null>(null);
   const [demoOtpValue, setDemoOtpValue] = useState<string>("");
-  const [mockDevOtp, setMockDevOtp] = useState<string | null>(null);
+  const [mockDevOtp, _setMockDevOtp] = useState<string | null>(null);
   const [demoOtpSecondsRemaining, setDemoOtpSecondsRemaining] = useState<number>(300);
   const [isDemoLoading, setIsDemoLoading] = useState<boolean>(false);
 
@@ -290,7 +221,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           if (cfg.redirectUri) setGoogleRedirectUri(cfg.redirectUri);
         }
       })
-      .catch(() => {});
+      .catch(() => { });
 
     return () => {
       isMounted = false;
@@ -773,35 +704,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     }
   };
 
-  // 7. Demo Persona OTP Request
-  const handleRequestDemoChallenge = async (persona?: PersonaInfo) => {
-    const target = persona || selectedPersona;
-    setIsDemoLoading(true);
-    setErrorMessage(null);
-
-    try {
-      const challengeData = await createAuthChallenge(target.id, selectedChannel);
-      setDemoChallenge(challengeData);
-      setDemoOtpSecondsRemaining(300);
-      setModalMode("DEMO_OTP");
-
-      if (selectedChannel === "mock" && challengeData.demoMode) {
-        try {
-          const mockData = await fetchMockDevOtp(challengeData.challengeId);
-          setMockDevOtp(mockData.demoOtp);
-        } catch {
-          setMockDevOtp("123456");
-        }
-      }
-    } catch (err: any) {
-      setErrorMessage(
-        err instanceof ApiError ? err.message : "Failed to generate demo OTP."
-      );
-    } finally {
-      setIsDemoLoading(false);
-    }
-  };
-
   // 8. Demo Persona OTP Verification
   const handleVerifyDemoOtp = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -855,7 +757,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     if (modalMode === "FORGOT_PASSWORD") return "Enter your Patient ID or registered email to receive a password reset code.";
     if (modalMode === "RESET_PASSWORD") return `Enter the verification code sent to ${forgotMaskedEmail} and your new password.`;
     if (modalMode === "DEMO_OTP") return `Enter the 6-digit code for ${demoChallenge?.maskedDestination || demoChallenge?.maskedIdentifier}.`;
-    return "Ayushman Bharat Digital Mission (ABDM) Health Record Portal";
+    return undefined;
   };
 
   return (
@@ -876,11 +778,10 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 setModalMode("SIGN_IN");
                 setErrorMessage(null);
               }}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-none text-xs font-semibold transition-all cursor-pointer ${
-                modalMode === "SIGN_IN" || modalMode === "FORGOT_PASSWORD"
-                  ? "bg-[#1A1918] text-white border border-[#1A1918] shadow-2xs"
-                  : "text-[#5C574F] hover:text-[#191817]"
-              }`}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-none text-xs font-semibold transition-all cursor-pointer ${modalMode === "SIGN_IN" || modalMode === "FORGOT_PASSWORD"
+                ? "bg-[#1A1918] text-white border border-[#1A1918] shadow-2xs"
+                : "text-[#5C574F] hover:text-[#191817]"
+                }`}
             >
               <LogIn className="w-3.5 h-3.5" />
               <span>Sign In</span>
@@ -892,17 +793,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 setRoleSelectionStep(true);
                 setErrorMessage(null);
               }}
-              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-none text-xs font-semibold transition-all cursor-pointer ${
-                modalMode === "SIGN_UP"
-                  ? "bg-[#1A1918] text-white border border-[#1A1918] shadow-2xs"
-                  : "text-[#5C574F] hover:text-[#191817]"
-              }`}
+              className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-none text-xs font-semibold transition-all cursor-pointer ${modalMode === "SIGN_UP"
+                ? "bg-[#1A1918] text-white border border-[#1A1918] shadow-2xs"
+                : "text-[#5C574F] hover:text-[#191817]"
+                }`}
             >
-              <UserPlus className="w-3.5 h-3.5 text-amber-300" />
+              <UserPlus className="w-3.5 h-3.5" />
               <span>Create Account</span>
-              <span className="text-[10px] bg-[#FAF7F2] text-[#57477D] px-1.5 py-0.5 rounded-none border border-[#57477D]/25 font-mono font-bold">
-                4 Roles
-              </span>
             </button>
           </div>
         )}
@@ -1004,7 +901,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     required
                     value={passwordIdentifier}
                     onChange={(e) => setPasswordIdentifier(e.target.value)}
-                    placeholder="e.g. SS-PAT-000001 or rahul.verma@synthetic.demo"
+                    placeholder="Enter Patient ID or registered email"
                     className="w-full pl-9 pr-3 py-2 text-xs text-[#1A1918] border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2] font-mono"
                   />
                 </div>
@@ -1061,22 +958,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 </button>
               </div>
 
-              {/* Demo Auto-fill Helper */}
-              <div className="flex items-center justify-between text-[11px] pt-0.5 bg-[#FAF7F2] p-2 border border-[#EAE4D9]">
-                <span className="text-[#69655E]">Seeded Demo Account:</span>
-                <button
-                  type="button"
-                  onClick={() => {
-                    setPasswordIdentifier("PID-10000001");
-                    setLoginPasswordValue("Password123!");
-                  }}
-                  className="text-[#57477D] hover:text-[#453763] font-semibold hover:underline cursor-pointer flex items-center gap-1"
-                >
-                  <Zap className="w-3 h-3 text-amber-500" />
-                  <span>Auto-fill Rahul Verma (PID-10000001)</span>
-                </button>
-              </div>
-
               <Button
                 type="submit"
                 variant="primary"
@@ -1088,69 +969,6 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                 Sign In
               </Button>
             </form>
-
-            {/* EXPANDABLE DEMO PERSONA OTP SECTION */}
-            <div className="pt-2 border-t border-slate-200">
-              <button
-                type="button"
-                onClick={() => setShowDemoOtpOptions((prev) => !prev)}
-                className="w-full py-2 px-3 rounded-none bg-slate-50 hover:bg-slate-100 border border-slate-200 flex items-center justify-between text-xs font-medium text-slate-700 cursor-pointer transition-colors"
-              >
-                <div className="flex items-center gap-2">
-                  <Zap className="w-3.5 h-3.5 text-amber-500" />
-                  <span>Explore Demo Personas (Doctor, Lab, Pharmacy, Admin)</span>
-                </div>
-                <span className="text-[11px] text-[#57477D] font-mono font-semibold">
-                  {showDemoOtpOptions ? "Hide ▲" : "Show ▼"}
-                </span>
-              </button>
-            </div>
-
-            {showDemoOtpOptions && (
-              <div className="space-y-3 pt-1 animate-fadeIn">
-                <div className="grid grid-cols-5 gap-1.5 p-1 bg-slate-100 rounded-none border border-slate-200">
-                  {DEMO_PERSONAS.map((persona) => {
-                    const Icon = persona.icon;
-                    const isSelected = selectedPersona.role === persona.role;
-                    return (
-                      <button
-                        key={persona.role}
-                        type="button"
-                        onClick={() => {
-                          setSelectedPersona(persona);
-                        }}
-                        className={`flex flex-col items-center justify-center py-2 px-1 rounded-none text-center transition-all cursor-pointer ${
-                          isSelected
-                            ? "bg-white text-[#1A1918] border border-[#1A1918] font-bold"
-                            : "text-[#69655E] hover:bg-white/50"
-                        }`}
-                      >
-                        <Icon className={`w-4 h-4 mb-1 ${isSelected ? "text-[#57477D]" : "text-[#7A746B]"}`} />
-                        <span className="text-[10px] truncate w-full">{persona.badge}</span>
-                      </button>
-                    );
-                  })}
-                </div>
-
-                <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between">
-                  <div>
-                    <div className="text-xs font-bold text-slate-800">{selectedPersona.name}</div>
-                    <div className="text-[10px] font-mono text-slate-500">{selectedPersona.id}</div>
-                  </div>
-                  <Button
-                    type="button"
-                    variant="secondary"
-                    size="sm"
-                    className="rounded-none"
-                    isLoading={isDemoLoading}
-                    onClick={() => handleRequestDemoChallenge(selectedPersona)}
-                    rightIcon={<Zap className="w-3.5 h-3.5 text-amber-500" />}
-                  >
-                    1-Click OTP
-                  </Button>
-                </div>
-              </div>
-            )}
           </div>
         )}
 
@@ -1171,16 +989,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 1: Patient */}
                   <div
                     onClick={() => setSignupRole("patient")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${
-                      signupRole === "patient"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                    }`}
+                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "patient"
+                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
-                        signupRole === "patient" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                      }`}>
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "patient" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}>
                         <User className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1200,16 +1016,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 2: Doctor */}
                   <div
                     onClick={() => setSignupRole("doctor")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${
-                      signupRole === "doctor"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                    }`}
+                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "doctor"
+                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
-                        signupRole === "doctor" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                      }`}>
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "doctor" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}>
                         <Stethoscope className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1229,16 +1043,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 3: Laboratory */}
                   <div
                     onClick={() => setSignupRole("laboratory")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${
-                      signupRole === "laboratory"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                    }`}
+                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "laboratory"
+                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
-                        signupRole === "laboratory" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                      }`}>
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "laboratory" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}>
                         <FlaskConical className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1258,16 +1070,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 4: Pharmacy */}
                   <div
                     onClick={() => setSignupRole("pharmacy")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${
-                      signupRole === "pharmacy"
-                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                        : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                    }`}
+                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "pharmacy"
+                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
-                        signupRole === "pharmacy" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                      }`}>
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "pharmacy" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}>
                         <Pill className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
@@ -1299,18 +1109,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             ) : (
               /* STEP 2: ROLE-SPECIFIC REGISTRATION FORM */
               <div className="space-y-4">
-                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                <div className="flex items-center justify-between pb-1">
                   <button
                     type="button"
                     onClick={() => setRoleSelectionStep(true)}
-                    className="flex items-center gap-1.5 text-xs font-semibold text-[#57477D] hover:text-[#453763] cursor-pointer"
+                    className="flex items-center gap-1.5 text-xs font-medium text-[#57477D] hover:text-[#453763] transition-colors cursor-pointer"
                   >
                     <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Change Role</span>
+                    <span>Choose different role</span>
                   </button>
-                  <span className="text-[10px] font-bold text-slate-800 uppercase tracking-wider bg-slate-100 px-2 py-0.5 border border-[#D5CEC2]">
-                    Role: {signupRole}
-                  </span>
                 </div>
 
                 {/* ROLE 1 FORM: PATIENT */}
@@ -1323,7 +1130,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           type="button"
                           disabled={isGoogleLoading}
                           onClick={() => handleGoogleOAuthFallback("register")}
-                          className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-[#D5CEC2] bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
+                          className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-[#EAE4D9] bg-white hover:bg-[#FAF7F2] text-[#191817] text-xs font-semibold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
                         >
                           <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
                             <path
@@ -1350,17 +1157,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
                     {/* DIVIDER: OR REGISTER MANUALLY */}
                     <div className="relative flex py-1 items-center">
-                      <div className="flex-grow border-t border-[#D5CEC2]"></div>
-                      <span className="flex-shrink mx-3 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                      <div className="flex-grow border-t border-[#EAE4D9]"></div>
+                      <span className="flex-shrink mx-3 text-[#7A746B] text-[10px] font-medium uppercase tracking-wider">
                         OR REGISTER WITH EMAIL
                       </span>
-                      <div className="flex-grow border-t border-[#D5CEC2]"></div>
+                      <div className="flex-grow border-t border-[#EAE4D9]"></div>
                     </div>
 
                     {/* MANUAL PATIENT REGISTRATION FORM */}
                     <form onSubmit={handlePatientSignup} className="space-y-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Full Name <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1368,13 +1175,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
-                          placeholder="e.g. Rahul Sharma"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          placeholder="Full name"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Email Address <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1382,14 +1189,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
-                          placeholder="e.g. rahul.sharma@example.com"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          placeholder="Enter Your Email"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                         />
                       </div>
 
                       <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          <label className="block text-xs font-medium text-[#191817] mb-1">
                             Password <span className="text-red-500">*</span>
                           </label>
                           <div className="relative">
@@ -1399,13 +1206,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                               minLength={8}
                               value={signupPassword}
                               onChange={(e) => setSignupPassword(e.target.value)}
-                              placeholder="Min 8 chars"
-                              className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white pr-8"
+                              placeholder="Password"
+                              className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white pr-8 transition-colors"
                             />
                             <button
                               type="button"
                               onClick={() => setShowSignupPassword((prev) => !prev)}
-                              className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
+                              className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#7A746B] hover:text-[#191817] cursor-pointer"
+                              aria-label={showSignupPassword ? "Hide password" : "Show password"}
                             >
                               {showSignupPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
                             </button>
@@ -1413,7 +1221,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         </div>
 
                         <div>
-                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          <label className="block text-xs font-medium text-[#191817] mb-1">
                             Confirm Password <span className="text-red-500">*</span>
                           </label>
                           <input
@@ -1421,51 +1229,57 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             required
                             value={signupConfirmPassword}
                             onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                            placeholder="Re-enter password"
-                            className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                            placeholder="Confirm password"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                           />
                         </div>
                       </div>
 
-                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                         <div>
-                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          <label className="block text-xs font-medium text-[#191817] mb-1">
                             Mobile Number
                           </label>
                           <input
-                            type="text"
+                            type="tel"
                             value={signupPhone}
                             onChange={(e) => setSignupPhone(e.target.value)}
-                            placeholder="+91-9876543210"
-                            className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                            placeholder="Enter Mobile number"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                           />
                         </div>
 
                         <div>
-                          <label className="block text-xs font-semibold text-slate-700 mb-1">
-                            Gender
-                          </label>
-                          <select
-                            value={signupGender}
-                            onChange={(e) => setSignupGender(e.target.value as "Male" | "Female" | "Other")}
-                            className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
-                          >
-                            <option value="Male">Male</option>
-                            <option value="Female">Female</option>
-                            <option value="Other">Other</option>
-                          </select>
-                        </div>
-
-                        <div>
-                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          <label className="block text-xs font-medium text-[#191817] mb-1">
                             Date of Birth
                           </label>
                           <input
                             type="date"
                             value={signupDob}
                             onChange={(e) => setSignupDob(e.target.value)}
-                            className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#EAE4D9] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
                           />
+                        </div>
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
+                          Gender
+                        </label>
+                        <div className="grid grid-cols-3 gap-2">
+                          {(["Male", "Female", "Other"] as const).map((g) => (
+                            <button
+                              key={g}
+                              type="button"
+                              onClick={() => setSignupGender(g)}
+                              className={`py-1.5 px-3 text-xs border rounded-none transition-all cursor-pointer text-center ${signupGender === g
+                                ? "border-[#1A1918] bg-[#1A1918] text-white font-medium shadow-2xs"
+                                : "border-[#EAE4D9] bg-white text-[#5C574F] hover:bg-[#FAF7F2] hover:text-[#191817]"
+                                }`}
+                            >
+                              {g}
+                            </button>
+                          ))}
                         </div>
                       </div>
 
@@ -1473,7 +1287,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         type="submit"
                         variant="primary"
                         size="md"
-                        className="w-full rounded-none mt-2"
+                        className="w-full rounded-none mt-2 shadow-2xs"
                         isLoading={isSignupLoading}
                         rightIcon={<ArrowRight className="w-4 h-4" />}
                       >
@@ -1590,7 +1404,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
-                          placeholder="+91-9876543210"
+                          placeholder="+91 Mobile number"
                           className="w-full px-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                         />
                       </div>
@@ -2117,7 +1931,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   autoFocus
                   value={forgotIdentifier}
                   onChange={(e) => setForgotIdentifier(e.target.value)}
-                  placeholder="e.g. SS-PAT-000001 or rahul.verma@synthetic.demo"
+                  placeholder="Enter Patient ID or registered email"
                   className="w-full pl-9 pr-3 py-2 text-xs text-slate-900 border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
                 />
               </div>
@@ -2399,14 +2213,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           </form>
         )}
 
-        {/* COMPLIANCE FOOTER */}
-        <div className="pt-2 border-t border-slate-200 flex items-center justify-between text-[11px] text-slate-400">
-          <div className="flex items-center gap-1.5">
-            <ShieldCheck className="w-3.5 h-3.5 text-[#57477D]" />
-            <span>SwaasthSaarthi Security Architecture</span>
-          </div>
-          <span>Sharp Aesthetic Theme</span>
-        </div>
+
       </div>
     </Dialog>
   );
