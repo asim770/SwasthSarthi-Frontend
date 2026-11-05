@@ -206,10 +206,10 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
         )}
 
         {/* Patient ID and Consultation Date */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50 border border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9]">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Patient ID <span className="text-red-500">*</span>
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+              Patient ID <span className="text-red-700">*</span>
             </label>
             <input
               type="text"
@@ -217,20 +217,20 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
               placeholder="e.g. SS-PAT-000001"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white font-mono font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Consultation Date <span className="text-red-500">*</span>
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+              Consultation Date <span className="text-red-700">*</span>
             </label>
             <input
               type="date"
               required
               value={consultationDate}
               onChange={(e) => setConsultationDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -238,8 +238,8 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
         {/* Symptoms & Clinical Findings */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Symptoms / Presenting Complaints <span className="text-red-500">*</span>
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+              Symptoms / Presenting Complaints <span className="text-red-700">*</span>
             </label>
             <textarea
               required
@@ -247,13 +247,13 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={symptoms}
               onChange={(e) => setSymptoms(e.target.value)}
               placeholder="Patient reported symptoms..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Clinical Findings / Vitals <span className="text-red-500">*</span>
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+              Clinical Findings / Vitals <span className="text-red-700">*</span>
             </label>
             <textarea
               required
@@ -261,7 +261,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={clinicalFindings}
               onChange={(e) => setClinicalFindings(e.target.value)}
               placeholder="Physical examination, vitals, observations..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -269,8 +269,8 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
         {/* Diagnosis & Treatment Plan */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Diagnosis / Clinical Assessment <span className="text-red-500">*</span>
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+              Diagnosis / Clinical Assessment <span className="text-red-700">*</span>
             </label>
             <input
               type="text"
@@ -278,13 +278,13 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={diagnosis}
               onChange={(e) => setDiagnosis(e.target.value)}
               placeholder="e.g. Stage 1 Essential Hypertension"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Treatment Plan <span className="text-red-500">*</span>
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+              Treatment Plan <span className="text-red-700">*</span>
             </label>
             <input
               type="text"
@@ -292,22 +292,22 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={treatmentPlan}
               onChange={(e) => setTreatmentPlan(e.target.value)}
               placeholder="e.g. Diet modification and pharmacological therapy"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
         {/* Prescribed Medicines Section */}
-        <div className="border border-slate-200 p-3 bg-white space-y-2.5">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <Pill className="w-3.5 h-3.5 text-teal-700" />
-              <span>Prescribed Medications (E-Prescription)</span>
+        <div className="border border-[#EAE4D9] p-3 bg-white space-y-2.5">
+          <div className="flex items-center justify-between pb-1.5 border-b border-[#EAE4D9]">
+            <div className="flex items-center gap-1.5 font-bold text-[#1A1918]">
+              <Pill className="w-3.5 h-3.5 text-[#57477D]" />
+              <span className="font-mono uppercase tracking-wider text-[11px]">Prescribed Medications (E-Prescription)</span>
             </div>
             <button
               type="button"
               onClick={handleAddMedicine}
-              className="flex items-center gap-1 px-2 py-0.5 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-300 font-semibold cursor-pointer"
+              className="flex items-center gap-1 px-2.5 py-1 bg-[#FAF7F2] hover:bg-[#EAE4D9] text-[#57477D] border border-[#EAE4D9] font-mono text-[10px] font-semibold cursor-pointer"
             >
               <Plus className="w-3 h-3" />
               <span>Add Medicine</span>
@@ -317,7 +317,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
           {medicines.map((med, index) => (
             <div
               key={index}
-              className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-slate-50 border border-slate-200 items-center"
+              className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-[#FAF7F2] border border-[#EAE4D9] items-center"
             >
               <div className="sm:col-span-3">
                 <input
@@ -325,7 +325,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Medicine Name"
                   value={med.name}
                   onChange={(e) => handleMedicineChange(index, "name", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-slate-300 bg-white font-semibold text-slate-900"
+                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white font-semibold text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-2">
@@ -334,7 +334,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Dosage (40mg)"
                   value={med.dosage}
                   onChange={(e) => handleMedicineChange(index, "dosage", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-slate-300 bg-white text-slate-900"
+                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-3">
@@ -343,7 +343,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Frequency (OD / BD)"
                   value={med.frequency}
                   onChange={(e) => handleMedicineChange(index, "frequency", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-slate-300 bg-white text-slate-900"
+                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-3">
@@ -352,14 +352,14 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   placeholder="Instructions"
                   value={med.instructions}
                   onChange={(e) => handleMedicineChange(index, "instructions", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-slate-300 bg-white text-slate-900"
+                  className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
                 />
               </div>
               <div className="sm:col-span-1 text-center">
                 <button
                   type="button"
                   onClick={() => handleRemoveMedicine(index)}
-                  className="text-red-500 hover:text-red-700 p-1 cursor-pointer"
+                  className="text-[#8C877D] hover:text-red-700 p-1 cursor-pointer"
                   title="Remove Medicine"
                 >
                   <Trash2 className="w-3.5 h-3.5" />
@@ -370,11 +370,11 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
         </div>
 
         {/* Recommended Laboratory Tests */}
-        <div className="border border-slate-200 p-3 bg-white space-y-2">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <FlaskConical className="w-3.5 h-3.5 text-teal-700" />
-              <span>Recommended Diagnostic Orders</span>
+        <div className="border border-[#EAE4D9] p-3 bg-white space-y-2">
+          <div className="flex items-center justify-between pb-1.5 border-b border-[#EAE4D9]">
+            <div className="flex items-center gap-1.5 font-bold text-[#1A1918]">
+              <FlaskConical className="w-3.5 h-3.5 text-[#57477D]" />
+              <span className="font-mono uppercase tracking-wider text-[11px]">Recommended Diagnostic Orders</span>
             </div>
           </div>
 
@@ -390,7 +390,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
                   handleAddTest();
                 }
               }}
-              className="flex-1 px-3 py-1.5 text-xs border border-slate-300 bg-white text-slate-900"
+              className="flex-1 px-3 py-1.5 text-xs border border-[#D5CEC2] bg-[#FAF7F2] text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
             />
             <Button
               type="button"
@@ -407,13 +407,13 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
             {tests.map((testName, i) => (
               <span
                 key={i}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-teal-50 border border-teal-300 text-teal-900 font-semibold"
+                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#FAF7F2] border border-[#EAE4D9] text-[#57477D] font-mono text-xs font-semibold"
               >
                 <span>{testName}</span>
                 <button
                   type="button"
                   onClick={() => handleRemoveTest(i)}
-                  className="text-teal-700 hover:text-teal-900 cursor-pointer font-bold"
+                  className="text-[#57477D] hover:text-red-700 cursor-pointer font-bold"
                 >
                   ×
                 </button>
@@ -425,19 +425,19 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
         {/* Follow-up Date and Clinical Notes */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
               Follow-Up Review Date
             </label>
             <input
               type="date"
               value={followUpDate}
               onChange={(e) => setFollowUpDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
               Clinical Notes &amp; Guidance
             </label>
             <input
@@ -445,12 +445,12 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
               value={clinicalNotes}
               onChange={(e) => setClinicalNotes(e.target.value)}
               placeholder="Special instructions or precautions..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#EAE4D9]">
           <Button
             type="button"
             variant="secondary"

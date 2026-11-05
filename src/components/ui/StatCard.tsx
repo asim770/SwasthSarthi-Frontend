@@ -21,25 +21,25 @@ export const StatCard: React.FC<StatCardProps> = ({
   trend,
 }) => {
   return (
-    <div className="bg-white border border-[#d7eaea] rounded-[18px] p-5 shadow-[0_6px_24px_rgba(15,23,42,0.05)] hover:border-[#b2d8d8] transition-all">
+    <div className="bg-white border border-[#EAE4D9] rounded-none p-5 hover:border-[#D5CEC2] transition-colors">
       <div className="flex items-center justify-between mb-3">
-        <span className="text-xs font-semibold text-[#64748b] uppercase tracking-wider">
+        <span className="text-[11px] font-mono font-semibold text-[#69655E] uppercase tracking-wider">
           {title}
         </span>
-        <div className="w-9 h-9 rounded-xl bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080]">
+        <div className="w-9 h-9 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
           {icon}
         </div>
       </div>
       <div className="flex items-baseline gap-2 mb-1">
-        <span className="text-2xl font-bold text-[#172033] tracking-tight">{value}</span>
+        <span className="text-2xl font-editorial-serif font-bold text-[#1A1918] tracking-tight">{value}</span>
         {badge}
       </div>
-      <div className="flex items-center justify-between text-xs text-[#64748b]">
+      <div className="flex items-center justify-between text-xs text-[#69655E]">
         {subtitle && <span>{subtitle}</span>}
         {trend && (
           <span
-            className={`font-medium ${
-              trend.isPositive ? "text-emerald-600" : "text-amber-600"
+            className={`font-mono text-xs font-medium ${
+              trend.isPositive ? "text-emerald-700" : "text-amber-700"
             }`}
           >
             {trend.value}

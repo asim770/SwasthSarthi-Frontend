@@ -7,7 +7,6 @@ import {
   Clock,
   Bell,
   Settings,
-  Building2,
 } from "lucide-react";
 
 export type NavigationRoute =
@@ -30,7 +29,7 @@ export interface NavItem {
 }
 
 export const NAV_ITEMS: NavItem[] = [
-  { id: "landing", label: "Hospital", icon: Building2, tooltip: "Hospital Landing Page" },
+  { id: "landing", label: "Home", icon: House, tooltip: "SwaasthSaarthi Home" },
   { id: "dashboard", label: "Dashboard", icon: House, tooltip: "Patient Portal Dashboard" },
   { id: "records", label: "Records", icon: FileText, badge: "12", tooltip: "Health Records" },
   { id: "consents", label: "Consent", icon: ShieldCheck, badge: "2", tooltip: "Consent Management" },

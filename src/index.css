@@ -2,34 +2,34 @@
 
 @layer base {
   :root {
-    /* Official SwasthSaarthi Colour Tokens */
-    --app-background: #f0f8f8;
+    /* Official SwaasthSaarthi Unified Editorial Tokens */
+    --app-background: #FAF7F2;
     --surface-primary: #ffffff;
-    --surface-secondary: #f0fdfa;
-    --surface-glass: rgba(255, 255, 255, 0.78);
+    --surface-secondary: #F4EFE6;
+    --surface-glass: rgba(250, 247, 242, 0.95);
 
-    --teal-light: #b2d8d8;
-    --teal-medium: #66b2b2;
-    --teal-primary: #008080;
-    --teal-hover: #006666;
-    --teal-deep: #004c4c;
+    --teal-light: #EAE4D9;
+    --teal-medium: #6F5E97;
+    --teal-primary: #57477D;
+    --teal-hover: #453763;
+    --teal-deep: #2C2244;
 
-    --text-primary: #172033;
-    --text-secondary: #475569;
-    --text-muted: #64748b;
+    --text-primary: #191817;
+    --text-secondary: #5C574F;
+    --text-muted: #7A746B;
 
-    --border-subtle: #d7eaea;
-    --border-glass: rgba(255, 255, 255, 0.85);
+    --border-subtle: #EAE4D9;
+    --border-glass: #EAE4D9;
 
-    --shadow-soft: 0 4px 20px rgba(15, 23, 42, 0.04);
+    --shadow-soft: 0 4px 20px rgba(26, 25, 24, 0.04);
     --radius-card: 0px;
     --radius-button: 0px;
 
     /* Backward-compatible and typography variables */
     --app-bg: #FAF7F2;
-    --glass-bg: rgba(250, 247, 242, 0.85);
-    --glass-bg-strong: rgba(250, 247, 242, 0.95);
-    --glass-border: #E8E2D8;
+    --glass-bg: rgba(250, 247, 242, 0.88);
+    --glass-bg-strong: rgba(250, 247, 242, 0.98);
+    --glass-border: #EAE4D9;
     --glass-highlight: rgba(255, 255, 255, 0.95);
     --accent: #57477D;
     --accent-soft: rgba(87, 71, 125, 0.08);
@@ -42,7 +42,7 @@
   body {
     font-family: var(--font-sans);
     background-color: #FAF7F2;
-    color: var(--text-primary, #172033);
+    color: var(--text-primary, #191817);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
@@ -82,69 +82,59 @@
   }
 }
 
-/* Light Teal Background with subtle airy gradient */
+/* Warm Ivory Background for entire platform */
 .app-light-bg {
-  background-color: var(--app-background, #f0f8f8);
-  background-image:
-    radial-gradient(at 0% 0%, rgba(178, 216, 216, 0.22) 0px, transparent 48%),
-    radial-gradient(at 100% 0%, rgba(240, 253, 250, 0.85) 0px, transparent 50%),
-    radial-gradient(at 50% 100%, rgba(102, 178, 178, 0.08) 0px, transparent 50%),
-    linear-gradient(180deg, #f5fafa 0%, #f0f8f8 45%, #e8f4f4 100%);
-  background-attachment: fixed;
+  background-color: #FAF7F2;
 }
 
-/* Apple-Inspired Glassmorphic Surfaces with subtle teal borders */
+/* Editorial Glassmorphic Surfaces with hairline ivory borders */
 .glass-panel {
-  background: var(--surface-glass, rgba(255, 255, 255, 0.78));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle, #d7eaea);
-  border-radius: var(--radius-card, 18px);
-  box-shadow: var(--shadow-soft, 0 6px 24px rgba(15, 23, 42, 0.05));
+  background: #ffffff;
+  border: 1px solid #EAE4D9;
+  border-radius: 0px;
+  box-shadow: var(--shadow-soft, 0 4px 20px rgba(26, 25, 24, 0.04));
 }
 
 .glass-panel-interactive {
-  background: var(--surface-glass, rgba(255, 255, 255, 0.78));
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid var(--border-subtle, #d7eaea);
-  border-radius: var(--radius-card, 18px);
-  box-shadow: var(--shadow-soft, 0 6px 24px rgba(15, 23, 42, 0.05));
+  background: #ffffff;
+  border: 1px solid #EAE4D9;
+  border-radius: 0px;
+  box-shadow: var(--shadow-soft, 0 4px 20px rgba(26, 25, 24, 0.04));
   transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .glass-panel-interactive:hover {
-  background: rgba(255, 255, 255, 0.95);
-  border-color: var(--teal-light, #b2d8d8);
-  box-shadow: 0 8px 30px -4px rgba(0, 128, 128, 0.08), 0 2px 6px -1px rgba(15, 23, 42, 0.03);
+  background: #ffffff;
+  border-color: #1A1918;
+  box-shadow: 0 8px 24px rgba(26, 25, 24, 0.06);
   transform: translateY(-1px);
 }
 
 .glass-sidebar {
-  background: rgba(255, 255, 255, 0.85);
-  backdrop-filter: blur(24px);
-  -webkit-backdrop-filter: blur(24px);
-  border-right: 1px solid var(--border-subtle, #d7eaea);
+  background: rgba(250, 247, 242, 0.95);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-right: 1px solid #EAE4D9;
 }
 
 .glass-header {
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(250, 247, 242, 0.95);
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid var(--border-subtle, #d7eaea);
+  border-bottom: 1px solid #EAE4D9;
 }
 
 .glass-input {
-  background: rgba(255, 255, 255, 0.9);
-  border: 1px solid var(--border-subtle, #d7eaea);
-  border-radius: var(--radius-button, 12px);
+  background: #FAF7F2;
+  border: 1px solid #D5CEC2;
+  border-radius: 0px;
   transition: all 160ms ease;
 }
 
 .glass-input:focus {
   background: #ffffff;
-  border-color: var(--teal-primary, #008080);
-  box-shadow: 0 0 0 3px rgba(0, 128, 128, 0.15);
+  border-color: #1A1918;
+  box-shadow: 0 0 0 2px rgba(26, 25, 24, 0.1);
 }
 
 /* Subtle, refined macOS-style scrollbar */

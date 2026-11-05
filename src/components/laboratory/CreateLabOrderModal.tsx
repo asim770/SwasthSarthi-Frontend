@@ -135,7 +135,7 @@ export const CreateLabOrderModal: React.FC<CreateLabOrderModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-4 py-1 text-xs">
         {error && (
-          <div className="p-3 bg-red-50 border border-red-200 rounded-[12px] text-red-700 flex items-center gap-2">
+          <div className="p-3 bg-red-50 border border-red-200 rounded-none text-red-700 flex items-center gap-2 font-mono">
             <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
             <span className="leading-snug">{error}</span>
           </div>
@@ -143,14 +143,14 @@ export const CreateLabOrderModal: React.FC<CreateLabOrderModalProps> = ({
 
         {/* Patient Selection */}
         <div>
-          <label className="block font-semibold text-[#172033] mb-1.5 flex items-center gap-1.5">
-            <User className="w-3.5 h-3.5 text-[#008080]" />
+          <label className="block font-semibold text-[#1A1918] mb-1.5 flex items-center gap-1.5">
+            <User className="w-3.5 h-3.5 text-[#57477D]" />
             Target Patient
           </label>
           <select
             value={selectedPatientId}
             onChange={(e) => setSelectedPatientId(e.target.value)}
-            className="w-full px-3.5 py-2.5 border border-[#d7eaea] rounded-[12px] bg-white text-[#172033] focus:outline-hidden focus:ring-2 focus:ring-[#008080] text-xs shadow-2xs"
+            className="w-full px-3.5 py-2.5 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-xs"
             required
           >
             {patients.map((p) => (
@@ -163,14 +163,14 @@ export const CreateLabOrderModal: React.FC<CreateLabOrderModalProps> = ({
 
         {/* Test Selection from Catalog */}
         <div>
-          <label className="block font-semibold text-[#172033] mb-1.5 flex items-center gap-1.5">
-            <FlaskConical className="w-3.5 h-3.5 text-[#008080]" />
+          <label className="block font-semibold text-[#1A1918] mb-1.5 flex items-center gap-1.5">
+            <FlaskConical className="w-3.5 h-3.5 text-[#57477D]" />
             Clinical Test Catalogue
           </label>
           <select
             value={selectedCatalogItem}
             onChange={(e) => handleSelectCatalog(e.target.value)}
-            className="w-full px-3.5 py-2.5 border border-[#d7eaea] rounded-[12px] bg-white text-[#172033] focus:outline-hidden focus:ring-2 focus:ring-[#008080] text-xs shadow-2xs"
+            className="w-full px-3.5 py-2.5 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-xs font-mono"
           >
             {LAB_CATALOG.map((item) => (
               <option key={item.code} value={item.name}>
@@ -183,14 +183,14 @@ export const CreateLabOrderModal: React.FC<CreateLabOrderModalProps> = ({
         {/* Target Facility & Priority */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block font-semibold text-[#172033] mb-1.5 flex items-center gap-1.5">
-              <Building2 className="w-3.5 h-3.5 text-[#008080]" />
+            <label className="block font-semibold text-[#1A1918] mb-1.5 flex items-center gap-1.5">
+              <Building2 className="w-3.5 h-3.5 text-[#57477D]" />
               Target Laboratory Facility
             </label>
             <select
               value={targetFacility}
               onChange={(e) => setTargetFacility(e.target.value)}
-              className="w-full px-3.5 py-2.5 border border-[#d7eaea] rounded-[12px] bg-white text-[#172033] focus:outline-hidden focus:ring-2 focus:ring-[#008080] text-xs shadow-2xs"
+              className="w-full px-3.5 py-2.5 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-xs"
             >
               {TARGET_FACILITIES.map((fac) => (
                 <option key={fac} value={fac}>
@@ -201,13 +201,13 @@ export const CreateLabOrderModal: React.FC<CreateLabOrderModalProps> = ({
           </div>
 
           <div>
-            <label className="block font-semibold text-[#172033] mb-1.5">
+            <label className="block font-semibold text-[#1A1918] mb-1.5">
               Order Priority
             </label>
             <select
               value={priority}
               onChange={(e) => setPriority(e.target.value as "ROUTINE" | "URGENT" | "STAT")}
-              className="w-full px-3.5 py-2.5 border border-[#d7eaea] rounded-[12px] bg-white text-[#172033] focus:outline-hidden focus:ring-2 focus:ring-[#008080] text-xs font-semibold shadow-2xs"
+              className="w-full px-3.5 py-2.5 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-xs font-mono font-semibold"
             >
               <option value="ROUTINE">Routine</option>
               <option value="URGENT">Urgent (24h)</option>
@@ -218,20 +218,20 @@ export const CreateLabOrderModal: React.FC<CreateLabOrderModalProps> = ({
 
         {/* Clinical Instructions */}
         <div>
-          <label className="block font-semibold text-[#172033] mb-1.5">
+          <label className="block font-semibold text-[#1A1918] mb-1.5">
             Specimen Intake Instructions
           </label>
           <textarea
             value={instructions}
             onChange={(e) => setInstructions(e.target.value)}
             rows={2}
-            className="w-full px-3.5 py-2.5 border border-[#d7eaea] rounded-[12px] bg-white text-[#172033] focus:outline-hidden focus:ring-2 focus:ring-[#008080] text-xs shadow-2xs"
+            className="w-full px-3.5 py-2.5 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-xs"
             placeholder="E.g., 12-hour fasting, EDTA tube, refrigerated transport..."
           />
         </div>
 
-        <div className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-[11px] text-[#004c4c] flex items-start gap-2">
-          <FileCheck2 className="w-4 h-4 text-[#008080] shrink-0 mt-0.5" />
+        <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-[11px] text-[#5C574F] flex items-start gap-2 font-mono">
+          <FileCheck2 className="w-4 h-4 text-[#57477D] shrink-0 mt-0.5" />
           <span>
             This action creates a synthetic <strong>FHIR R4 ServiceRequest</strong> tied to the patient's care context and routed strictly to the assigned laboratory facility.
           </span>

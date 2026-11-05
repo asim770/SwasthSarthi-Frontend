@@ -81,21 +81,21 @@ export const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
     >
       {submitted ? (
         <div className="py-8 flex flex-col items-center justify-center text-center">
-          <CheckCircle2 className="w-12 h-12 text-teal-600 mb-2 animate-bounce" />
-          <h4 className="text-sm font-semibold text-slate-900">Record Ingested Successfully</h4>
-          <p className="text-xs text-slate-500 mt-1">
+          <CheckCircle2 className="w-12 h-12 text-emerald-600 mb-2 animate-bounce" />
+          <h4 className="text-sm font-editorial-serif font-bold text-[#191817]">Record Ingested Successfully</h4>
+          <p className="text-xs text-[#5C574F] mt-1">
             Linked to ABHA: rahul.verma@sbx under NRCES FHIR R4 standard.
           </p>
         </div>
       ) : (
-        <form onSubmit={handleSubmit} className="space-y-3.5">
+        <form onSubmit={handleSubmit} className="space-y-3.5 font-editorial-sans">
           {/* Mock File Upload Dropzone */}
-          <div className="border-2 border-dashed border-[#b2d8d8] rounded-[16px] p-4 text-center bg-[#f0fdfa] hover:bg-[#e8f4f4] transition-colors cursor-pointer">
-            <UploadCloud className="w-6 h-6 text-[#008080] mx-auto mb-1.5" />
-            <span className="text-xs font-semibold text-[#172033] block">
+          <div className="border border-dashed border-[#D5CEC2] rounded-none p-5 text-center bg-[#FAF7F2] hover:bg-white transition-colors cursor-pointer">
+            <UploadCloud className="w-6 h-6 text-[#57477D] mx-auto mb-1.5" />
+            <span className="text-xs font-semibold text-[#191817] block">
               Drag &amp; drop PDF report, CCDA, or FHIR JSON
             </span>
-            <span className="text-[11px] text-[#64748b] block mt-0.5">
+            <span className="text-[11px] text-[#7A746B] block mt-0.5">
               Supports lab reports, discharge summaries, and prescriptions
             </span>
           </div>
@@ -111,13 +111,13 @@ export const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
             <div>
-              <label className="block text-xs font-semibold text-[#172033] mb-1.5">
+              <label className="block text-xs font-semibold text-[#191817] mb-1.5">
                 FHIR R4 Resource Type
               </label>
               <select
                 value={resourceType}
                 onChange={(e) => setResourceType(e.target.value as "DiagnosticReport" | "Encounter" | "Immunization")}
-                className="w-full rounded-[12px] border border-[#d7eaea] text-xs text-[#172033] bg-white px-3 py-2.5 focus:outline-none focus:ring-2 focus:ring-[#008080] focus:border-[#008080]"
+                className="w-full rounded-none border border-[#D5CEC2] text-xs text-[#191817] bg-[#FAF7F2] px-3 py-2.5 focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
               >
                 <option value="DiagnosticReport">DiagnosticReport (Lab / Imaging)</option>
                 <option value="Encounter">Encounter (Consultation / OP)</option>
@@ -142,7 +142,7 @@ export const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
           />
 
           <div>
-            <label className="block text-xs font-semibold text-[#172033] mb-1.5">
+            <label className="block text-xs font-semibold text-[#191817] mb-1.5">
               Clinical Findings / Summary
             </label>
             <textarea
@@ -150,7 +150,7 @@ export const UploadRecordModal: React.FC<UploadRecordModalProps> = ({
               placeholder="Key diagnostic findings, measurements, or doctor notes..."
               value={summary}
               onChange={(e) => setSummary(e.target.value)}
-              className="w-full rounded-[12px] border border-[#d7eaea] text-xs text-[#172033] p-2.5 focus:outline-none focus:ring-2 focus:ring-[#008080] focus:border-[#008080] bg-white"
+              className="w-full rounded-none border border-[#D5CEC2] text-xs text-[#191817] p-2.5 focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2]"
             />
           </div>
         </form>

@@ -59,16 +59,16 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
         </>
       }
     >
-      <div className="space-y-4 text-xs text-[#475569]">
+      <div className="space-y-4 text-xs text-[#5C574F] font-editorial-sans">
         {/* Status header */}
-        <div className="flex items-center justify-between p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px]">
-          <div className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-white border border-[#d7eaea] flex items-center justify-center text-[#008080]">
+        <div className="flex items-center justify-between p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-none bg-white border border-[#D5CEC2] flex items-center justify-center text-[#57477D] shadow-2xs">
               <Building2 className="w-4 h-4 shrink-0" />
             </div>
             <div>
-              <span className="font-semibold text-[#172033] block text-xs">{consent.requester}</span>
-              <span className="text-[10px] text-[#64748b]">{consent.hiuType}</span>
+              <span className="font-semibold text-[#191817] block text-xs">{consent.requester}</span>
+              <span className="text-[10px] text-[#7A746B] font-mono">{consent.hiuType}</span>
             </div>
           </div>
           <Badge
@@ -88,21 +88,21 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
 
         {/* Purpose */}
         <div>
-          <span className="font-semibold text-[#172033] uppercase tracking-wider text-[10px] block mb-1">
+          <span className="font-semibold text-[#191817] uppercase tracking-wider text-[10px] font-mono block mb-1">
             Care Purpose &amp; Justification
           </span>
-          <p className="p-3 bg-white border border-[#d7eaea] rounded-[12px] text-[#475569] leading-relaxed shadow-2xs">
+          <p className="p-3.5 bg-white border border-[#EAE4D9] rounded-none text-[#5C574F] leading-relaxed shadow-2xs">
             {consent.purpose}
           </p>
         </div>
 
         {/* Scope and Date Ranges */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-[#f0fdfa] rounded-[14px] border border-[#d7eaea]">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-[#FAF7F2] rounded-none border border-[#EAE4D9]">
           <div>
-            <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Data Scope (FHIR)</span>
+            <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Data Scope (FHIR)</span>
             <div className="flex flex-wrap gap-1 mt-1.5">
               {consent.dataTypes.map((t) => (
-                <span key={t} className="px-2 py-0.5 bg-white border border-[#d7eaea] rounded-[6px] text-[10px] font-mono text-[#004c4c]">
+                <span key={t} className="px-2 py-0.5 bg-white border border-[#EAE4D9] rounded-none text-[10px] font-mono text-[#57477D] font-bold">
                   {t}
                 </span>
               ))}
@@ -110,16 +110,16 @@ export const ConsentDetailsModal: React.FC<ConsentDetailsModalProps> = ({
           </div>
 
           <div>
-            <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Consent Validity</span>
-            <span className="text-[#172033] font-medium block mt-1.5">
+            <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Consent Validity</span>
+            <span className="text-[#191817] font-semibold block mt-1.5 font-mono">
               {consent.expiresAt}
             </span>
           </div>
         </div>
 
         {/* Security badge */}
-        <div className="flex items-center gap-2.5 p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] text-[#004c4c]">
-          <ShieldCheck className="w-4 h-4 text-[#008080] shrink-0" />
+        <div className="flex items-center gap-2.5 p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-[#5C574F]">
+          <ShieldCheck className="w-4 h-4 text-[#4E8C78] shrink-0" />
           <span className="text-[11px] leading-tight">
             Consent is governed by NDHM Consent Management Protocol. You retain complete right to revoke consent at any moment.
           </span>

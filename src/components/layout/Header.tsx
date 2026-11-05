@@ -153,43 +153,43 @@ export const Header: React.FC<HeaderProps> = ({
         <div className="relative" ref={notifRef}>
           <button
             onClick={() => setIsNotificationsOpen((prev) => !prev)}
-            className="relative p-1.5 text-slate-500 hover:text-slate-800 hover:bg-white/80 rounded-xl transition-colors cursor-pointer border border-transparent hover:border-slate-200/60"
+            className="relative p-1.5 text-[#5C574F] hover:text-[#191817] hover:bg-[#FAF7F2] rounded-none transition-colors cursor-pointer border border-transparent hover:border-[#EAE4D9]"
             aria-label="Notifications"
             title="View Notifications"
           >
             <Bell className="w-4 h-4" />
-            <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-teal-600 rounded-full" />
+            <span className="absolute top-1 right-1 w-1.5 h-1.5 bg-[#57477D] rounded-none" />
           </button>
 
           {isNotificationsOpen && (
-            <div className="absolute right-0 mt-2 w-72 sm:w-80 glass-panel rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-              <div className="px-3.5 py-2 border-b border-slate-200/50 flex items-center justify-between">
-                <span className="text-xs font-semibold text-slate-900">Notifications</span>
-                <span className="text-[10px] font-medium text-teal-800 bg-teal-50 border border-teal-100 px-1.5 py-0.5 rounded-md">
+            <div className="absolute right-0 mt-2 w-72 sm:w-80 bg-white border border-[#EAE4D9] rounded-none shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+              <div className="px-3.5 py-2 border-b border-[#EAE4D9] flex items-center justify-between">
+                <span className="text-xs font-semibold text-[#1A1918]">Notifications</span>
+                <span className="text-[10px] font-mono font-medium text-[#57477D] bg-[#FAF7F2] border border-[#EAE4D9] px-1.5 py-0.5 rounded-none">
                   In-App Dispatch
                 </span>
               </div>
 
-              <div className="max-h-64 overflow-y-auto divide-y divide-slate-100/60">
+              <div className="max-h-64 overflow-y-auto divide-y divide-[#EAE4D9]/60">
                 {sampleNotifications.map((n) => (
                   <div
                     key={n.id}
-                    className={`p-3 text-left hover:bg-white/50 transition-colors ${
-                      n.unread ? "bg-teal-50/20 font-medium" : ""
+                    className={`p-3 text-left hover:bg-[#FAF7F2] transition-colors ${
+                      n.unread ? "bg-[#FAF7F2] font-medium" : ""
                     }`}
                   >
                     <div className="flex items-center justify-between gap-2">
-                      <span className="text-xs font-semibold text-slate-800">{n.title}</span>
-                      <span className="text-[10px] text-slate-400">{n.time}</span>
+                      <span className="text-xs font-semibold text-[#1A1918]">{n.title}</span>
+                      <span className="text-[10px] text-[#69655E]">{n.time}</span>
                     </div>
-                    <p className="text-[11px] text-slate-500 mt-0.5 line-clamp-1">{n.desc}</p>
+                    <p className="text-[11px] text-[#69655E] mt-0.5 line-clamp-1">{n.desc}</p>
                   </div>
                 ))}
               </div>
 
-              <div className="px-3 pt-2 pb-1 border-t border-slate-200/50 text-center">
+              <div className="px-3 pt-2 pb-1 border-t border-[#EAE4D9] text-center">
                 <button
-                  className="text-xs text-teal-700 font-medium hover:text-teal-900 cursor-pointer"
+                  className="text-xs text-[#57477D] font-medium hover:underline cursor-pointer"
                   onClick={() => {
                     setIsNotificationsOpen(false);
                     if (onNavigateNotifications) onNavigateNotifications();
@@ -206,9 +206,9 @@ export const Header: React.FC<HeaderProps> = ({
         {!isAuthenticated ? (
           <button
             onClick={onOpenLogin}
-            className="flex items-center gap-1.5 px-3 py-1.5 rounded-xl text-xs font-medium bg-teal-700 text-white hover:bg-teal-800 transition-colors shadow-2xs cursor-pointer"
+            className="flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs font-medium bg-[#1A1918] text-white hover:bg-[#2A2928] transition-colors shadow-2xs cursor-pointer"
           >
-            <Shield className="w-3.5 h-3.5 text-teal-200" />
+            <Shield className="w-3.5 h-3.5 text-amber-300" />
             <span className="hidden sm:inline">Sign In with ABHA</span>
             <span className="sm:hidden">Sign In</span>
           </button>
@@ -216,35 +216,35 @@ export const Header: React.FC<HeaderProps> = ({
           <div className="relative" ref={profileRef}>
             <button
               onClick={() => setIsProfileOpen((prev) => !prev)}
-              className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-xl hover:bg-white/80 transition-colors border border-transparent hover:border-slate-200/60 cursor-pointer"
+              className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-none hover:bg-[#FAF7F2] transition-colors border border-transparent hover:border-[#EAE4D9] cursor-pointer"
               aria-label="User account menu"
             >
-              <div className="w-7 h-7 rounded-lg bg-teal-700 text-white font-semibold text-xs flex items-center justify-center shrink-0">
+              <div className="w-7 h-7 rounded-none bg-[#57477D] text-white font-semibold text-xs flex items-center justify-center shrink-0">
                 {getInitials(user?.name)}
               </div>
               <div className="hidden sm:flex flex-col text-left">
-                <span className="text-xs font-semibold text-slate-900 leading-tight">
+                <span className="text-xs font-semibold text-[#1A1918] leading-tight">
                   {user?.name}
                 </span>
-                <span className="text-[10px] text-slate-400 leading-none">
+                <span className="text-[10px] text-[#69655E] leading-none">
                   {getRoleLabel(user?.role)}
                 </span>
               </div>
             </button>
 
             {isProfileOpen && (
-              <div className="absolute right-0 mt-2 w-60 glass-panel rounded-2xl shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
-                <div className="px-3.5 py-2.5 border-b border-slate-200/50">
+              <div className="absolute right-0 mt-2 w-60 bg-white border border-[#EAE4D9] rounded-none shadow-xl py-2 z-50 animate-in fade-in zoom-in-95 duration-150">
+                <div className="px-3.5 py-2.5 border-b border-[#EAE4D9]">
                   <div className="flex items-center gap-1.5 mb-0.5">
-                    <span className="text-xs font-semibold text-slate-900 truncate">
+                    <span className="text-xs font-semibold text-[#1A1918] truncate">
                       {user?.name}
                     </span>
-                    <CheckCircle className="w-3 h-3 text-teal-600 shrink-0" />
+                    <CheckCircle className="w-3 h-3 text-emerald-600 shrink-0" />
                   </div>
-                  <p className="text-[11px] text-slate-400 font-mono truncate">
+                  <p className="text-[11px] text-[#69655E] font-mono truncate">
                     {user?.abhaAddress || user?.abhaId}
                   </p>
-                  <p className="text-[10px] text-teal-700 font-medium mt-1">
+                  <p className="text-[10px] text-[#57477D] font-mono font-medium mt-1">
                     {getRoleLabel(user?.role)}
                   </p>
                 </div>

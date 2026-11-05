@@ -206,23 +206,23 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-4 font-sans text-xs">
         {error && (
-          <div className="p-3 bg-red-50 border border-red-300 text-red-900 rounded-none flex items-center gap-2">
+          <div className="p-3 bg-red-50 border border-red-300 text-red-900 rounded-none flex items-center gap-2 font-mono">
             <AlertCircle className="w-4 h-4 text-red-600 shrink-0" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-none flex items-center gap-2">
+          <div className="p-3 bg-emerald-50 border border-emerald-300 text-emerald-900 rounded-none flex items-center gap-2 font-mono">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Laboratory report submitted and added to patient medical records!</span>
           </div>
         )}
 
         {/* Patient ID and Test Information */}
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-slate-50 border border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9]">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Patient ID <span className="text-red-500">*</span>
             </label>
             <input
@@ -231,12 +231,12 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
               placeholder="e.g. SS-PAT-000001"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white font-mono font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Test Name <span className="text-red-500">*</span>
             </label>
             <input
@@ -245,12 +245,12 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               value={testName}
               onChange={(e) => setTestName(e.target.value)}
               placeholder="e.g. Lipid Profile, Complete Blood Count"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Test Category
             </label>
             <input
@@ -258,7 +258,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               value={testCategory}
               onChange={(e) => setTestCategory(e.target.value)}
               placeholder="e.g. Biochemistry, Pathology"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
@@ -266,7 +266,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
         {/* Date, Technician, Lab Name */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Test Date <span className="text-red-500">*</span>
             </label>
             <input
@@ -274,12 +274,12 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               required
               value={testDate}
               onChange={(e) => setTestDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Laboratory Name
             </label>
             <input
@@ -287,12 +287,12 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               value={laboratoryName}
               onChange={(e) => setLaboratoryName(e.target.value)}
               placeholder="e.g. Metropolis Diagnostics Hub"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Technician Name / Credentials
             </label>
             <input
@@ -300,22 +300,22 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               value={technicianName}
               onChange={(e) => setTechnicianName(e.target.value)}
               placeholder="e.g. Senior Biochemist"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
         {/* Structured Results Table */}
-        <div className="border border-slate-200 p-3 bg-white space-y-2.5">
-          <div className="flex items-center justify-between pb-1.5 border-b border-slate-200">
-            <div className="flex items-center gap-1.5 font-bold text-slate-900">
-              <FlaskConical className="w-3.5 h-3.5 text-teal-700" />
+        <div className="border border-[#EAE4D9] p-3 bg-white space-y-2.5">
+          <div className="flex items-center justify-between pb-1.5 border-b border-[#EAE4D9]">
+            <div className="flex items-center gap-1.5 font-bold text-[#1A1918]">
+              <FlaskConical className="w-3.5 h-3.5 text-[#57477D]" />
               <span>Diagnostic Observation Measurements (Values &amp; Flags)</span>
             </div>
             <button
               type="button"
               onClick={handleAddResult}
-              className="flex items-center gap-1 px-2 py-0.5 bg-teal-50 hover:bg-teal-100 text-teal-800 border border-teal-300 font-semibold cursor-pointer"
+              className="flex items-center gap-1 px-2.5 py-1 bg-[#1A1918] text-white rounded-none font-mono text-[11px] hover:bg-[#2A2928] cursor-pointer"
             >
               <Plus className="w-3 h-3" />
               <span>Add Parameter</span>
@@ -326,7 +326,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
             {results.map((row, index) => (
               <div
                 key={index}
-                className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-slate-50 border border-slate-200 items-center"
+                className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-[#FAF7F2] border border-[#EAE4D9] items-center"
               >
                 <div className="sm:col-span-3">
                   <input
@@ -334,7 +334,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                     placeholder="Parameter (e.g. Total Cholesterol)"
                     value={row.name}
                     onChange={(e) => handleResultChange(index, "name", e.target.value)}
-                    className="w-full px-2 py-1 text-xs border border-slate-300 bg-white font-semibold text-slate-900"
+                    className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white font-semibold text-[#1A1918]"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -343,7 +343,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                     placeholder="Result (195)"
                     value={row.value}
                     onChange={(e) => handleResultChange(index, "value", e.target.value)}
-                    className="w-full px-2 py-1 text-xs border border-slate-300 bg-white font-bold text-slate-900"
+                    className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white font-mono font-bold text-[#1A1918]"
                   />
                 </div>
                 <div className="sm:col-span-2">
@@ -352,7 +352,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                     placeholder="Unit (mg/dL)"
                     value={row.unit}
                     onChange={(e) => handleResultChange(index, "unit", e.target.value)}
-                    className="w-full px-2 py-1 text-xs border border-slate-300 bg-white text-slate-900 font-mono"
+                    className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918] font-mono"
                   />
                 </div>
                 <div className="sm:col-span-3">
@@ -361,14 +361,14 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                     placeholder="Ref Range (125-200 mg/dL)"
                     value={row.referenceRange}
                     onChange={(e) => handleResultChange(index, "referenceRange", e.target.value)}
-                    className="w-full px-2 py-1 text-xs border border-slate-300 bg-white text-slate-900"
+                    className="w-full px-2 py-1 text-xs border border-[#D5CEC2] bg-white text-[#1A1918]"
                   />
                 </div>
                 <div className="sm:col-span-1">
                   <select
                     value={row.interpretation}
                     onChange={(e) => handleResultChange(index, "interpretation", e.target.value)}
-                    className="w-full px-1 py-1 text-[11px] border border-slate-300 bg-white text-slate-900 font-semibold"
+                    className="w-full px-1 py-1 text-[11px] border border-[#D5CEC2] bg-white text-[#1A1918] font-mono font-semibold"
                   >
                     <option value="Normal">Normal</option>
                     <option value="Borderline High">Borderline</option>
@@ -395,7 +395,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
         {/* Report Notes & Attachment */}
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Clinical Report Notes
             </label>
             <input
@@ -403,12 +403,12 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               value={notes}
               onChange={(e) => setNotes(e.target.value)}
               placeholder="Clinical impression, method, analyzers used..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1">
               Official PDF Report Document
             </label>
             <div className="flex items-center gap-2">
@@ -417,16 +417,16 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                 value={attachmentTitle}
                 onChange={(e) => setAttachmentTitle(e.target.value)}
                 placeholder="Signed_Report.pdf"
-                className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
               />
-              <span className="shrink-0 text-[10px] bg-slate-100 text-slate-700 px-2 py-1.5 border border-slate-300 font-bold uppercase">
+              <span className="shrink-0 text-[10px] bg-[#FAF7F2] text-[#57477D] px-2 py-1.5 border border-[#EAE4D9] font-mono font-bold uppercase">
                 PDF
               </span>
             </div>
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#EAE4D9]">
           <Button
             type="button"
             variant="secondary"

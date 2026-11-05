@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import {
-  Heart,
   LogIn,
   ArrowUpRight,
   ShieldCheck,
@@ -15,11 +14,16 @@ import {
   Check,
   Search,
   Sparkles,
-  Building2,
-  Award,
-  Users,
   Menu,
   X,
+  FlaskConical,
+  Pill,
+  UserCheck,
+  Lock,
+  CheckCircle2,
+  Layers,
+  ArrowRight,
+  HeartPulse,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { fetchPatientComprehensiveInfo } from "../../api/client";
@@ -37,9 +41,6 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
   // Mobile menu toggle
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
-
-  // Wishlist heart toggle
-  const [isSaved, setIsSaved] = useState(false);
 
   // Quick Patient ID lookup state
   const [lookupPid, setLookupPid] = useState("PID-10000001");
@@ -97,22 +98,83 @@ export const LandingView: React.FC<LandingViewProps> = ({
     setTimeout(() => setCopiedPid(false), 2000);
   };
 
+  // 4 Core Roles in SwaasthSaarthi
+  const platformRoles = [
+    {
+      id: "patient",
+      title: "Patient & Citizen",
+      badge: "LIFETIME HEALTH VAULT",
+      badgeColor: "text-[#57477D] bg-[#57477D]/10 border-[#57477D]/20",
+      icon: UserCheck,
+      desc: "Every citizen receives a lifelong Patient ID (PID-XXXXXXXX). Store diagnostic reports, view prescription logs, and grant or revoke time-bound doctor access with 1 click.",
+      highlights: [
+        "Unique lifelong Patient ID (PID)",
+        "Direct ABDM ABHA linking",
+        "Zero-knowledge consent control",
+      ],
+      actionText: "Open Patient Portal",
+    },
+    {
+      id: "doctor",
+      title: "Doctor & Specialist",
+      badge: "CLINICAL WORKSTATION",
+      badgeColor: "text-[#57477D] bg-[#FAF7F2] border-[#EAE4D9]",
+      icon: Stethoscope,
+      desc: "Review patient longitudinal medical history across all network facilities. Author FHIR-compliant encounter notes, write digital prescriptions, and order diagnostic labs.",
+      highlights: [
+        "Chronological clinical timeline",
+        "Cross-facility historical review",
+        "Instant digital e-prescriptions",
+      ],
+      actionText: "Doctor Workstation",
+    },
+    {
+      id: "laboratory",
+      title: "Diagnostic Laboratory",
+      badge: "DIAGNOSTIC ENGINE",
+      badgeColor: "text-amber-800 bg-amber-50 border-amber-200",
+      icon: FlaskConical,
+      desc: "Publish diagnostic findings, pathology observations, and radiology reports directly to the patient's record using their unique Patient ID.",
+      highlights: [
+        "PID-linked report dispatch",
+        "HL7 FHIR R4 Observations",
+        "Automated patient alert triggers",
+      ],
+      actionText: "Laboratory Access",
+    },
+    {
+      id: "pharmacy",
+      title: "Pharmacy & Dispensary",
+      badge: "DISPENSATION SYSTEM",
+      badgeColor: "text-emerald-800 bg-emerald-50 border-emerald-200",
+      icon: Pill,
+      desc: "Validate digital doctor prescriptions instantly. Record medication dispensation logs and prevent adverse drug interactions across ongoing care plans.",
+      highlights: [
+        "Tamper-proof prescription verification",
+        "Fulfillment & dispensation logs",
+        "Drug-to-drug interaction checks",
+      ],
+      actionText: "Pharmacy Portal",
+    },
+  ];
+
+  // Clinical Specialties
   const specialties = [
     {
       id: "cardio",
       tag: "CENTRE OF EXCELLENCE",
       title: "Heart & Vascular Institute",
-      desc: "Interventional cardiology, non-invasive cardiac imaging, electrophysiology, and 24/7 dedicated STEMI catheterization lab.",
+      desc: "Interventional cardiology, non-invasive cardiac imaging, electrophysiology, and 24/7 dedicated STEMI catheterization response.",
       icon: Activity,
       stat: "99.4% Survival Rate",
       doctors: "14 Senior Cardiologists",
     },
     {
       id: "oncology",
-      tag: "PRECISION CARE",
+      tag: "PRECISION ONCOLOGY",
       title: "Comprehensive Cancer Centre",
-      desc: "Multi-disciplinary tumor boards, image-guided linear accelerators, precision immunotherapy, and surgical oncology.",
-      icon: Stethoscope,
+      desc: "Multi-disciplinary tumor boards, image-guided linear accelerators, precision immunotherapy, and organ-preserving surgical oncology.",
+      icon: HeartPulse,
       stat: "1,200+ Remissions",
       doctors: "9 Surgical Oncologists",
     },
@@ -122,7 +184,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
       title: "Brain & Spine Sciences",
       desc: "Minimally invasive neurosurgery, comprehensive stroke care unit, neuro-rehabilitation, and pediatric neurology.",
       icon: ShieldCheck,
-      stat: "<30m Stroke Door-to-Needle",
+      stat: "<30m Door-to-Needle",
       doctors: "11 Neurologists & Surgeons",
     },
     {
@@ -139,35 +201,39 @@ export const LandingView: React.FC<LandingViewProps> = ({
   const faqs = [
     {
       q: "How is my unique Patient ID (PID) assigned upon registration?",
-      a: "When you sign up on SwaasthSaarthi with your email address, our system automatically generates a unique identifier (formatted as PID-XXXXXXXX). This ID serves as your permanent clinical key to link test results, inpatient admissions, and ABDM health records.",
+      a: "When you sign up on SwaasthSaarthi with your email address or Google authentication, our system automatically generates a unique identifier (formatted as PID-XXXXXXXX). This ID serves as your permanent clinical key to link test results, prescriptions, inpatient encounters, and ABDM health records across all network facilities.",
     },
     {
       q: "Can I log in using either my Patient ID or my registered email?",
       a: "Yes! Our dual-credential authentication gateway allows you to log in securely with either your Patient ID (e.g. PID-10000001) or your email address along with your chosen password. You can also utilize instant demo OTP verification for quick evaluations.",
     },
     {
+      q: "How do doctors, laboratories, and pharmacies collaborate?",
+      a: "Every care touchpoint uses the patient's unique Patient ID. When a doctor writes a prescription or orders a test, it is linked to the patient's PID. Diagnostic laboratories submit reports directly to that PID, and pharmacies verify and dispense medications against it—creating one unified, tamper-evident longitudinal health chart.",
+    },
+    {
       q: "How does SwaasthSaarthi safeguard my medical privacy?",
-      a: "All diagnostic reports and encounter notes are stored conforming to HL7 FHIR R4 specifications. Third-party doctors or diagnostic labs cannot view your longitudinal history without your explicit, time-bounded, OTP-verified ABDM consent.",
+      a: "All diagnostic reports and encounter notes are stored conforming to HL7 FHIR R4 specifications. Practitioners or diagnostic labs cannot view your longitudinal history without your explicit, time-bounded, OTP-verified ABDM consent, which you can revoke at any time.",
     },
     {
       q: "What should I do in an emergency situation?",
-      a: "Our Emergency & Trauma Centre network is staffed 24/7 with emergency physicians, critical care nurses, and on-call trauma surgeons. You can reach our rapid hotline at +91 (800) 456-7890 or walk directly into any network hospital campus at any hour.",
+      a: "Our Emergency & Trauma Centre coordination network is staffed 24/7 with emergency physicians and critical care specialists. You can reach our rapid hotline at +91 (800) 456-7890 or walk directly into any network hospital campus at any hour.",
     },
   ];
 
   return (
     <div className="min-h-screen bg-[#FAF7F2] text-[#1E1D1B] font-editorial-sans selection:bg-[#57477D]/15 selection:text-[#57477D]">
-      {/* 1. TOP EDITORIAL NAVBAR (Sharp edges, exact layout & aesthetics from reference screenshot) */}
+      {/* 1. TOP EDITORIAL NAVBAR */}
       <header className="sticky top-0 z-50 bg-[#FAF7F2]/95 backdrop-blur-md border-b border-[#EAE4D9]/80 transition-all duration-200">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-20 flex items-center justify-between gap-4">
           {/* Left: Brand Logo & Stylized Emblem */}
           <div className="flex items-center gap-3">
             <a
               href="#hero"
-              className="group flex items-center gap-2.5 transition-transform duration-200 hover:scale-[1.01]"
+              className="group flex items-center gap-3 transition-transform duration-200 hover:scale-[1.01]"
               aria-label="SwaasthSaarthi Home"
             >
-              {/* Stylized sharp emblem matching screenshot palette */}
+              {/* Stylized sharp emblem */}
               <div className="relative w-10 h-10 rounded-none bg-gradient-to-tr from-[#57477D] via-[#6F5E97] to-[#7EA89B] p-0.5 flex items-center justify-center shadow-xs">
                 <div className="w-full h-full bg-[#FAF7F2] rounded-none flex items-center justify-center overflow-hidden">
                   <svg
@@ -186,7 +252,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                       fillOpacity="0.85"
                     />
                     <circle cx="16" cy="16" r="3.5" fill="#FAF7F2" />
-                    <circle cx="16" cy="16" r="2" fill="#57477D" />
+                    <circle cx="16" cy="2" fill="#57477D" />
                   </svg>
                 </div>
               </div>
@@ -205,31 +271,31 @@ export const LandingView: React.FC<LandingViewProps> = ({
           {/* Center: Editorial Navigation Links (Desktop) */}
           <nav className="hidden md:flex items-center gap-6 lg:gap-8 text-sm font-medium text-[#2E2C2A]">
             <a
-              href="#specialties"
+              href="#ecosystem"
               className="hover:text-[#57477D] transition-colors py-1 relative group"
             >
-              Specialties
+              Role Ecosystem
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
-              href="#care-edit"
+              href="#specialties"
               className="hover:text-[#57477D] transition-colors py-1 relative group"
             >
-              The Care Edit
+              Centres of Care
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
               href="#records-lookup"
               className="hover:text-[#57477D] transition-colors py-1 relative group"
             >
-              Health Records
+              Verify Patient ID
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
-              href="#our-story"
+              href="#architecture"
               className="hover:text-[#57477D] transition-colors py-1 relative group"
             >
-              Our Story
+              Architecture
               <span className="absolute bottom-0 left-0 w-0 h-0.5 bg-[#57477D] transition-all duration-200 group-hover:w-full" />
             </a>
             <a
@@ -241,48 +307,29 @@ export const LandingView: React.FC<LandingViewProps> = ({
             </a>
           </nav>
 
-          {/* Right: Utility Icons and Sharp Action Button */}
+          {/* Right: Live Network Badge and Sharp Action Button */}
           <div className="flex items-center gap-3 sm:gap-4">
-            {/* Heart / Saved Bookmark Icon (Sharp container) */}
-            <button
-              onClick={() => setIsSaved(!isSaved)}
-              className={`p-2 rounded-none transition-all cursor-pointer ${
-                isSaved
-                  ? "text-rose-600 bg-rose-50"
-                  : "text-[#2E2C2A] hover:text-[#57477D] hover:bg-[#EAE4D9]/40"
-              }`}
-              title="Saved Hospital Care Contexts"
-              aria-label="Wishlist and saved care"
-            >
-              <Heart
-                className={`w-5 h-5 ${isSaved ? "fill-rose-600" : ""}`}
-                strokeWidth={1.8}
-              />
-            </button>
+            {/* Live Gateway indicator */}
+            <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-[#FAF7F2] border border-[#EAE4D9] text-xs font-medium text-[#57477D]">
+              <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+              <span>ABDM Gateway Live</span>
+            </div>
 
-            {/* Login / Auth Icon (Sharp container) */}
-            <button
-              onClick={isAuthenticated ? onNavigateToDashboard : onOpenLogin}
-              className="p-2 rounded-none text-[#2E2C2A] hover:text-[#57477D] hover:bg-[#EAE4D9]/40 transition-colors cursor-pointer"
-              title={isAuthenticated ? "Open Dashboard" : "Sign In with Patient ID / Email"}
-              aria-label="Authentication portal"
-            >
-              <LogIn className="w-5 h-5" strokeWidth={1.8} />
-            </button>
-
-            {/* Sharp Bordered Button matching 'WhatsApp Preorders' in screenshot */}
+            {/* Sharp Action Button */}
             {isAuthenticated ? (
               <button
                 onClick={onNavigateToDashboard}
-                className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-none border border-[#2E2C2A] text-xs sm:text-sm font-medium text-[#1A1918] hover:bg-[#1A1918] hover:text-white transition-all duration-200 cursor-pointer shadow-2xs"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-none border border-[#1A1918] bg-[#1A1918] text-white hover:bg-[#2E2C2A] text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-2xs flex items-center gap-2"
               >
-                Go to Dashboard →
+                <span>Go to Dashboard</span>
+                <ArrowRight className="w-3.5 h-3.5" />
               </button>
             ) : (
               <button
                 onClick={onOpenLogin}
-                className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-none border border-[#2E2C2A] text-xs sm:text-sm font-medium text-[#1A1918] hover:bg-[#1A1918] hover:text-white transition-all duration-200 cursor-pointer shadow-2xs flex items-center gap-1.5"
+                className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-none border border-[#1A1918] bg-[#1A1918] text-white hover:bg-[#2E2C2A] text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-2xs flex items-center gap-2"
               >
+                <LogIn className="w-3.5 h-3.5" />
                 <span>Patient Portal</span>
               </button>
             )}
@@ -306,32 +353,32 @@ export const LandingView: React.FC<LandingViewProps> = ({
         {isMobileMenuOpen && (
           <div className="md:hidden border-t border-[#EAE4D9] bg-[#FAF7F2]/98 backdrop-blur-md px-6 py-4 space-y-3">
             <a
+              href="#ecosystem"
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
+            >
+              Role Ecosystem
+            </a>
+            <a
               href="#specialties"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
             >
-              Specialties
-            </a>
-            <a
-              href="#care-edit"
-              onClick={() => setIsMobileMenuOpen(false)}
-              className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
-            >
-              The Care Edit
+              Centres of Care
             </a>
             <a
               href="#records-lookup"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
             >
-              Health Records
+              Verify Patient ID
             </a>
             <a
-              href="#our-story"
+              href="#architecture"
               onClick={() => setIsMobileMenuOpen(false)}
               className="block text-sm font-medium text-[#2E2C2A] hover:text-[#57477D] py-1.5"
             >
-              Our Story
+              Architecture
             </a>
             <a
               href="#faq"
@@ -347,14 +394,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
       {/* 2. FULL-BLEED EDITORIAL HERO SECTION */}
       <section
         id="hero"
-        className="relative w-full min-h-[580px] sm:min-h-[640px] lg:min-h-[720px] flex items-center bg-cover bg-no-repeat overflow-hidden border-b border-[#EAE4D9]/80"
+        className="relative w-full min-h-[600px] sm:min-h-[660px] lg:min-h-[740px] flex items-center bg-cover bg-no-repeat overflow-hidden border-b border-[#EAE4D9]/80"
         style={{
           backgroundImage: `
             linear-gradient(
               90deg,
               rgba(250, 247, 240, 0.98) 0%,
-              rgba(250, 247, 240, 0.94) 28%,
-              rgba(250, 247, 240, 0.72) 42%,
+              rgba(250, 247, 240, 0.94) 30%,
+              rgba(250, 247, 240, 0.72) 44%,
               rgba(250, 247, 240, 0.22) 58%,
               rgba(250, 247, 240, 0.02) 75%
             ),
@@ -367,13 +414,13 @@ export const LandingView: React.FC<LandingViewProps> = ({
       >
         {/* Soft responsive vertical gradient for mobile screens */}
         <div
-          className="absolute inset-0 pointer-events-none lg:hidden bg-gradient-to-b from-[#FAF7F2]/98 via-[#FAF7F2]/90 to-[#FAF7F2]/40"
+          className="absolute inset-0 pointer-events-none lg:hidden bg-gradient-to-b from-[#FAF7F2]/98 via-[#FAF7F2]/92 to-[#FAF7F2]/45"
           aria-hidden="true"
         />
 
         {/* Content Container */}
         <div className="max-w-[1400px] w-full mx-auto px-4 sm:px-8 lg:px-12 py-16 sm:py-24 lg:py-28 relative z-10">
-          <div className="max-w-[500px] flex flex-col justify-center">
+          <div className="max-w-[520px] flex flex-col justify-center">
             {/* Eyebrow */}
             <div className="inline-flex items-center gap-2 mb-4 sm:mb-6">
               <span className="text-[11px] sm:text-xs font-semibold tracking-[0.22em] text-[#716B82] uppercase">
@@ -389,14 +436,12 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </span>
             </h1>
 
-            {/* Subtitle Paragraph matching editorial tone */}
+            {/* Subtitle Paragraph matching editorial tone & clinical purpose */}
             <p className="mt-5 sm:mt-7 text-sm sm:text-base lg:text-[17px] text-[#5C574F] leading-relaxed max-w-lg font-normal">
-              For quiet reassurance, routine health checkups, and moments when you need
-              world-class clinical expertise. Connected longitudinal health records,
-              with care that truly feels like you.
+              A unified, connected healthcare network for routine checkups, diagnostic reports, and specialized clinical care. One lifelong Patient ID, zero-friction medical records across every care provider.
             </p>
 
-            {/* Action Buttons: Sharp dark rectangular button + Sharp Outline button */}
+            {/* Action Buttons */}
             <div className="mt-8 sm:mt-10 flex flex-wrap items-center gap-4">
               <button
                 onClick={isAuthenticated ? onNavigateToDashboard : onOpenLogin}
@@ -414,13 +459,27 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </a>
             </div>
 
-            {/* Bottom Specs Row with slash delimiters matching reference screenshot */}
-            <div className="mt-10 sm:mt-14 pt-6 border-t border-[#EAE4D9]/80 flex flex-wrap items-center gap-2.5 sm:gap-4 text-xs sm:text-sm font-medium text-[#7A746B]">
-              <span>Square pocket format</span>
+            {/* Genuine Healthcare Credibility Specs Row */}
+            <div className="mt-10 sm:mt-14 pt-6 border-t border-[#EAE4D9]/80 flex flex-wrap items-center gap-3 sm:gap-4 text-xs sm:text-sm font-medium text-[#6B655B]">
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                Lifelong Patient ID (PID)
+              </span>
               <span className="text-[#BDB6A8]">/</span>
-              <span>Top spiral binding</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#4E8C78]" />
+                ABDM M1-M3 Certified
+              </span>
               <span className="text-[#BDB6A8]">/</span>
-              <span>ABDM & FHIR R4 Ready</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                HL7 FHIR R4 Standardized
+              </span>
+              <span className="text-[#BDB6A8]">/</span>
+              <span className="flex items-center gap-1.5">
+                <span className="w-1.5 h-1.5 rounded-full bg-emerald-600" />
+                Zero-Knowledge Consent
+              </span>
             </div>
           </div>
         </div>
@@ -433,21 +492,92 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
       </section>
 
-      {/* 3. THE CARE EDIT (Sharp rectangular boxes matching 'THE COVER EDIT') */}
-      <section id="care-edit" className="py-16 sm:py-24 border-t border-[#EAE4D9] bg-[#FAF7F2]">
+      {/* 3. ROLE-BASED HEALTHCARE ECOSYSTEM SECTION */}
+      <section id="ecosystem" className="py-16 sm:py-24 bg-white border-b border-[#EAE4D9]">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
           {/* Section Header */}
           <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#EAE4D9]">
             <div>
               <span className="text-xs font-semibold tracking-[0.25em] text-[#716B82] uppercase">
-                THE CARE EDIT
+                ROLE-BASED HEALTHCARE ECOSYSTEM
               </span>
               <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
-                Curated clinical excellence, tailored to you.
+                One universal patient record. Four synchronized roles.
+              </h2>
+            </div>
+            <p className="text-xs sm:text-sm text-[#7A746B] max-w-sm">
+              SwaasthSaarthi connects patients, doctors, diagnostic labs, and pharmacies into one consent-driven network.
+            </p>
+          </div>
+
+          {/* 4 Roles Grid */}
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
+            {platformRoles.map((role) => {
+              const Icon = role.icon;
+              return (
+                <div
+                  key={role.id}
+                  className="group bg-[#FAF7F2] rounded-none p-6 sm:p-7 border border-[#EAE4D9] hover:border-[#1A1918] transition-all duration-300 hover:shadow-[0_8px_24px_rgba(26,25,24,0.06)] flex flex-col justify-between"
+                >
+                  <div>
+                    <div className="flex items-center justify-between mb-4">
+                      <span className={`text-[10px] font-semibold tracking-wider px-2.5 py-1 rounded-none border ${role.badgeColor}`}>
+                        {role.badge}
+                      </span>
+                      <div className="w-10 h-10 rounded-none bg-white border border-[#EAE4D9] flex items-center justify-center text-[#1A1918] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-colors duration-200">
+                        <Icon className="w-5 h-5" />
+                      </div>
+                    </div>
+
+                    <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-[#191817] mb-2.5 group-hover:text-[#57477D] transition-colors">
+                      {role.title}
+                    </h3>
+                    <p className="text-xs sm:text-sm text-[#615C54] leading-relaxed mb-5 font-normal">
+                      {role.desc}
+                    </p>
+
+                    {/* Key feature highlights */}
+                    <div className="space-y-2 mb-6">
+                      {role.highlights.map((item, idx) => (
+                        <div key={idx} className="flex items-center gap-2 text-xs text-[#524E48]">
+                          <CheckCircle2 className="w-3.5 h-3.5 text-[#4E8C78] shrink-0" />
+                          <span>{item}</span>
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+
+                  <div className="pt-4 border-t border-[#EAE4D9]/80">
+                    <button
+                      onClick={onOpenLogin}
+                      className="w-full py-2.5 px-3 rounded-none bg-white border border-[#D5CEC2] text-xs font-medium text-[#1A1918] group-hover:bg-[#1A1918] group-hover:text-white group-hover:border-[#1A1918] transition-all duration-200 flex items-center justify-center gap-2 cursor-pointer shadow-2xs"
+                    >
+                      <span>{role.actionText}</span>
+                      <ArrowRight className="w-3.5 h-3.5" />
+                    </button>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* 4. CENTRES OF CLINICAL EXCELLENCE */}
+      <section id="specialties" className="py-16 sm:py-24 border-b border-[#EAE4D9] bg-[#FAF7F2]">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
+          {/* Section Header */}
+          <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4 mb-10 sm:mb-14 pb-4 border-b border-[#EAE4D9]">
+            <div>
+              <span className="text-xs font-semibold tracking-[0.25em] text-[#716B82] uppercase">
+                CENTRES OF CLINICAL EXCELLENCE
+              </span>
+              <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
+                Curated clinical excellence, connected to you.
               </h2>
             </div>
             <p className="text-xs sm:text-sm text-[#7A746B] max-w-xs">
-              Every department connects seamlessly to your centralized longitudinal health record.
+              Every clinical division connects seamlessly to your centralized longitudinal health record.
             </p>
           </div>
 
@@ -498,8 +628,8 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
       </section>
 
-      {/* 4. INTERACTIVE PATIENT ID & RECORD LOOKUP WIDGET (Sharp Div Edges) */}
-      <section id="records-lookup" className="py-16 sm:py-20 bg-[#F4EFE6] border-y border-[#EAE4D9]">
+      {/* 5. INTERACTIVE PATIENT ID & RECORD LOOKUP WIDGET */}
+      <section id="records-lookup" className="py-16 sm:py-20 bg-[#F4EFE6] border-b border-[#EAE4D9]">
         <div className="max-w-[1200px] mx-auto px-4 sm:px-8">
           <div className="bg-white rounded-none p-6 sm:p-10 lg:p-12 border border-[#E4DDD0] shadow-[0_12px_32px_rgba(40,32,24,0.05)]">
             <div className="grid lg:grid-cols-12 gap-8 items-start">
@@ -652,31 +782,27 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
       </section>
 
-      {/* 5. EDITORIAL PILLARS / OUR STORY (Sharp Cards) */}
-      <section id="our-story" className="py-20 sm:py-28 max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
+      {/* 6. PLATFORM ARCHITECTURE & STANDARDS */}
+      <section id="architecture" className="py-20 sm:py-28 max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
         <div className="grid lg:grid-cols-12 gap-12 items-center">
           <div className="lg:col-span-5">
             <span className="text-xs font-semibold tracking-[0.22em] text-[#716B82] uppercase">
-              ABOUT OUR CAMPUS
+              PLATFORM ARCHITECTURE & STANDARDS
             </span>
             <h2 className="font-editorial-serif text-3xl sm:text-5xl text-[#191817] font-normal mt-2 mb-6 leading-tight">
-              Hospitality meets world-class clinical precision.
+              Enterprise-grade digital health infrastructure.
             </h2>
             <p className="text-sm sm:text-base text-[#615C54] leading-relaxed mb-6 font-normal">
-              Founded on the belief that healthcare should feel calm, humane, and deeply personal,
-              SwaasthSaarthi integrates international medical standards with modern
-              digital health infrastructure.
+              SwaasthSaarthi integrates international clinical informatics with national digital health standards for safe, consent-driven care coordination across all healthcare providers.
             </p>
             <p className="text-sm sm:text-base text-[#615C54] leading-relaxed mb-8 font-normal">
-              Whether you are here for preventive cardiology, outpatient pediatric wellness,
-              or specialized surgical care, our campus provides an unhurried, reassuring environment
-              where your health story is always heard.
+              Whether you are an outpatient visiting a local clinic, undergoing specialized surgery, or receiving lab diagnostics, your longitudinal record remains continuous, encrypted, and completely under your control.
             </p>
 
             <div className="grid grid-cols-2 gap-6 pt-4 border-t border-[#EAE4D9]">
               <div>
-                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#57477D]">350+</div>
-                <div className="text-xs text-[#7A746B] mt-1">Specialized Care Beds</div>
+                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#57477D]">50+</div>
+                <div className="text-xs text-[#7A746B] mt-1">Network Care Facilities</div>
               </div>
               <div>
                 <div className="font-editorial-serif text-2xl sm:text-3xl text-[#57477D]">100%</div>
@@ -688,11 +814,31 @@ export const LandingView: React.FC<LandingViewProps> = ({
           <div className="lg:col-span-7 grid sm:grid-cols-2 gap-6">
             <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
               <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
-                <Award className="w-5 h-5" />
+                <Layers className="w-5 h-5" />
               </div>
-              <h3 className="font-editorial-serif text-xl text-[#191817]">JCI & NABH Accreditation</h3>
+              <h3 className="font-editorial-serif text-xl text-[#191817]">HL7 FHIR R4 Standards</h3>
               <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
-                Adhering to the most rigorous international clinical protocols and patient safety measures.
+                Standardized diagnostic reports, encounter notes, and medication plans interoperable with modern electronic health record systems.
+              </p>
+            </div>
+
+            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
+              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
+                <ShieldCheck className="w-5 h-5" />
+              </div>
+              <h3 className="font-editorial-serif text-xl text-[#191817]">ABDM Ayushman Bharat</h3>
+              <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
+                Full compliance with National Digital Health Mission Milestone 1 (M1), M2, and M3 protocols for longitudinal data exchange.
+              </p>
+            </div>
+
+            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
+              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
+                <Lock className="w-5 h-5" />
+              </div>
+              <h3 className="font-editorial-serif text-xl text-[#191817]">Zero-Knowledge Consent</h3>
+              <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
+                Granular, time-bound authorization. Patients choose exactly which doctor or laboratory can view specific care contexts.
               </p>
             </div>
 
@@ -702,34 +848,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </div>
               <h3 className="font-editorial-serif text-xl text-[#191817]">24/7 Rapid Emergency</h3>
               <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
-                State-of-the-art Level 1 trauma facilities, rapid catheterization response, and ICU transport.
-              </p>
-            </div>
-
-            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
-              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
-                <Building2 className="w-5 h-5" />
-              </div>
-              <h3 className="font-editorial-serif text-xl text-[#191817]">Dedicated Care Pavilions</h3>
-              <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
-                Quiet suites, landscaped healing gardens, and sunlit recovery wings designed for peace of mind.
-              </p>
-            </div>
-
-            <div className="bg-white p-7 rounded-none border border-[#EAE4D9] space-y-3">
-              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D]">
-                <Users className="w-5 h-5" />
-              </div>
-              <h3 className="font-editorial-serif text-xl text-[#191817]">Patient-First Consent</h3>
-              <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
-                You retain complete autonomy over which medical records are shared with external practitioners.
+                Emergency trauma coordination, rapid patient identification, and instant retrieval of critical allergies and blood group records.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* 6. FREQUENTLY ASKED QUESTIONS (Sharp Accordion) */}
+      {/* 7. FREQUENTLY ASKED QUESTIONS */}
       <section id="faq" className="py-20 bg-[#F4EFE6] border-t border-[#EAE4D9]">
         <div className="max-w-[960px] mx-auto px-4 sm:px-8">
           <div className="text-center mb-12">
@@ -772,7 +898,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
         </div>
       </section>
 
-      {/* 7. EDITORIAL FOOTER (Sharp Architecture) */}
+      {/* 8. EDITORIAL FOOTER */}
       <footer className="bg-[#FAF7F2] border-t border-[#EAE4D9] pt-16 pb-12">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12">
           <div className="grid md:grid-cols-2 lg:grid-cols-12 gap-10 pb-12 border-b border-[#EAE4D9]">
@@ -789,40 +915,40 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 </span>
               </div>
               <p className="text-xs sm:text-sm text-[#6E685F] leading-relaxed max-w-sm">
-                Excellence in clinical care, modern patient hospitality, and secure longitudinal health
-                records powered by the SwaasthSaarthi platform.
+                India's next-generation unified healthcare network and longitudinal records platform. Empowering patients, physicians, laboratories, and pharmacies through open ABDM standards.
               </p>
               <div className="flex items-center gap-3 text-xs text-[#7A746B] pt-2">
                 <span className="flex items-center gap-1.5">
                   <MapPin className="w-3.5 h-3.5 text-[#57477D]" />
-                  Central Digital Health Network
+                  Central Digital Health Network · Ayushman Bharat Ready
                 </span>
               </div>
             </div>
 
-            {/* Links column: Clinical */}
+            {/* Links column: Role Portals */}
             <div className="lg:col-span-2 space-y-3">
               <h5 className="text-xs font-semibold tracking-wider text-[#191817] uppercase">
-                Care Divisions
+                Role Portals
+              </h5>
+              <ul className="text-xs sm:text-sm text-[#6E685F] space-y-2">
+                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Patient Portal</button></li>
+                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Doctor Workstation</button></li>
+                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Diagnostic Laboratory</button></li>
+                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Pharmacy Dispensation</button></li>
+                <li><a href="#records-lookup" className="hover:text-[#57477D]">Patient ID Verification</a></li>
+              </ul>
+            </div>
+
+            {/* Links column: Care Divisions */}
+            <div className="lg:col-span-2 space-y-3">
+              <h5 className="text-xs font-semibold tracking-wider text-[#191817] uppercase">
+                Centres of Care
               </h5>
               <ul className="text-xs sm:text-sm text-[#6E685F] space-y-2">
                 <li><a href="#specialties" className="hover:text-[#57477D]">Cardiovascular</a></li>
                 <li><a href="#specialties" className="hover:text-[#57477D]">Oncology</a></li>
                 <li><a href="#specialties" className="hover:text-[#57477D]">Neurosciences</a></li>
-                <li><a href="#specialties" className="hover:text-[#57477D]">Pediatrics</a></li>
-                <li><a href="#specialties" className="hover:text-[#57477D]">Emergency & Trauma</a></li>
-              </ul>
-            </div>
-
-            {/* Links column: Patient Access */}
-            <div className="lg:col-span-2 space-y-3">
-              <h5 className="text-xs font-semibold tracking-wider text-[#191817] uppercase">
-                Patient Portal
-              </h5>
-              <ul className="text-xs sm:text-sm text-[#6E685F] space-y-2">
-                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">Login with PID</button></li>
-                <li><button onClick={onOpenLogin} className="hover:text-[#57477D] text-left cursor-pointer">New Patient Sign Up</button></li>
-                <li><a href="#records-lookup" className="hover:text-[#57477D]">Lookup Records</a></li>
+                <li><a href="#specialties" className="hover:text-[#57477D]">Health Vault & ABDM</a></li>
                 <li><a href="#faq" className="hover:text-[#57477D]">Consent Privacy</a></li>
               </ul>
             </div>
@@ -859,12 +985,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
             <div>
               © 2026 SwaasthSaarthi. All rights reserved.
             </div>
-            <div className="flex items-center gap-6">
+            <div className="flex items-center gap-4 sm:gap-6 flex-wrap">
               <span>FHIR R4 Standardized</span>
               <span>•</span>
               <span>ABDM Ayushman Bharat Ready</span>
               <span>•</span>
               <span>ISO 27001 Certified</span>
+              <span>•</span>
+              <span>256-Bit TLS Vault</span>
             </div>
           </div>
         </div>

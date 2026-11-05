@@ -73,7 +73,7 @@ export function NotificationListView() {
   const getCategoryIcon = (cat: NotificationCategory) => {
     switch (cat) {
       case "CONSENT":
-        return <FileText className="w-4 h-4 text-teal-600" />;
+        return <FileText className="w-4 h-4 text-[#57477D]" />;
       case "CLINICAL_ACCESS":
         return <ShieldAlert className="w-4 h-4 text-indigo-600" />;
       case "LAB_REPORT":
@@ -97,19 +97,19 @@ export function NotificationListView() {
   });
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 font-editorial-sans">
       {/* Header Banner */}
-      <div className="bg-white border border-[#d7eaea] rounded-[18px] p-6 shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
+      <div className="bg-white border border-[#EAE4D9] rounded-none p-6 sm:p-7 shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
           <div className="max-w-2xl">
-            <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] text-xs font-semibold mb-3">
+            <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded-none bg-[#FAF7F2] text-[#57477D] border border-[#57477D]/25 text-xs font-mono font-bold uppercase tracking-wider mb-3">
               <Bell className="w-3.5 h-3.5" />
               Real-time In-App Dispatch
             </div>
-            <h1 className="text-2xl font-bold tracking-tight text-[#172033] mb-2">
+            <h1 className="text-2xl md:text-3xl font-editorial-serif font-bold tracking-tight text-[#191817] mb-2">
               Notifications &amp; Consent Alerts
             </h1>
-            <p className="text-[#475569] text-sm leading-relaxed">
+            <p className="text-[#5C574F] text-sm leading-relaxed">
               Timely, privacy-safe notifications for consent requests, authorized record queries, diagnostic test completions, and prescription dispensations.
             </p>
           </div>
@@ -117,7 +117,7 @@ export function NotificationListView() {
           {unreadCount > 0 && (
             <button
               onClick={handleMarkAll}
-              className="flex items-center gap-2 px-4 py-2 bg-[#008080] text-white rounded-[12px] text-xs font-semibold hover:bg-[#006666] active:bg-[#004c4c] transition-colors shadow-xs cursor-pointer self-start sm:self-auto shrink-0"
+              className="flex items-center gap-2 px-4 py-2 bg-[#1A1918] hover:bg-[#2E2C2A] text-white rounded-none text-xs font-semibold transition-colors shadow-2xs cursor-pointer self-start sm:self-auto shrink-0"
             >
               <CheckCheck className="w-4 h-4" />
               Mark all as read ({unreadCount})
@@ -127,12 +127,12 @@ export function NotificationListView() {
       </div>
 
       {/* Toolbar & Filters */}
-      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-[18px] border border-[#d7eaea] shadow-xs">
+      <div className="flex flex-col sm:flex-row items-center justify-between gap-3 bg-white p-4 rounded-none border border-[#EAE4D9] shadow-2xs">
         <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto">
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="text-xs border border-[#d7eaea] rounded-[12px] px-2.5 py-2 bg-white text-[#172033] font-medium cursor-pointer focus:outline-none focus:ring-2 focus:ring-[#008080]"
+            className="text-xs border border-[#D5CEC2] rounded-none px-3 py-2 bg-[#FAF7F2] text-[#191817] font-medium cursor-pointer focus:outline-none focus:bg-white focus:ring-1 focus:ring-[#1A1918]"
           >
             <option value="ALL">All Categories</option>
             <option value="CONSENT">Consent Events</option>
@@ -143,12 +143,12 @@ export function NotificationListView() {
             <option value="SECURITY">Security & Auth</option>
           </select>
 
-          <label className="flex items-center gap-1.5 text-xs text-[#475569] cursor-pointer ml-2">
+          <label className="flex items-center gap-1.5 text-xs text-[#5C574F] cursor-pointer ml-2">
             <input
               type="checkbox"
               checked={unreadOnly}
               onChange={(e) => setUnreadOnly(e.target.checked)}
-              className="rounded border-[#d7eaea] text-[#008080] focus:ring-[#008080] w-3.5 h-3.5"
+              className="rounded-none border-[#D5CEC2] text-[#1A1918] focus:ring-[#1A1918] w-3.5 h-3.5"
             />
             <span>Unread only</span>
           </label>
@@ -157,7 +157,7 @@ export function NotificationListView() {
         <button
           onClick={loadNotifications}
           disabled={loading}
-          className="p-2 border border-[#d7eaea] rounded-[12px] text-[#008080] hover:bg-[#f0fdfa] transition-colors cursor-pointer self-end sm:self-auto"
+          className="p-2 border border-[#D5CEC2] rounded-none text-[#191817] hover:bg-[#FAF7F2] transition-colors cursor-pointer self-end sm:self-auto"
           title="Refresh notifications"
         >
           <RefreshCw className={`w-4 h-4 ${loading ? "animate-spin" : ""}`} />
@@ -165,55 +165,55 @@ export function NotificationListView() {
       </div>
 
       {error && (
-        <div className="p-4 bg-rose-50 border border-rose-200 rounded-[18px] text-rose-800 text-xs">
+        <div className="p-4 bg-rose-50 border border-rose-200 rounded-none text-rose-800 text-xs">
           {error}
         </div>
       )}
 
       {/* Notifications Inbox */}
-      <div className="bg-white rounded-[18px] border border-[#d7eaea] shadow-xs overflow-hidden">
+      <div className="bg-white rounded-none border border-[#EAE4D9] shadow-[0_4px_20px_rgba(26,25,24,0.04)] overflow-hidden">
         {loading ? (
-          <div className="p-12 text-center text-[#64748b] text-sm">
-            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#008080]" />
+          <div className="p-12 text-center text-[#7A746B] text-sm">
+            <RefreshCw className="w-5 h-5 animate-spin mx-auto mb-2 text-[#57477D]" />
             Loading notifications...
           </div>
         ) : filteredNotifications.length === 0 ? (
-          <div className="p-12 text-center text-slate-500">
-            <Bell className="w-10 h-10 text-slate-300 mx-auto mb-2" />
-            <p className="text-sm font-medium">No notifications in your inbox.</p>
-            <p className="text-xs text-slate-400 mt-1">
+          <div className="p-12 text-center text-[#7A746B]">
+            <Bell className="w-10 h-10 text-[#D5CEC2] mx-auto mb-2" />
+            <p className="text-sm font-editorial-serif font-bold text-[#191817]">No notifications in your inbox.</p>
+            <p className="text-xs text-[#7A746B] mt-1">
               You will be notified here when important clinical or consent events occur.
             </p>
           </div>
         ) : (
-          <div className="divide-y divide-slate-100">
+          <div className="divide-y divide-[#EAE4D9]">
             {filteredNotifications.map((n) => (
               <div
                 key={n._id}
                 className={`p-4 sm:p-5 transition-colors flex items-start justify-between gap-4 ${
-                  !n.isRead ? "bg-teal-50/30 font-medium" : "hover:bg-slate-50/60"
+                  !n.isRead ? "bg-[#FAF7F2] font-medium" : "hover:bg-[#FAF7F2]/50"
                 }`}
               >
                 <div className="flex items-start gap-3.5">
-                  <div className="p-2 rounded-xl bg-slate-100 mt-0.5 shrink-0">
+                  <div className="p-2 rounded-none bg-white border border-[#EAE4D9] text-[#57477D] mt-0.5 shrink-0 shadow-2xs">
                     {getCategoryIcon(n.category)}
                   </div>
                   <div className="space-y-1">
                     <div className="flex items-center gap-2">
-                      <span className="text-sm font-semibold text-slate-900">
+                      <span className="text-sm font-bold text-[#191817]">
                         {n.title}
                       </span>
                       {!n.isRead && (
-                        <span className="w-2 h-2 rounded-full bg-teal-600 shrink-0" />
+                        <span className="w-2 h-2 rounded-none bg-[#57477D] shrink-0" />
                       )}
-                      <span className="px-2 py-0.5 rounded text-[10px] font-bold tracking-wider bg-slate-100 text-slate-600 uppercase">
+                      <span className="px-2 py-0.5 rounded-none text-[10px] font-mono font-bold tracking-wider bg-[#FAF7F2] text-[#57477D] border border-[#57477D]/25 uppercase">
                         {n.category}
                       </span>
                     </div>
-                    <p className="text-xs text-slate-600 leading-relaxed font-normal">
+                    <p className="text-xs text-[#5C574F] leading-relaxed font-normal">
                       {n.message}
                     </p>
-                    <div className="text-[10px] text-slate-400 pt-1">
+                    <div className="text-[10px] text-[#7A746B] pt-1 font-mono">
                       {new Date(n.createdAt).toLocaleString(undefined, {
                         month: "short",
                         day: "numeric",
@@ -221,7 +221,7 @@ export function NotificationListView() {
                         minute: "2-digit",
                       })}
                       {n.relatedResourceId && (
-                        <span className="ml-2 font-mono text-slate-400">
+                        <span className="ml-2 font-mono text-[#7A746B]">
                           Ref: {n.relatedResourceId}
                         </span>
                       )}
@@ -232,7 +232,7 @@ export function NotificationListView() {
                 {!n.isRead && (
                   <button
                     onClick={() => handleMarkOne(n.notificationId)}
-                    className="p-1.5 text-slate-400 hover:text-teal-700 hover:bg-slate-100 rounded-lg transition-colors cursor-pointer shrink-0"
+                    className="p-1.5 text-[#7A746B] hover:text-[#191817] hover:bg-[#FAF7F2] rounded-none transition-colors cursor-pointer shrink-0 border border-transparent hover:border-[#D5CEC2]"
                     title="Mark as read"
                   >
                     <Check className="w-4 h-4" />
@@ -244,10 +244,10 @@ export function NotificationListView() {
         )}
       </div>
 
-      <div className="p-4 bg-slate-100 rounded-xl text-xs text-slate-500 flex items-start gap-2">
-        <Info className="w-4 h-4 text-slate-400 shrink-0 mt-0.5" />
+      <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#5C574F] flex items-start gap-2.5">
+        <Info className="w-4 h-4 text-[#7A746B] shrink-0 mt-0.5" />
         <span>
-          <strong>Privacy Safeguard:</strong> All notification messages are strictly filtered and validated to prevent sensitive clinical parameters, test results, passwords, or authentication secrets from leaking outside encrypted clinical boundaries.
+          <strong className="text-[#191817]">Privacy Safeguard:</strong> All notification messages are strictly filtered and validated to prevent sensitive clinical parameters, test results, passwords, or authentication secrets from leaking outside encrypted clinical boundaries.
         </span>
       </div>
     </div>

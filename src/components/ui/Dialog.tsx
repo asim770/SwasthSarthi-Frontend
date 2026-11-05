@@ -64,11 +64,11 @@ export const Dialog: React.FC<DialogProps> = ({
         {/* Header */}
         <div className="flex items-start justify-between p-5 pb-4 border-b border-[#EAE4D9]">
           <div>
-            <h2 id="dialog-title" className="text-base font-semibold text-[#172033]">
+            <h2 id="dialog-title" className="text-base font-editorial-serif font-bold text-[#191817]">
               {title}
             </h2>
             {description && (
-              <p className="text-xs text-[#475569] mt-1 leading-relaxed">
+              <p className="text-xs text-[#5C574F] mt-1 leading-relaxed">
                 {description}
               </p>
             )}
@@ -76,20 +76,20 @@ export const Dialog: React.FC<DialogProps> = ({
           <button
             onClick={onClose}
             aria-label="Close dialog"
-            className="text-slate-400 hover:text-[#172033] rounded-none p-1 hover:bg-[#FAF7F2] transition-colors cursor-pointer border border-transparent hover:border-[#EAE4D9]"
+            className="text-[#7A746B] hover:text-[#191817] rounded-none p-1 hover:bg-[#FAF7F2] transition-colors cursor-pointer border border-transparent hover:border-[#EAE4D9]"
           >
             <X className="w-4 h-4" />
           </button>
         </div>
 
         {/* Body Content */}
-        <div className="p-5 max-h-[70vh] overflow-y-auto text-sm text-[#475569]">
+        <div className="p-5 max-h-[70vh] overflow-y-auto text-sm text-[#5C574F]">
           {children}
         </div>
 
         {/* Footer */}
         {footer && (
-          <div className="p-4 bg-[#f0fdfa] border-t border-[#d7eaea]/70 flex items-center justify-end gap-2.5">
+          <div className="p-4 bg-[#FAF7F2] border-t border-[#EAE4D9] flex items-center justify-end gap-2.5">
             {footer}
           </div>
         )}

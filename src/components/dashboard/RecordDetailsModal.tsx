@@ -88,16 +88,16 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
         </>
       }
     >
-      <div className="space-y-4">
+      <div className="space-y-4 font-editorial-sans">
         {/* Meta Header */}
-        <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-[#d7eaea]">
+        <div className="flex flex-wrap items-center gap-2 pb-3 border-b border-[#EAE4D9]">
           <Badge variant={getBadgeVariant(record.resourceType)} size="md">
             {record.resourceType}
           </Badge>
           <Badge variant={record.status === "final" || record.status === "completed" ? "success" : "neutral"} size="md" dot>
             Status: {record.status}
           </Badge>
-          <span className="text-xs text-[#64748b] font-mono ml-auto">
+          <span className="text-xs text-[#7A746B] font-mono ml-auto">
             ABDM Care Context: {record.careContextId}
           </span>
         </div>
@@ -106,69 +106,69 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
           <div className="relative">
             <button
               onClick={handleCopyJson}
-              className="absolute right-2.5 top-2.5 px-2.5 py-1 rounded-[8px] bg-slate-800 text-slate-300 hover:text-white text-xs flex items-center gap-1.5 transition-colors"
+              className="absolute right-2.5 top-2.5 px-2.5 py-1 rounded-none bg-[#1A1918] text-[#FAF7F2] hover:bg-[#2E2C2A] text-xs flex items-center gap-1.5 transition-colors cursor-pointer shadow-2xs"
             >
               {copied ? <Check className="w-3 h-3 text-emerald-400" /> : <Copy className="w-3 h-3" />}
               <span>{copied ? "Copied" : "Copy JSON"}</span>
             </button>
-            <pre className="p-4 bg-slate-900 text-emerald-400 rounded-[12px] text-xs font-mono overflow-x-auto max-h-80 border border-[#d7eaea]">
+            <pre className="p-4 bg-[#1A1918] text-emerald-400 rounded-none text-xs font-mono overflow-x-auto max-h-80 border border-[#2E2C2A]">
               {JSON.stringify(mockFhirBundle, null, 2)}
             </pre>
           </div>
         ) : (
           <>
             {/* Clinical Metadata Grid */}
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3.5 bg-[#f0fdfa] rounded-[14px] border border-[#d7eaea]">
-              <div className="flex items-center gap-2.5 text-xs text-[#475569]">
-                <Building2 className="w-4 h-4 text-[#008080] shrink-0" />
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-4 bg-[#FAF7F2] rounded-none border border-[#EAE4D9]">
+              <div className="flex items-center gap-2.5 text-xs text-[#5C574F]">
+                <Building2 className="w-4 h-4 text-[#57477D] shrink-0" />
                 <div>
-                  <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Healthcare Provider</span>
-                  <span className="font-medium text-[#172033]">{record.provider}</span>
+                  <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Healthcare Provider</span>
+                  <span className="font-semibold text-[#191817]">{record.provider}</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 text-xs text-[#475569]">
-                <User className="w-4 h-4 text-[#008080] shrink-0" />
+              <div className="flex items-center gap-2.5 text-xs text-[#5C574F]">
+                <User className="w-4 h-4 text-[#57477D] shrink-0" />
                 <div>
-                  <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Attending Clinician</span>
-                  <span className="font-medium text-[#172033]">{record.doctor}</span>
+                  <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Attending Clinician</span>
+                  <span className="font-semibold text-[#191817]">{record.doctor}</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 text-xs text-[#475569]">
-                <Calendar className="w-4 h-4 text-[#008080] shrink-0" />
+              <div className="flex items-center gap-2.5 text-xs text-[#5C574F]">
+                <Calendar className="w-4 h-4 text-[#57477D] shrink-0" />
                 <div>
-                  <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Record Date</span>
-                  <span className="font-medium text-[#172033]">{record.date}</span>
+                  <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Record Date</span>
+                  <span className="font-semibold text-[#191817]">{record.date}</span>
                 </div>
               </div>
 
-              <div className="flex items-center gap-2.5 text-xs text-[#475569]">
-                <ShieldCheck className="w-4 h-4 text-[#008080] shrink-0" />
+              <div className="flex items-center gap-2.5 text-xs text-[#5C574F]">
+                <ShieldCheck className="w-4 h-4 text-[#4E8C78] shrink-0" />
                 <div>
-                  <span className="text-[#64748b] block text-[10px] uppercase font-semibold">Provenance &amp; Security</span>
-                  <span className="font-medium text-[#004c4c]">ABDM Cryptographically Verified</span>
+                  <span className="text-[#7A746B] block text-[10px] uppercase font-mono font-semibold">Provenance &amp; Security</span>
+                  <span className="font-semibold text-emerald-800">ABDM Cryptographically Verified</span>
                 </div>
               </div>
             </div>
 
             {/* Clinical Summary */}
             <div>
-              <h4 className="text-xs font-semibold text-[#172033] uppercase tracking-wider mb-1.5">
+              <h4 className="text-xs font-editorial-serif font-bold text-[#191817] uppercase tracking-wider mb-1.5">
                 Clinical Findings &amp; Summary
               </h4>
-              <div className="p-3 bg-white border border-[#d7eaea] rounded-[12px] text-xs text-[#475569] leading-relaxed font-sans shadow-2xs">
+              <div className="p-3.5 bg-white border border-[#EAE4D9] rounded-none text-xs text-[#5C574F] leading-relaxed shadow-2xs">
                 {record.summary}
               </div>
             </div>
 
             {/* ABHA Identifier Banner */}
-            <div className="p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] flex items-center justify-between text-xs">
+            <div className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
-                <FileText className="w-4 h-4 text-[#008080]" />
-                <span className="text-[#004c4c] font-medium">Linked to ABHA: rahul.verma@sbx</span>
+                <FileText className="w-4 h-4 text-[#57477D]" />
+                <span className="text-[#191817] font-semibold">Linked to ABHA: rahul.verma@sbx</span>
               </div>
-              <span className="text-[#008080] font-mono text-[11px]">NRCES HL7 FHIR R4</span>
+              <span className="text-[#57477D] font-mono text-[11px] font-bold">NRCES HL7 FHIR R4</span>
             </div>
           </>
         )}

@@ -30,11 +30,11 @@ export const Button: React.FC<ButtonProps> = ({
   };
 
   const variantStyles = {
-    primary: "bg-[#008080] text-white hover:bg-[#006666] active:bg-[#004c4c] shadow-xs",
-    secondary: "bg-white text-[#008080] border border-[#d7eaea] hover:bg-[#f0fdfa] hover:border-[#b2d8d8] shadow-xs",
-    outline: "bg-transparent text-[#008080] border border-[#b2d8d8] hover:bg-[#f0fdfa]",
-    ghost: "bg-transparent text-[#475569] hover:bg-[#f0fdfa] hover:text-[#008080]",
-    danger: "bg-rose-600 text-white hover:bg-rose-700 active:bg-rose-800 shadow-xs",
+    primary: "bg-[#1A1918] text-white hover:bg-[#2E2C2A] active:bg-[#121110] shadow-2xs border border-[#1A1918]",
+    secondary: "bg-white text-[#191817] border border-[#D5CEC2] hover:bg-[#FAF7F2] hover:border-[#1A1918] shadow-2xs",
+    outline: "bg-transparent text-[#191817] border border-[#D5CEC2] hover:bg-[#FAF7F2] hover:border-[#1A1918]",
+    ghost: "bg-transparent text-[#5C574F] hover:bg-[#FAF7F2] hover:text-[#191817]",
+    danger: "bg-[#991B1B] text-white hover:bg-[#7F1D1D] active:bg-[#681717] shadow-2xs border border-[#991B1B]",
   };
 
   return (

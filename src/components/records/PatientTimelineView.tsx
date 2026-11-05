@@ -277,7 +277,7 @@ export const PatientTimelineView: React.FC = () => {
         />
         <Card className="border-red-200 bg-red-50/40">
           <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-red-100 border border-red-200 flex items-center justify-center text-red-700 mb-4 shadow-xs">
+            <div className="w-14 h-14 rounded-none bg-red-100 border border-red-200 flex items-center justify-center text-red-700 mb-4 shadow-xs">
               <ShieldAlert className="w-7 h-7" />
             </div>
             <h3 className="text-base font-bold text-red-900 mb-1">
@@ -303,7 +303,7 @@ export const PatientTimelineView: React.FC = () => {
         />
         <Card className="border-amber-200 bg-amber-50/40">
           <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-700 mb-4 shadow-xs">
+            <div className="w-14 h-14 rounded-none bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-700 mb-4 shadow-xs">
               <ShieldAlert className="w-7 h-7" />
             </div>
             <h3 className="text-base font-bold text-amber-900 mb-1">
@@ -321,7 +321,7 @@ export const PatientTimelineView: React.FC = () => {
   const getResourceIcon = (type: string) => {
     switch (type) {
       case "DiagnosticReport":
-        return <FlaskConical className="w-4 h-4 text-teal-600" />;
+        return <FlaskConical className="w-4 h-4 text-[#57477D]" />;
       case "Encounter":
         return <Stethoscope className="w-4 h-4 text-blue-600" />;
       case "Observation":
@@ -371,7 +371,7 @@ export const PatientTimelineView: React.FC = () => {
         description="Unified HL7 FHIR Release 4 clinical timeline aggregated across participating ABDM healthcare institutions under patient electronic consent."
         badge={
           <div className="flex items-center gap-1.5">
-            <Badge variant="teal" size="sm">FHIR R4 Compliant</Badge>
+            <Badge variant="purple" size="sm">FHIR R4 Compliant</Badge>
             <Badge variant="neutral" size="sm">Mock ABDM Gateway</Badge>
           </div>
         }
@@ -440,20 +440,20 @@ export const PatientTimelineView: React.FC = () => {
 
       {/* Doctor Patient Context & Patient ID Search Bar */}
       {user?.role === "doctor" && (
-        <Card className="border-[#1E1D1B] rounded-none bg-white shadow-none">
+        <Card className="border-[#EAE4D9] rounded-none bg-white shadow-none">
           <CardContent className="p-4 space-y-4 text-xs">
             {/* Top row: Patient ID Search & Quick Selection Dropdown */}
-            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#E5E0D8]">
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#EAE4D9]">
               {/* Patient ID Search Input */}
               <form onSubmit={handleLookupPatient} className="flex items-center gap-2 flex-1 max-w-md">
                 <div className="relative flex-1">
-                  <Search className="w-4 h-4 text-[#8A8780] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <Search className="w-4 h-4 text-[#8C877D] absolute left-3 top-1/2 -translate-y-1/2" />
                   <input
                     type="text"
                     placeholder="Enter Patient ID (e.g. SS-PAT-000001)..."
                     value={patientIdInput}
                     onChange={(e) => setPatientIdInput(e.target.value)}
-                    className="w-full pl-9 pr-3 py-1.5 bg-[#FAF7F2] border border-[#1E1D1B] rounded-none text-xs font-mono font-bold text-[#1E1D1B] placeholder-[#8A8780] focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                    className="w-full pl-9 pr-3 py-1.5 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none text-xs font-mono font-bold text-[#1A1918] placeholder-[#8C877D] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                   />
                 </div>
                 <Button
@@ -469,8 +469,8 @@ export const PatientTimelineView: React.FC = () => {
 
               {/* Patient Selection Dropdown */}
               <div className="flex items-center gap-2">
-                <span className="font-bold text-[#1E1D1B] flex items-center gap-1.5 shrink-0 text-xs">
-                  <User className="w-4 h-4 text-[#008080]" />
+                <span className="font-bold text-[#1A1918] flex items-center gap-1.5 shrink-0 text-xs font-mono uppercase tracking-wider text-[11px]">
+                  <User className="w-4 h-4 text-[#57477D]" />
                   Active Patient:
                 </span>
                 <select
@@ -481,7 +481,7 @@ export const PatientTimelineView: React.FC = () => {
                     const p = patients.find((pt) => pt.id === pid);
                     if (p) setSelectedPatientName(p.name);
                   }}
-                  className="bg-white border border-[#1E1D1B] rounded-none px-3 py-1.5 font-bold text-xs text-[#1E1D1B] focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                  className="bg-white border border-[#D5CEC2] rounded-none px-3 py-1.5 font-bold text-xs text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                 >
                   {patients.map((p) => (
                     <option key={p.id} value={p.id}>
@@ -500,24 +500,24 @@ export const PatientTimelineView: React.FC = () => {
               </div>
             )}
             {consentRequestSuccess && (
-              <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+              <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2 rounded-none">
                 <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
                 <span>{consentRequestSuccess}</span>
               </div>
             )}
 
             {/* Minimal Patient Identity Card & Consent Bar */}
-            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#FAF7F2] p-3 border border-[#E5E0D8]">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#FAF7F2] p-3 border border-[#EAE4D9] rounded-none">
               {/* Minimal Identity Info */}
               <div className="space-y-1">
                 <div className="flex items-center gap-3">
-                  <span className="font-bold text-sm text-[#1E1D1B]">{selectedPatientName || "Selected Patient"}</span>
-                  <span className="font-mono text-xs px-2 py-0.5 bg-[#008080]/10 text-[#008080] border border-[#008080]/30 font-bold">
+                  <span className="font-bold text-sm text-[#1A1918] font-editorial-serif">{selectedPatientName || "Selected Patient"}</span>
+                  <span className="font-mono text-xs px-2 py-0.5 bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] font-bold">
                     {currentPatientCustomId}
                   </span>
                 </div>
-                <p className="text-[11px] text-[#636059] flex items-center gap-1.5">
-                  <Lock className="w-3 h-3 text-[#008080]" />
+                <p className="text-[11px] text-[#69655E] flex items-center gap-1.5 font-mono">
+                  <Lock className="w-3 h-3 text-[#57477D]" />
                   <span>Minimal patient identity disclosed per privacy regulations. Complete clinical records require patient consent.</span>
                 </p>
               </div>
@@ -525,7 +525,7 @@ export const PatientTimelineView: React.FC = () => {
               {/* Consent Status & Action */}
               <div className="flex items-center gap-2 shrink-0">
                 {activeConsent ? (
-                  <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1.5 text-xs font-semibold">
+                  <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1.5 text-xs font-semibold rounded-none font-mono">
                     <ShieldCheck className="w-4 h-4 text-emerald-600" />
                     <span>
                       Consent Active #{activeConsent.consentId} (Expires: {new Date(activeConsent.expiresAt).toLocaleDateString()})
@@ -533,7 +533,7 @@ export const PatientTimelineView: React.FC = () => {
                   </div>
                 ) : (
                   <div className="flex items-center gap-3">
-                    <div className="flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-300 px-2.5 py-1 text-xs font-semibold">
+                    <div className="flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-200 px-2.5 py-1 text-xs font-semibold rounded-none font-mono">
                       <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
                       <span>Consent Required</span>
                     </div>
@@ -555,41 +555,41 @@ export const PatientTimelineView: React.FC = () => {
       )}
 
       {/* Filter and Search Bar */}
-      <Card>
+      <Card className="rounded-none border-[#EAE4D9] shadow-none">
         <CardContent className="p-4 space-y-3">
           <div className="flex flex-col md:flex-row gap-3">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-slate-400 absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-4 h-4 text-[#8C877D] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
                 placeholder="Search diagnostic tests, doctors, medications, or findings..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-white border border-[#d7eaea] rounded-[12px] text-xs text-[#172033] placeholder-slate-400 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#008080] focus:border-[#008080]"
+                className="w-full pl-9 pr-3 py-2 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none text-xs text-[#1A1918] placeholder-[#8C877D] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
               />
             </div>
 
             {/* Date Range Pickers */}
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <div className="flex items-center gap-1.5 bg-white border border-[#d7eaea] rounded-[12px] px-2.5 py-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#008080]" />
+              <div className="flex items-center gap-1.5 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none px-2.5 py-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#57477D]" />
                 <input
                   type="date"
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
-                  className="bg-transparent text-[#172033] text-xs focus:outline-none"
+                  className="bg-transparent text-[#1A1918] text-xs focus:outline-none"
                   title="From Date"
                 />
               </div>
-              <span className="text-[#64748b] text-xs">to</span>
-              <div className="flex items-center gap-1.5 bg-white border border-[#d7eaea] rounded-[12px] px-2.5 py-1.5">
-                <Calendar className="w-3.5 h-3.5 text-[#008080]" />
+              <span className="text-[#69655E] text-xs font-mono">to</span>
+              <div className="flex items-center gap-1.5 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none px-2.5 py-1.5">
+                <Calendar className="w-3.5 h-3.5 text-[#57477D]" />
                 <input
                   type="date"
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
-                  className="bg-transparent text-[#172033] text-xs focus:outline-none"
+                  className="bg-transparent text-[#1A1918] text-xs focus:outline-none"
                   title="To Date"
                 />
               </div>
@@ -599,7 +599,7 @@ export const PatientTimelineView: React.FC = () => {
                 <select
                   value={selectedInstitution}
                   onChange={(e) => setSelectedInstitution(e.target.value)}
-                  className="bg-white border border-[#d7eaea] rounded-[12px] px-2.5 py-1.5 text-xs text-[#172033] focus:outline-none focus:ring-2 focus:ring-[#008080]"
+                  className="bg-[#FAF7F2] border border-[#D5CEC2] rounded-none px-2.5 py-1.5 text-xs text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                 >
                   <option value="ALL">All HIP Sources</option>
                   {institutionOptions.map((inst) => (
@@ -640,19 +640,19 @@ export const PatientTimelineView: React.FC = () => {
                 <button
                   key={f.id}
                   onClick={() => setSelectedType(f.id)}
-                  className={`px-3 py-1.5 rounded-[12px] text-xs font-semibold shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-none text-xs font-semibold shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
                     selectedType === f.id
-                      ? "bg-[#008080] text-white shadow-xs"
-                      : "bg-[#f0fdfa] text-[#475569] border border-[#d7eaea] hover:bg-[#b2d8d8]/30 hover:text-[#008080]"
+                      ? "bg-[#1A1918] text-white shadow-none"
+                      : "bg-[#FAF7F2] text-[#69655E] border border-[#D5CEC2] hover:bg-[#EAE4D9] hover:text-[#1A1918]"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{f.label}</span>
                   <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-full ${
+                    className={`text-[10px] px-1.5 py-0.2 rounded-none font-mono ${
                       selectedType === f.id
-                        ? "bg-[#004c4c] text-white"
-                        : "bg-[#d7eaea]/70 text-[#004c4c]"
+                        ? "bg-white/20 text-white"
+                        : "bg-[#EAE4D9] text-[#1A1918]"
                     }`}
                   >
                     {count}
@@ -666,10 +666,10 @@ export const PatientTimelineView: React.FC = () => {
 
       {/* Main Timeline View */}
       {error ? (
-        <Card className="border-red-200 bg-red-50/50">
+        <Card className="border-red-200 bg-red-50/50 rounded-none shadow-none">
           <CardContent className="py-10 text-center text-xs text-red-700">
             <AlertCircle className="w-8 h-8 text-red-500 mx-auto mb-2" />
-            <span className="font-bold block text-sm mb-1">Access Restricted</span>
+            <span className="font-bold block text-sm mb-1 font-editorial-serif">Access Restricted</span>
             <p className="max-w-md mx-auto">{error}</p>
           </CardContent>
         </Card>
@@ -679,13 +679,13 @@ export const PatientTimelineView: React.FC = () => {
           {[1, 2, 3, 4].map((i) => (
             <div
               key={i}
-              className="p-5 bg-white border border-slate-200 rounded-xl shadow-2xs animate-pulse flex items-start gap-4"
+              className="p-5 bg-white border border-[#EAE4D9] rounded-none shadow-none animate-pulse flex items-start gap-4"
             >
-              <div className="w-10 h-10 rounded-xl bg-slate-200 shrink-0" />
+              <div className="w-10 h-10 rounded-none bg-[#FAF7F2] shrink-0" />
               <div className="flex-1 space-y-2">
-                <div className="h-4 bg-slate-200 rounded w-1/3" />
-                <div className="h-3 bg-slate-100 rounded w-3/4" />
-                <div className="h-3 bg-slate-100 rounded w-1/2" />
+                <div className="h-4 bg-[#FAF7F2] rounded-none w-1/3" />
+                <div className="h-3 bg-[#FAF7F2] rounded-none w-3/4" />
+                <div className="h-3 bg-[#FAF7F2] rounded-none w-1/2" />
               </div>
             </div>
           ))}
@@ -713,25 +713,25 @@ export const PatientTimelineView: React.FC = () => {
         />
       ) : (
         /* Chronological Vertical Timeline Spine */
-        <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 sm:before:left-4 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#d7eaea]">
+        <div className="relative pl-6 sm:pl-8 space-y-6 before:absolute before:left-3 sm:before:left-4 before:top-3 before:bottom-3 before:w-0.5 before:bg-[#EAE4D9]">
           {records.map((record) => (
             <div key={record.id} className="relative group">
               {/* Timeline dot */}
-              <div className="absolute -left-6 sm:-left-8 top-4 w-6 h-6 rounded-full bg-white border-2 border-[#008080] flex items-center justify-center shadow-xs transition-transform group-hover:scale-110">
-                <span className="w-2 h-2 rounded-full bg-[#008080]" />
+              <div className="absolute -left-6 sm:-left-8 top-4 w-6 h-6 rounded-none bg-white border border-[#1A1918] flex items-center justify-center shadow-none transition-transform group-hover:scale-110">
+                <span className="w-2 h-2 rounded-none bg-[#57477D]" />
               </div>
 
               {/* Record Card */}
-              <Card className="hover:border-[#b2d8d8] transition-all hover:shadow-xs">
+              <Card className="hover:border-[#D5CEC2] transition-all shadow-none rounded-none border-[#EAE4D9]">
                 <CardContent className="p-4 sm:p-5">
                   <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-3 mb-2">
                     <div className="flex items-start gap-3">
-                      <div className="w-9 h-9 rounded-xl bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center shrink-0 mt-0.5 text-[#008080]">
+                      <div className="w-9 h-9 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center shrink-0 mt-0.5 text-[#57477D]">
                         {getResourceIcon(record.resourceType)}
                       </div>
                       <div>
                         <div className="flex items-center gap-2 flex-wrap">
-                          <h4 className="text-sm font-bold text-[#172033]">
+                          <h4 className="text-sm font-bold text-[#1A1918] font-editorial-serif">
                             {cleanDisplay(record.title)}
                           </h4>
                           <Badge
@@ -741,24 +741,24 @@ export const PatientTimelineView: React.FC = () => {
                             {record.resourceType}
                           </Badge>
                           {record.origin === "abdm_transfer" && (
-                            <span className="text-[10px] px-1.5 py-0.5 rounded bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8] font-semibold">
+                            <span className="text-[10px] px-1.5 py-0.5 rounded-none bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] font-semibold font-mono">
                               Exchanged via ABDM
                             </span>
                           )}
                         </div>
-                        <div className="flex items-center gap-3 text-[11px] text-[#64748b] mt-1 flex-wrap">
-                          <span className="flex items-center gap-1 font-medium text-[#475569]">
-                            <Calendar className="w-3 h-3 text-[#008080]" />
+                        <div className="flex items-center gap-3 text-[11px] text-[#69655E] mt-1 flex-wrap font-mono">
+                          <span className="flex items-center gap-1 font-medium text-[#1A1918]">
+                            <Calendar className="w-3 h-3 text-[#8C877D]" />
                             {record.date}
                           </span>
                           <span>•</span>
-                          <span className="flex items-center gap-1 text-[#475569]">
-                            <Building2 className="w-3 h-3 text-[#008080]" />
+                          <span className="flex items-center gap-1 text-[#5C574F]">
+                            <Building2 className="w-3 h-3 text-[#8C877D]" />
                             {cleanDisplay(record.sourceInstitution)}
                           </span>
                           <span>•</span>
-                          <span className="text-[#475569]">
-                            Dr: <strong>{cleanDisplay(record.doctorName)}</strong>
+                          <span className="text-[#5C574F]">
+                            Dr: <strong className="text-[#1A1918]">{cleanDisplay(record.doctorName)}</strong>
                           </span>
                         </div>
                       </div>
@@ -780,17 +780,17 @@ export const PatientTimelineView: React.FC = () => {
                   </div>
 
                   {/* Clinical Summary */}
-                  <div className="mt-3 p-3 bg-[#f0fdfa]/60 border border-[#d7eaea]/70 rounded-xl text-xs text-[#475569] leading-relaxed font-sans">
+                  <div className="mt-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#5C574F] leading-relaxed font-sans">
                     {cleanDisplay(record.summary)}
                   </div>
 
                   {/* Care context and mock marker */}
-                  <div className="mt-3 flex items-center justify-between text-[10px] text-[#64748b] pt-2 border-t border-[#d7eaea]/60">
+                  <div className="mt-3 flex items-center justify-between text-[10px] text-[#69655E] pt-2 border-t border-[#EAE4D9]">
                     <span className="font-mono">
-                      Care Context: <strong>{record.careContextId}</strong>
+                      Care Context: <strong className="text-[#1A1918]">{record.careContextId}</strong>
                     </span>
-                    <span className="flex items-center gap-1 text-[#008080] font-semibold">
-                      <Sparkles className="w-3 h-3 text-[#008080]" />
+                    <span className="flex items-center gap-1 text-[#57477D] font-semibold font-mono">
+                      <Sparkles className="w-3 h-3 text-[#57477D]" />
                       Synthetic Demo Data
                     </span>
                   </div>

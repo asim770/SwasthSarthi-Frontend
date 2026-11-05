@@ -194,7 +194,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen app-light-bg flex flex-col font-sans text-[var(--text-primary,#172033)]">
+    <div className="min-h-screen bg-[#FAF7F2] font-editorial-sans flex flex-col text-[#191817] selection:bg-[#57477D]/15 selection:text-[#57477D]">
       {/* 1. Horizontal Glass Top Navbar (Replaces permanent vertical sidebar) */}
       <GlassNavbar
         currentRoute={currentRoute}

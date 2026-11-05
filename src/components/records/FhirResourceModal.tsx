@@ -94,13 +94,13 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
     >
       <div className="space-y-3">
         {/* Tab navigation */}
-        <div className="flex items-center gap-1 border-b border-[#d7eaea] text-xs font-semibold pt-1">
+        <div className="flex items-center gap-1 border-b border-[#EAE4D9] text-xs font-semibold pt-1">
           <button
             onClick={() => setActiveTab("clinical")}
             className={`pb-2.5 px-3.5 border-b-2 transition-colors cursor-pointer ${
               activeTab === "clinical"
-                ? "border-[#008080] text-[#008080]"
-                : "border-transparent text-[#64748b] hover:text-[#172033]"
+                ? "border-[#1A1918] text-[#1A1918]"
+                : "border-transparent text-[#69655E] hover:text-[#1A1918]"
             }`}
           >
             Clinical Summary
@@ -109,8 +109,8 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
             onClick={() => setActiveTab("fhir")}
             className={`pb-2.5 px-3.5 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === "fhir"
-                ? "border-[#008080] text-[#008080]"
-                : "border-transparent text-[#64748b] hover:text-[#172033]"
+                ? "border-[#1A1918] text-[#1A1918]"
+                : "border-transparent text-[#69655E] hover:text-[#1A1918]"
             }`}
           >
             <Code className="w-3.5 h-3.5" />
@@ -120,8 +120,8 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
             onClick={() => setActiveTab("provenance")}
             className={`pb-2.5 px-3.5 border-b-2 transition-colors cursor-pointer flex items-center gap-1.5 ${
               activeTab === "provenance"
-                ? "border-[#008080] text-[#008080]"
-                : "border-transparent text-[#64748b] hover:text-[#172033]"
+                ? "border-[#1A1918] text-[#1A1918]"
+                : "border-transparent text-[#69655E] hover:text-[#1A1918]"
             }`}
           >
             <ShieldCheck className="w-3.5 h-3.5" />
@@ -134,71 +134,71 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
           {activeTab === "clinical" && (
             <div className="space-y-4 text-xs">
               {/* Summary Block */}
-              <div className="p-4 bg-[#f0fdfa] rounded-[14px] border border-[#d7eaea]">
-                <span className="text-[11px] font-bold uppercase tracking-wider text-[#64748b] block mb-1">
+              <div className="p-4 bg-[#FAF7F2] rounded-none border border-[#EAE4D9]">
+                <span className="text-[11px] font-bold uppercase tracking-wider text-[#69655E] block mb-1 font-mono">
                   Clinical Summary & Observations
                 </span>
-                <p className="text-[#172033] leading-relaxed font-sans text-xs sm:text-[13px]">
+                <p className="text-[#1A1918] leading-relaxed font-sans text-xs sm:text-[13px]">
                   {cleanDisplay(record.summary)}
                 </p>
               </div>
 
               {/* Attributes Grid */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
-                <div className="p-3 bg-white border border-[#d7eaea] rounded-[14px] flex items-center gap-3 shadow-2xs">
-                  <div className="w-8 h-8 rounded-lg bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080] shrink-0">
+                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
                     <Calendar className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#64748b] uppercase font-semibold block">Record Date</span>
-                    <span className="font-semibold text-[#172033]">{record.date}</span>
+                    <span className="text-[10px] text-[#69655E] uppercase font-semibold block font-mono">Record Date</span>
+                    <span className="font-semibold text-[#1A1918] font-mono">{record.date}</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-white border border-[#d7eaea] rounded-[14px] flex items-center gap-3 shadow-2xs">
-                  <div className="w-8 h-8 rounded-lg bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080] shrink-0">
+                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
                     <Building2 className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#64748b] uppercase font-semibold block">Source Facility</span>
-                    <span className="font-semibold text-[#172033] truncate block max-w-[200px]">
+                    <span className="text-[10px] text-[#69655E] uppercase font-semibold block font-mono">Source Facility</span>
+                    <span className="font-semibold text-[#1A1918] truncate block max-w-[200px]">
                       {cleanDisplay(record.sourceInstitution)}
                     </span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-white border border-[#d7eaea] rounded-[14px] flex items-center gap-3 shadow-2xs">
-                  <div className="w-8 h-8 rounded-lg bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080] shrink-0">
+                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
                     <User className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#64748b] uppercase font-semibold block">Attending Clinician</span>
-                    <span className="font-semibold text-[#172033]">{cleanDisplay(record.doctorName)}</span>
+                    <span className="text-[10px] text-[#69655E] uppercase font-semibold block font-mono">Attending Clinician</span>
+                    <span className="font-semibold text-[#1A1918]">{cleanDisplay(record.doctorName)}</span>
                   </div>
                 </div>
 
-                <div className="p-3 bg-white border border-[#d7eaea] rounded-[14px] flex items-center gap-3 shadow-2xs">
-                  <div className="w-8 h-8 rounded-lg bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080] shrink-0">
+                <div className="p-3 bg-white border border-[#EAE4D9] rounded-none flex items-center gap-3 shadow-none">
+                  <div className="w-8 h-8 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] shrink-0">
                     <ShieldCheck className="w-4 h-4" />
                   </div>
                   <div>
-                    <span className="text-[10px] text-[#64748b] uppercase font-semibold block">Status & Verification</span>
-                    <span className="font-semibold text-[#172033] capitalize">{record.status} (Verified)</span>
+                    <span className="text-[10px] text-[#69655E] uppercase font-semibold block font-mono">Status & Verification</span>
+                    <span className="font-semibold text-[#1A1918] capitalize">{record.status} (Verified)</span>
                   </div>
                 </div>
               </div>
 
               {/* Extra details if available */}
               {record.details && Object.keys(record.details).length > 0 && (
-                <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px]">
-                  <span className="text-[11px] font-bold text-[#172033] block mb-2">
+                <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none">
+                  <span className="text-[11px] font-bold text-[#1A1918] block mb-2 font-mono uppercase tracking-wider">
                     Extracted Diagnostic Metrics
                   </span>
                   <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
                     {Object.entries(record.details).map(([k, v]) => (
-                      <div key={k} className="p-2.5 bg-white rounded-[10px] border border-[#d7eaea] text-[11px] shadow-2xs">
-                        <span className="text-[#64748b] block text-[10px]">{k}</span>
-                        <span className="font-semibold text-[#172033]">{String(v ?? "—")}</span>
+                      <div key={k} className="p-2.5 bg-white rounded-none border border-[#EAE4D9] text-[11px] shadow-none">
+                        <span className="text-[#69655E] block text-[10px] font-mono">{k}</span>
+                        <span className="font-semibold text-[#1A1918] font-mono">{String(v ?? "—")}</span>
                       </div>
                     ))}
                   </div>
@@ -209,7 +209,7 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
 
           {activeTab === "fhir" && (
             <div className="space-y-3">
-              <div className="flex items-center justify-between text-xs text-[#64748b]">
+              <div className="flex items-center justify-between text-xs text-[#69655E] font-mono">
                 <span>HL7 FHIR Release 4 JSON Representation</span>
                 <Button
                   variant="secondary"
@@ -221,7 +221,7 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
                 </Button>
               </div>
 
-              <div className="bg-slate-900 text-emerald-400 p-4 rounded-[14px] font-mono text-xs overflow-x-auto max-h-[360px] shadow-inner leading-relaxed border border-[#d7eaea]">
+              <div className="bg-[#1A1918] text-emerald-400 p-4 rounded-none font-mono text-xs overflow-x-auto max-h-[360px] shadow-none leading-relaxed border border-[#EAE4D9]">
                 <pre>{JSON.stringify(fhirPayload, null, 2)}</pre>
               </div>
             </div>
@@ -229,36 +229,36 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
 
           {activeTab === "provenance" && (
             <div className="space-y-3 text-xs">
-              <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px] flex items-center justify-between">
-                <div className="flex items-center gap-2 text-[#004c4c] font-semibold">
-                  <Sparkles className="w-4 h-4 text-[#008080]" />
+              <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-center justify-between">
+                <div className="flex items-center gap-2 text-[#57477D] font-semibold font-mono">
+                  <Sparkles className="w-4 h-4 text-[#57477D]" />
                   <span>Synthetic Demonstration Resource</span>
                 </div>
-                <Badge variant="teal" size="sm">Mock ABDM Gateway</Badge>
+                <Badge variant="purple" size="sm">Mock ABDM Gateway</Badge>
               </div>
 
-              <div className="divide-y divide-[#d7eaea]/50 border border-[#d7eaea] rounded-[14px] bg-white overflow-hidden text-[#475569]">
+              <div className="divide-y divide-[#EAE4D9] border border-[#EAE4D9] rounded-none bg-white overflow-hidden text-[#5C574F]">
                 <div className="p-3 flex justify-between items-center">
-                  <span className="text-[#64748b]">Resource Identifier</span>
-                  <code className="font-mono text-[#172033]">{record.recordId}</code>
+                  <span className="text-[#69655E] font-mono">Resource Identifier</span>
+                  <code className="font-mono text-[#1A1918]">{record.recordId}</code>
                 </div>
                 <div className="p-3 flex justify-between items-center">
-                  <span className="text-[#64748b]">Originating HIP Source</span>
-                  <span className="font-semibold text-[#172033]">{record.sourceInstitution}</span>
+                  <span className="text-[#69655E] font-mono">Originating HIP Source</span>
+                  <span className="font-semibold text-[#1A1918]">{record.sourceInstitution}</span>
                 </div>
                 <div className="p-3 flex justify-between items-center">
-                  <span className="text-[#64748b]">Care Context Link</span>
-                  <code className="font-mono text-[#172033]">{record.careContextId}</code>
+                  <span className="text-[#69655E] font-mono">Care Context Link</span>
+                  <code className="font-mono text-[#1A1918]">{record.careContextId}</code>
                 </div>
                 <div className="p-3 flex justify-between items-center">
-                  <span className="text-[#64748b]">Enclosing FHIR Bundle ID</span>
-                  <code className="font-mono text-[#172033] text-[11px] truncate max-w-[280px]">
+                  <span className="text-[#69655E] font-mono">Enclosing FHIR Bundle ID</span>
+                  <code className="font-mono text-[#1A1918] text-[11px] truncate max-w-[280px]">
                     {record.bundleId}
                   </code>
                 </div>
                 <div className="p-3 flex justify-between items-center">
-                  <span className="text-[#64748b]">Transfer Origin</span>
-                  <Badge variant={record.origin === "abdm_transfer" ? "teal" : "neutral"} size="sm">
+                  <span className="text-[#69655E] font-mono">Transfer Origin</span>
+                  <Badge variant={record.origin === "abdm_transfer" ? "purple" : "neutral"} size="sm">
                     {record.origin === "abdm_transfer" ? "Simulated ABDM Transfer" : "Personal Health Vault"}
                   </Badge>
                 </div>

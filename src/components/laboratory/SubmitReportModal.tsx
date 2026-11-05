@@ -127,28 +127,28 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {/* Order Context Strip */}
-        <div className="bg-[#f0fdfa] border border-[#d7eaea] rounded-[14px] p-3 text-xs text-[#475569] flex flex-wrap gap-x-6 gap-y-2">
+        <div className="bg-[#FAF7F2] border border-[#EAE4D9] rounded-none p-3 text-xs text-[#5C574F] flex flex-wrap gap-x-6 gap-y-2">
           <div>
-            <span className="text-[#64748b]">Order ID:</span>{" "}
-            <span className="font-mono font-bold text-[#172033]">{order.orderId}</span>
+            <span className="text-[#69655E] font-mono">Order ID:</span>{" "}
+            <span className="font-mono font-bold text-[#57477D]">{order.orderId}</span>
           </div>
           <div>
-            <span className="text-[#64748b]">Patient:</span>{" "}
-            <span className="font-mono font-semibold text-[#172033]">{order.patientId}</span>
+            <span className="text-[#69655E] font-mono">Patient:</span>{" "}
+            <span className="font-mono font-semibold text-[#1A1918]">{order.patientId}</span>
           </div>
           <div>
-            <span className="text-[#64748b]">Facility:</span>{" "}
-            <span className="font-semibold text-[#172033]">{order.targetFacility}</span>
+            <span className="text-[#69655E]">Facility:</span>{" "}
+            <span className="font-semibold text-[#1A1918]">{order.targetFacility}</span>
           </div>
           <div>
-            <span className="text-[#64748b]">Priority:</span>{" "}
+            <span className="text-[#69655E]">Priority:</span>{" "}
             <span
-              className={`font-bold px-2 py-0.5 rounded-full text-[10px] ${
+              className={`font-mono font-bold px-2 py-0.5 rounded-none text-[10px] ${
                 order.priority === "STAT"
-                  ? "bg-rose-100 text-rose-800"
+                  ? "bg-rose-100 text-rose-800 border border-rose-300"
                   : order.priority === "URGENT"
-                  ? "bg-amber-100 text-amber-800"
-                  : "bg-[#f0fdfa] text-[#008080] border border-[#b2d8d8]"
+                  ? "bg-amber-100 text-amber-800 border border-amber-300"
+                  : "bg-white text-[#57477D] border border-[#EAE4D9]"
               }`}
             >
               {order.priority}
@@ -157,14 +157,14 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
         </div>
 
         {error && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-[12px] text-xs text-rose-800 flex items-start gap-2">
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-none text-xs text-rose-800 flex items-start gap-2 font-mono">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-[12px] text-xs text-emerald-800 flex items-center gap-2">
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-none text-xs text-emerald-800 flex items-center gap-2 font-mono">
             <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>DiagnosticReport and Observations validated and persisted successfully!</span>
           </div>
@@ -172,7 +172,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
 
         {/* Title */}
         <div>
-          <label className="block text-xs font-semibold text-[#172033] mb-1.5">
+          <label className="block text-xs font-semibold text-[#1A1918] mb-1.5">
             Diagnostic Report Title *
           </label>
           <input
@@ -180,21 +180,21 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
             required
             value={title}
             onChange={(e) => setTitle(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] text-[#172033] bg-white shadow-2xs"
+            className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
           />
         </div>
 
         {/* Observations list */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-semibold text-[#172033] flex items-center gap-1.5">
-              <Activity className="w-3.5 h-3.5 text-[#008080]" />
+            <label className="text-xs font-semibold text-[#1A1918] flex items-center gap-1.5">
+              <Activity className="w-3.5 h-3.5 text-[#57477D]" />
               Discrete FHIR Observations / Measured Values ({observations.length})
             </label>
             <button
               type="button"
               onClick={handleAddObservation}
-              className="inline-flex items-center gap-1 text-xs text-[#008080] hover:text-[#006666] font-semibold cursor-pointer"
+              className="inline-flex items-center gap-1 text-xs text-[#57477D] hover:text-[#1A1918] font-mono font-semibold cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" /> Add Observation
             </button>
@@ -204,68 +204,68 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
             {observations.map((obs, idx) => (
               <div
                 key={idx}
-                className="p-3 bg-white border border-[#d7eaea] rounded-[12px] text-xs space-y-2 shadow-2xs"
+                className="p-3 bg-white border border-[#EAE4D9] rounded-none text-xs space-y-2"
               >
                 <div className="grid grid-cols-12 gap-2">
                   <div className="col-span-5">
-                    <label className="text-[10px] text-[#64748b] font-medium">Test / Analyte</label>
+                    <label className="text-[10px] text-[#69655E] font-medium">Test / Analyte</label>
                     <input
                       type="text"
                       value={obs.name}
                       onChange={(e) => handleObservationChange(idx, "name", e.target.value)}
                       placeholder="e.g. HbA1c"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
                     />
                   </div>
                   <div className="col-span-3">
-                    <label className="text-[10px] text-[#64748b] font-medium">Code (LOINC)</label>
+                    <label className="text-[10px] text-[#69655E] font-medium">Code (LOINC)</label>
                     <input
                       type="text"
                       value={obs.code}
                       onChange={(e) => handleObservationChange(idx, "code", e.target.value)}
                       placeholder="4548-4"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] font-mono text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono text-[#1A1918] bg-[#FAF7F2]"
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[10px] text-[#64748b] font-medium">Value</label>
+                    <label className="text-[10px] text-[#69655E] font-medium">Value</label>
                     <input
                       type="text"
                       value={obs.value}
                       onChange={(e) => handleObservationChange(idx, "value", e.target.value)}
                       placeholder="6.2"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] font-mono font-semibold text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] font-mono font-semibold text-[#1A1918] bg-[#FAF7F2]"
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[10px] text-[#64748b] font-medium">Unit</label>
+                    <label className="text-[10px] text-[#69655E] font-medium">Unit</label>
                     <input
                       type="text"
                       value={obs.unit || ""}
                       onChange={(e) => handleObservationChange(idx, "unit", e.target.value)}
                       placeholder="%"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-12 gap-2 items-center">
                   <div className="col-span-7">
-                    <label className="text-[10px] text-[#64748b] font-medium">Reference Range</label>
+                    <label className="text-[10px] text-[#69655E] font-medium">Reference Range</label>
                     <input
                       type="text"
                       value={obs.referenceRange || ""}
                       onChange={(e) => handleObservationChange(idx, "referenceRange", e.target.value)}
                       placeholder="< 5.7 % (Normal)"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
                     />
                   </div>
                   <div className="col-span-4">
-                    <label className="text-[10px] text-[#64748b] font-medium">Interpretation</label>
+                    <label className="text-[10px] text-[#69655E] font-medium">Interpretation</label>
                     <select
                       value={obs.interpretation || "NORMAL"}
                       onChange={(e) => handleObservationChange(idx, "interpretation", e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] bg-white text-[#172033]"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] bg-[#FAF7F2] text-[#1A1918] font-mono"
                     >
                       <option value="NORMAL">NORMAL</option>
                       <option value="HIGH">HIGH</option>
@@ -279,7 +279,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
                       <button
                         type="button"
                         onClick={() => handleRemoveObservation(idx)}
-                        className="text-[#64748b] hover:text-rose-600 p-1 rounded"
+                        className="text-[#7A746B] hover:text-rose-600 p-1 cursor-pointer"
                         title="Remove observation"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
@@ -294,7 +294,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
 
         {/* Clinical Summary */}
         <div>
-          <label className="block text-xs font-semibold text-[#172033] mb-1.5">
+          <label className="block text-xs font-semibold text-[#1A1918] mb-1.5">
             Clinical Summary & Impression *
           </label>
           <textarea
@@ -302,19 +302,19 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
             rows={3}
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] text-[#172033] bg-white shadow-2xs"
+            className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
             placeholder="Document laboratory pathologist's final conclusion and diagnostic impression..."
           />
         </div>
 
         {/* Footer Actions */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#d7eaea]">
-          <div className="text-[11px] text-[#64748b] flex items-center gap-1.5">
-            <FlaskConical className="w-3.5 h-3.5 text-[#008080]" />
+        <div className="flex items-center justify-between pt-3 border-t border-[#EAE4D9]">
+          <div className="text-[11px] text-[#69655E] flex items-center gap-1.5">
+            <FlaskConical className="w-3.5 h-3.5 text-[#57477D]" />
             <span>Stores FHIR DiagnosticReport into facility records for ABDM discovery.</span>
           </div>
           <div className="flex gap-2">
-            <Button type="button" variant="outline" onClick={onClose} disabled={loading}>
+            <Button type="button" variant="secondary" onClick={onClose} disabled={loading}>
               Cancel
             </Button>
             <Button type="submit" variant="primary" disabled={loading}>

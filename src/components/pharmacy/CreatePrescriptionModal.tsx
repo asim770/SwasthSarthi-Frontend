@@ -244,14 +244,14 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
     >
       <form onSubmit={handleSubmit} className="space-y-5">
         {error && (
-          <div className="p-3 bg-rose-50 border border-rose-200 rounded-lg text-xs text-rose-800 flex items-start gap-2">
+          <div className="p-3 bg-rose-50 border border-rose-200 rounded-none text-xs text-rose-800 flex items-start gap-2">
             <AlertCircle className="w-4 h-4 text-rose-600 shrink-0 mt-0.5" />
             <span>{error}</span>
           </div>
         )}
 
         {success && (
-          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-lg text-xs text-emerald-800 flex items-center gap-2">
+          <div className="p-3 bg-emerald-50 border border-emerald-200 rounded-none text-xs text-emerald-800 flex items-center gap-2">
             <FileCheck2 className="w-4 h-4 text-emerald-600 shrink-0" />
             <span>Prescription signed, validated and active for safe pharmacy dispensing!</span>
           </div>
@@ -260,14 +260,14 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
         {/* Patient Selection & Validity */}
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           <div className="sm:col-span-1">
-            <label className="block text-xs font-semibold text-[#172033] mb-1.5 flex items-center gap-1.5">
-              <User className="w-3.5 h-3.5 text-[#008080]" />
+            <label className="block text-xs font-semibold text-[#1A1918] mb-1.5 flex items-center gap-1.5 font-mono uppercase tracking-wider text-[11px]">
+              <User className="w-3.5 h-3.5 text-[#57477D]" />
               Patient Selection *
             </label>
             <select
               value={selectedPatientId}
               onChange={(e) => setSelectedPatientId(e.target.value)}
-              className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] bg-white text-[#172033] shadow-2xs"
+              className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2] text-[#1A1918]"
             >
               {patients.map((p) => (
                 <option key={p.id} value={p.id}>
@@ -278,8 +278,8 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
           </div>
 
           <div className="sm:col-span-1">
-            <label className="block text-xs font-semibold text-[#172033] mb-1.5 flex items-center gap-1.5">
-              <Calendar className="w-3.5 h-3.5 text-[#008080]" />
+            <label className="block text-xs font-semibold text-[#1A1918] mb-1.5 flex items-center gap-1.5 font-mono uppercase tracking-wider text-[11px]">
+              <Calendar className="w-3.5 h-3.5 text-[#57477D]" />
               Validity Period (Days)
             </label>
             <input
@@ -288,19 +288,19 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
               max={365}
               value={validityDays}
               onChange={(e) => setValidityDays(Number(e.target.value))}
-              className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] text-[#172033] bg-white shadow-2xs"
+              className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
             />
           </div>
 
           <div className="sm:col-span-1">
-            <label className="block text-xs font-semibold text-[#172033] mb-1.5 flex items-center gap-1.5">
-              <Clock className="w-3.5 h-3.5 text-[#008080]" />
+            <label className="block text-xs font-semibold text-[#1A1918] mb-1.5 flex items-center gap-1.5 font-mono uppercase tracking-wider text-[11px]">
+              <Clock className="w-3.5 h-3.5 text-[#57477D]" />
               Authorized Refills
             </label>
             <select
               value={maxRefills}
               onChange={(e) => setMaxRefills(Number(e.target.value))}
-              className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] bg-white text-[#172033] shadow-2xs"
+              className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-[#FAF7F2] text-[#1A1918]"
             >
               <option value={0}>0 (Single Fill Only)</option>
               <option value={1}>1 Refill Permitted</option>
@@ -314,14 +314,14 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
         {/* Medications List */}
         <div>
           <div className="flex items-center justify-between mb-2">
-            <label className="text-xs font-semibold text-[#172033] flex items-center gap-1.5">
-              <Pill className="w-3.5 h-3.5 text-[#008080]" />
+            <label className="text-xs font-semibold text-[#1A1918] flex items-center gap-1.5 font-mono uppercase tracking-wider text-[11px]">
+              <Pill className="w-3.5 h-3.5 text-[#57477D]" />
               Prescribed Medications & Fulfilment Limits ({medications.length})
             </label>
             <button
               type="button"
               onClick={() => handleAddMedication(medications.length)}
-              className="inline-flex items-center gap-1 text-xs text-[#008080] hover:text-[#006666] font-semibold cursor-pointer"
+              className="inline-flex items-center gap-1 text-xs text-[#57477D] hover:text-[#1A1918] font-semibold cursor-pointer"
             >
               <Plus className="w-3.5 h-3.5" /> Add Another Medication
             </button>
@@ -331,17 +331,17 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
             {medications.map((med, idx) => (
               <div
                 key={idx}
-                className="p-3 bg-white border border-[#d7eaea] rounded-[14px] text-xs space-y-2.5 shadow-2xs"
+                className="p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs space-y-2.5"
               >
-                <div className="flex items-center justify-between pb-1.5 border-b border-[#d7eaea]/70">
-                  <span className="font-semibold text-[#004c4c] text-xs">
+                <div className="flex items-center justify-between pb-1.5 border-b border-[#EAE4D9]">
+                  <span className="font-semibold text-[#1A1918] text-xs font-mono">
                     Medication #{idx + 1}
                   </span>
                   <div className="flex items-center gap-2">
                     <select
                       onChange={(e) => handleSelectFromCatalog(idx, e.target.value)}
                       value={med.name}
-                      className="px-2 py-0.5 text-[11px] border border-[#d7eaea] rounded-[8px] bg-[#f0fdfa] text-[#004c4c]"
+                      className="px-2 py-0.5 text-[11px] border border-[#D5CEC2] rounded-none bg-white text-[#1A1918]"
                     >
                       {MEDICATION_CATALOG.map((cat) => (
                         <option key={cat.code} value={cat.name}>
@@ -353,7 +353,7 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
                       <button
                         type="button"
                         onClick={() => handleRemoveMedication(idx)}
-                        className="text-[#64748b] hover:text-rose-600 p-1"
+                        className="text-[#8C877D] hover:text-rose-700 p-1"
                       >
                         <Trash2 className="w-3.5 h-3.5" />
                       </button>
@@ -363,58 +363,58 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
 
                 <div className="grid grid-cols-12 gap-2">
                   <div className="col-span-5">
-                    <label className="text-[10px] text-[#64748b] font-medium">Drug Name</label>
+                    <label className="text-[10px] text-[#69655E] font-medium font-mono">Drug Name</label>
                     <input
                       type="text"
                       required
                       value={med.name}
                       onChange={(e) => handleMedicationChange(idx, "name", e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] font-semibold text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] font-semibold text-[#1A1918] bg-white"
                     />
                   </div>
                   <div className="col-span-3">
-                    <label className="text-[10px] text-[#64748b] font-medium">RxNorm Code</label>
+                    <label className="text-[10px] text-[#69655E] font-medium font-mono">RxNorm Code</label>
                     <input
                       type="text"
                       value={med.code}
                       onChange={(e) => handleMedicationChange(idx, "code", e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] font-mono text-[#64748b] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] font-mono text-[#57477D] bg-white"
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[10px] text-[#64748b] font-medium">Dosage</label>
+                    <label className="text-[10px] text-[#69655E] font-medium font-mono">Dosage</label>
                     <input
                       type="text"
                       value={med.dosage}
                       onChange={(e) => handleMedicationChange(idx, "dosage", e.target.value)}
                       placeholder="e.g. 20 mg"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-white"
                     />
                   </div>
                   <div className="col-span-2">
-                    <label className="text-[10px] text-[#64748b] font-medium">Route</label>
+                    <label className="text-[10px] text-[#69655E] font-medium font-mono">Route</label>
                     <input
                       type="text"
                       value={med.route}
                       onChange={(e) => handleMedicationChange(idx, "route", e.target.value)}
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-white"
                     />
                   </div>
                 </div>
 
                 <div className="grid grid-cols-12 gap-2">
                   <div className="col-span-5">
-                    <label className="text-[10px] text-[#64748b] font-medium">Frequency & Timing</label>
+                    <label className="text-[10px] text-[#69655E] font-medium font-mono">Frequency & Timing</label>
                     <input
                       type="text"
                       value={med.frequency}
                       onChange={(e) => handleMedicationChange(idx, "frequency", e.target.value)}
                       placeholder="e.g. Once daily at bedtime"
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-white"
                     />
                   </div>
                   <div className="col-span-3">
-                    <label className="text-[10px] text-[#64748b] font-medium">Duration (Days)</label>
+                    <label className="text-[10px] text-[#69655E] font-medium font-mono">Duration (Days)</label>
                     <input
                       type="number"
                       min={1}
@@ -422,11 +422,11 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
                       onChange={(e) =>
                         handleMedicationChange(idx, "durationDays", Number(e.target.value))
                       }
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-white"
                     />
                   </div>
                   <div className="col-span-4">
-                    <label className="text-[10px] text-[#004c4c] font-semibold">
+                    <label className="text-[10px] text-[#1A1918] font-semibold font-mono">
                       Permitted Quantity (Units) *
                     </label>
                     <input
@@ -437,19 +437,19 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
                       onChange={(e) =>
                         handleMedicationChange(idx, "quantity", Number(e.target.value))
                       }
-                      className="w-full px-2.5 py-1.5 text-xs border border-[#b2d8d8] rounded-[8px] focus:ring-1 focus:ring-[#008080] font-bold bg-[#f0fdfa] text-[#004c4c]"
+                      className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] font-bold bg-[#FAF7F2] text-[#1A1918] font-mono"
                     />
                   </div>
                 </div>
 
                 <div>
-                  <label className="text-[10px] text-[#64748b] font-medium">Patient Instructions</label>
+                  <label className="text-[10px] text-[#69655E] font-medium font-mono">Patient Instructions</label>
                   <input
                     type="text"
                     value={med.instructions}
                     onChange={(e) => handleMedicationChange(idx, "instructions", e.target.value)}
                     placeholder="e.g. Take with water. Avoid grapefruit juice."
-                    className="w-full px-2.5 py-1.5 text-xs border border-[#d7eaea] rounded-[8px] focus:ring-1 focus:ring-[#008080] text-[#172033] bg-white"
+                    className="w-full px-2.5 py-1.5 text-xs border border-[#D5CEC2] rounded-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-white"
                   />
                 </div>
               </div>
@@ -459,21 +459,21 @@ export const CreatePrescriptionModal: React.FC<CreatePrescriptionModalProps> = (
 
         {/* General Instructions */}
         <div>
-          <label className="block text-xs font-semibold text-[#172033] mb-1.5">
+          <label className="block text-xs font-semibold text-[#1A1918] mb-1.5 font-mono uppercase tracking-wider text-[11px]">
             Practitioner Prescription Notes & Instructions
           </label>
           <input
             type="text"
             value={generalInstructions}
             onChange={(e) => setGeneralInstructions(e.target.value)}
-            className="w-full px-3.5 py-2.5 text-xs border border-[#d7eaea] rounded-[12px] focus:outline-none focus:ring-2 focus:ring-[#008080] text-[#172033] bg-white shadow-2xs"
+            className="w-full px-3.5 py-2.5 text-xs border border-[#D5CEC2] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] text-[#1A1918] bg-[#FAF7F2]"
           />
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between pt-3 border-t border-[#d7eaea]">
-          <div className="text-[11px] text-[#64748b] flex items-center gap-1.5">
-            <Pill className="w-3.5 h-3.5 text-[#008080]" />
+        <div className="flex items-center justify-between pt-3 border-t border-[#EAE4D9]">
+          <div className="text-[11px] text-[#69655E] flex items-center gap-1.5 font-mono">
+            <Pill className="w-3.5 h-3.5 text-[#57477D]" />
             <span>Generates FHIR R4 MedicationRequest with strict dosage & fulfillment constraints.</span>
           </div>
           <div className="flex gap-2">

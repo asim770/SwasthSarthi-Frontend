@@ -18,19 +18,19 @@ export const Input = React.forwardRef<HTMLInputElement, InputProps>(
             {label}
           </label>
         )}
-        <div className="relative rounded-[12px] shadow-2xs">
+        <div className="relative rounded-none shadow-2xs">
           {leftIcon && (
-            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-slate-400">
+            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-[#7A746B]">
               {leftIcon}
             </div>
           )}
           <input
             id={inputId}
             ref={ref}
-            className={`w-full rounded-[12px] border text-sm text-[#172033] placeholder:text-slate-400 bg-white transition-colors focus:outline-none focus:ring-2 focus:ring-[#008080] focus:border-[#008080] disabled:bg-slate-50 disabled:text-slate-500 disabled:cursor-not-allowed ${leftIcon ? "pl-9.5 pr-3.5" : "px-3.5"
+            className={`w-full rounded-none border text-sm text-[#191817] placeholder:text-[#9B958B] bg-[#FAF7F2] transition-colors focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] disabled:bg-[#F4EFE6] disabled:text-[#9B958B] disabled:cursor-not-allowed ${leftIcon ? "pl-9.5 pr-3.5" : "px-3.5"
               } py-2 ${error
-                ? "border-red-300 focus:ring-red-500 focus:border-red-500"
-                : "border-[#d7eaea]"
+                ? "border-red-400 focus:ring-red-600 focus:border-red-600"
+                : "border-[#D5CEC2]"
               } ${className}`}
             {...props}
           />

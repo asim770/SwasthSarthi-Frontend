@@ -123,10 +123,10 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
           </div>
         )}
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-slate-50 border border-slate-200">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 p-3 bg-[#FAF7F2] border border-[#EAE4D9]">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
-              Patient ID <span className="text-red-500">*</span>
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+              Patient ID <span className="text-red-700">*</span>
             </label>
             <input
               type="text"
@@ -134,26 +134,26 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
               placeholder="e.g. SS-PAT-000001"
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white font-mono font-bold text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
               Next Review Date
             </label>
             <input
               type="date"
               value={nextReviewDate}
               onChange={(e) => setNextReviewDate(e.target.value)}
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
         <div>
-          <label className="block text-slate-700 font-semibold mb-1">
-            Current Clinical Assessment <span className="text-red-500">*</span>
+          <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
+            Current Clinical Assessment <span className="text-red-700">*</span>
           </label>
           <textarea
             required
@@ -161,12 +161,12 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
             value={assessment}
             onChange={(e) => setAssessment(e.target.value)}
             placeholder="Evaluative summary of current health status..."
-            className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+            className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
           />
         </div>
 
         <div>
-          <label className="block text-slate-700 font-semibold mb-1">
+          <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
             Relevant Clinical Observations
           </label>
           <textarea
@@ -174,13 +174,13 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
             value={observations}
             onChange={(e) => setObservations(e.target.value)}
             placeholder="Measurable findings, comparative vitals, observations..."
-            className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+            className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
           />
         </div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
               Treatment Progress
             </label>
             <input
@@ -188,12 +188,12 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
               value={treatmentProgress}
               onChange={(e) => setTreatmentProgress(e.target.value)}
               placeholder="Adherence, response to medications..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
 
           <div>
-            <label className="block text-slate-700 font-semibold mb-1">
+            <label className="block text-[#1A1918] font-semibold mb-1 font-mono uppercase tracking-wider text-[11px]">
               Follow-Up Recommendations
             </label>
             <input
@@ -201,12 +201,12 @@ export const DoctorHealthAssessmentModal: React.FC<DoctorHealthAssessmentModalPr
               value={recommendations}
               onChange={(e) => setRecommendations(e.target.value)}
               placeholder="Recommended actions or adjustments..."
-              className="w-full px-3 py-2 border border-slate-300 rounded-none bg-white text-slate-900 focus:outline-none focus:ring-1 focus:ring-[#008080]"
+              className="w-full px-3 py-2 border border-[#D5CEC2] rounded-none bg-[#FAF7F2] text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
         </div>
 
-        <div className="flex justify-end gap-2 pt-2 border-t border-slate-200">
+        <div className="flex justify-end gap-2 pt-2 border-t border-[#EAE4D9]">
           <Button
             type="button"
             variant="secondary"

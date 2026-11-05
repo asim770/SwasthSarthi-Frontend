@@ -197,7 +197,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
         breadcrumb={config.breadcrumb}
         description={config.description}
         badge={
-          <Badge variant={isAdminBlocked || isLabBlocked || isPharmacyBlocked ? "danger" : "teal"} size="sm">
+          <Badge variant={isAdminBlocked || isLabBlocked || isPharmacyBlocked ? "danger" : "royal"} size="sm">
             {isAdminBlocked || isLabBlocked || isPharmacyBlocked ? "DAL Policy: Denied" : config.milestone}
           </Badge>
         }
@@ -215,20 +215,20 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* 403 Forbidden Screen for Administrator attempting to access Clinical Content */}
       {isAdminBlocked && (
-        <Card className="border-red-200 bg-red-50/40">
+        <Card className="border-red-200 bg-white rounded-none">
           <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-red-100 border border-red-200 flex items-center justify-center text-red-700 mb-4 shadow-xs">
+            <div className="w-14 h-14 rounded-none bg-red-50 border border-red-200 flex items-center justify-center text-red-700 mb-4">
               <ShieldAlert className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-bold text-red-900 mb-1">
+            <h3 className="text-lg font-editorial-serif font-bold text-red-900 mb-1">
               403 Forbidden — Clinical Data Access Denied
             </h3>
-            <p className="text-xs text-red-700 max-w-lg mb-6 leading-relaxed">
-              <strong>Security Policy Rule (DAL):</strong> Administrative users are strictly forbidden
+            <p className="text-xs text-[#5C574F] max-w-lg mb-6 leading-relaxed">
+              <strong className="text-red-900">Security Policy Rule (DAL):</strong> Administrative users are strictly forbidden
               from reading patient clinical records, FHIR bundles, diagnostic reports, or prescriptions.
               Administrative privileges grant operational oversight and user governance only.
             </p>
-            <div className="flex items-center gap-2 p-3 bg-white border border-red-200 rounded-lg max-w-md text-left text-xs text-red-800 mb-6">
+            <div className="flex items-center gap-2 p-3 bg-[#FAF7F2] border border-red-200 rounded-none max-w-md text-left text-xs text-red-800 mb-6 font-mono">
               <AlertTriangle className="w-4 h-4 text-red-600 shrink-0" />
               <span>
                 Backend policy assertion <code>assertDenyAdminClinicalAccess()</code> enforces this restriction on every API call.
@@ -243,15 +243,15 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* 403 Forbidden Screen for Laboratory or Pharmacy out of scope */}
       {(isLabBlocked || isPharmacyBlocked) && (
-        <Card className="border-amber-200 bg-amber-50/40">
+        <Card className="border-amber-200 bg-white rounded-none">
           <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-2xl bg-amber-100 border border-amber-200 flex items-center justify-center text-amber-700 mb-4 shadow-xs">
+            <div className="w-14 h-14 rounded-none bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 mb-4">
               <ShieldAlert className="w-7 h-7" />
             </div>
-            <h3 className="text-base font-bold text-amber-900 mb-1">
+            <h3 className="text-lg font-editorial-serif font-bold text-amber-900 mb-1">
               403 Forbidden — Resource Outside Authorized Scope
             </h3>
-            <p className="text-xs text-amber-800 max-w-md mb-6 leading-relaxed">
+            <p className="text-xs text-[#5C574F] max-w-md mb-6 leading-relaxed">
               Your role (<strong>{user?.role}</strong>) does not have authorization to browse general
               longitudinal medical history. Access is restricted exclusively to authorized test orders or dispensing workflows.
             </p>
@@ -267,35 +267,35 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
         <div className="space-y-6">
           {adminOverview && (
             <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
-                <span className="text-xs text-[#64748b] block">Total Users</span>
-                <span className="text-xl font-bold text-[#172033]">{adminOverview.totalUsers}</span>
+              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+                <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Total Users</span>
+                <span className="text-2xl font-editorial-serif font-bold text-[#1A1918]">{adminOverview.totalUsers}</span>
               </div>
-              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
-                <span className="text-xs text-[#64748b] block">Active Sessions</span>
-                <span className="text-xl font-bold text-emerald-600">{adminOverview.activeSessions}</span>
+              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+                <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Active Sessions</span>
+                <span className="text-2xl font-editorial-serif font-bold text-emerald-700">{adminOverview.activeSessions}</span>
               </div>
-              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
-                <span className="text-xs text-[#64748b] block">Total Consents</span>
-                <span className="text-xl font-bold text-[#172033]">{adminOverview.totalConsents}</span>
+              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+                <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Total Consents</span>
+                <span className="text-2xl font-editorial-serif font-bold text-[#1A1918]">{adminOverview.totalConsents}</span>
               </div>
-              <div className="p-4 bg-white border border-[#d7eaea] rounded-[18px] shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
-                <span className="text-xs text-[#64748b] block">Granted Consents</span>
-                <span className="text-xl font-bold text-[#008080]">{adminOverview.grantedConsents}</span>
+              <div className="p-4 bg-white border border-[#EAE4D9] rounded-none">
+                <span className="text-[11px] font-mono text-[#69655E] uppercase block mb-1">Granted Consents</span>
+                <span className="text-2xl font-editorial-serif font-bold text-[#57477D]">{adminOverview.grantedConsents}</span>
               </div>
             </div>
           )}
 
-          <Card>
+          <Card className="rounded-none border-[#EAE4D9]">
             <CardContent className="p-5">
               <div className="flex items-center justify-between mb-4">
-                <h4 className="text-sm font-bold text-[#172033]">Security Audit Trail (DAL Verified)</h4>
-                <Badge variant="teal" size="sm">Live Server Telemetry</Badge>
+                <h4 className="text-base font-editorial-serif font-bold text-[#1A1918]">Security Audit Trail (DAL Verified)</h4>
+                <Badge variant="royal" size="sm">Live Server Telemetry</Badge>
               </div>
               {dataLoading ? (
-                <div className="py-8 text-center text-xs text-[#64748b]">Loading audit trail...</div>
+                <div className="py-8 text-center text-xs text-[#69655E]">Loading audit trail...</div>
               ) : auditLogs.length > 0 ? (
-                <div className="divide-y divide-[#d7eaea]/50 overflow-x-auto">
+                <div className="divide-y divide-[#EAE4D9] overflow-x-auto">
                   {(auditLogs as Array<{
                     _id: string;
                     action: string;
@@ -307,22 +307,22 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                     <div key={log._id} className="py-2.5 flex items-center justify-between text-xs gap-4">
                       <div className="flex items-center gap-2">
                         <span
-                          className={`w-2 h-2 rounded-full ${
-                            log.outcome === "ALLOWED" ? "bg-emerald-500" : "bg-red-500"
+                          className={`w-2 h-2 rounded-none ${
+                            log.outcome === "ALLOWED" ? "bg-emerald-600" : "bg-red-600"
                           }`}
                         />
-                        <span className="font-mono font-semibold text-[#172033]">{log.action}</span>
-                        <span className="text-[#64748b]">({log.targetResourceType})</span>
+                        <span className="font-mono font-semibold text-[#1A1918]">{log.action}</span>
+                        <span className="text-[#69655E] font-mono">({log.targetResourceType})</span>
                       </div>
                       <div className="flex items-center gap-3">
-                        <span className="text-[11px] text-[#64748b] uppercase">{log.principalRole}</span>
+                        <span className="text-[11px] text-[#69655E] font-mono uppercase">{log.principalRole}</span>
                         <Badge
                           variant={log.outcome === "ALLOWED" ? "success" : "danger"}
                           size="sm"
                         >
                           {log.outcome}
                         </Badge>
-                        <span className="text-[10px] text-[#64748b] font-mono">
+                        <span className="text-[10px] text-[#69655E] font-mono">
                           {new Date(log.timestamp).toLocaleTimeString()}
                         </span>
                       </div>
@@ -330,7 +330,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                   ))}
                 </div>
               ) : (
-                <div className="py-8 text-center text-xs text-[#64748b]">No audit events recorded yet.</div>
+                <div className="py-8 text-center text-xs text-[#69655E]">No audit events recorded yet.</div>
               )}
             </CardContent>
           </Card>
@@ -339,18 +339,18 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* Authorized Laboratory View: Test Orders */}
       {!isLabBlocked && user?.role === "laboratory" && route === "labs" && (
-        <Card>
+        <Card className="rounded-none border-[#EAE4D9]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-sm font-bold text-[#172033]">
+              <h4 className="text-base font-editorial-serif font-bold text-[#1A1918]">
                 Assigned Laboratory Orders ({user.facility})
               </h4>
-              <Badge variant="teal" size="sm">Facility Scoped</Badge>
+              <Badge variant="royal" size="sm">Facility Scoped</Badge>
             </div>
             {dataLoading ? (
-              <div className="py-8 text-center text-xs text-[#64748b]">Loading test orders...</div>
+              <div className="py-8 text-center text-xs text-[#69655E]">Loading test orders...</div>
             ) : labOrders.length > 0 ? (
-              <div className="divide-y divide-[#d7eaea]/50">
+              <div className="divide-y divide-[#EAE4D9]">
                 {(labOrders as Array<{
                   orderId: string;
                   patientName: string;
@@ -361,22 +361,22 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                 }>).map((order) => (
                   <div key={order.orderId} className="py-3 flex items-center justify-between text-xs">
                     <div>
-                      <div className="flex items-center gap-2 font-semibold text-[#172033]">
+                      <div className="flex items-center gap-2 font-semibold text-[#1A1918]">
                         <span>{order.testName}</span>
                         <Badge variant="neutral" size="sm">{order.priority}</Badge>
                       </div>
-                      <span className="text-[#475569] text-[11px]">
-                        Patient: <strong>{order.patientName}</strong> • Order ID: <code>{order.orderId}</code>
+                      <span className="text-[#69655E] text-[11px]">
+                        Patient: <strong>{order.patientName}</strong> • Order ID: <code className="font-mono">{order.orderId}</code>
                       </span>
                     </div>
-                    <Badge variant={order.status === "COMPLETED" ? "success" : "teal"} size="sm">
+                    <Badge variant={order.status === "COMPLETED" ? "success" : "royal"} size="sm">
                       {order.status}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
-              <div className="py-8 text-center text-xs text-[#64748b]">No active test orders assigned to your facility.</div>
+              <div className="py-8 text-center text-xs text-[#69655E]">No active test orders assigned to your facility.</div>
             )}
           </CardContent>
         </Card>
@@ -384,18 +384,18 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* Authorized Pharmacy View: Prescriptions */}
       {!isPharmacyBlocked && user?.role === "pharmacy" && route === "prescriptions" && (
-        <Card>
+        <Card className="rounded-none border-[#EAE4D9]">
           <CardContent className="p-5">
             <div className="flex items-center justify-between mb-4">
-              <h4 className="text-sm font-bold text-[#172033]">
+              <h4 className="text-base font-editorial-serif font-bold text-[#1A1918]">
                 Active Eligible Prescriptions ({user.facility})
               </h4>
-              <Badge variant="teal" size="sm">Fulfillment Allowed</Badge>
+              <Badge variant="royal" size="sm">Fulfillment Allowed</Badge>
             </div>
             {dataLoading ? (
-              <div className="py-8 text-center text-xs text-[#64748b]">Loading prescriptions...</div>
+              <div className="py-8 text-center text-xs text-[#69655E]">Loading prescriptions...</div>
             ) : prescriptions.length > 0 ? (
-              <div className="divide-y divide-[#d7eaea]/50">
+              <div className="divide-y divide-[#EAE4D9]">
                 {(prescriptions as Array<{
                   prescriptionId: string;
                   patientName: string;
@@ -405,10 +405,10 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                 }>).map((rx) => (
                   <div key={rx.prescriptionId} className="py-3 flex items-center justify-between text-xs">
                     <div>
-                      <span className="font-semibold text-[#172033] block">
+                      <span className="font-semibold text-[#1A1918] block">
                         {rx.medications.map((m) => `${m.name} (${m.dosage})`).join(", ")}
                       </span>
-                      <span className="text-[#475569] text-[11px]">
+                      <span className="text-[#69655E] text-[11px]">
                         Patient: <strong>{rx.patientName}</strong> • Refills Remaining: <strong>{rx.remainingRefills}</strong>
                       </span>
                     </div>
@@ -417,7 +417,7 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
                 ))}
               </div>
             ) : (
-              <div className="py-8 text-center text-xs text-[#64748b]">No active prescriptions available.</div>
+              <div className="py-8 text-center text-xs text-[#69655E]">No active prescriptions available.</div>
             )}
           </CardContent>
         </Card>
@@ -425,24 +425,24 @@ export const PlaceholderView: React.FC<PlaceholderViewProps> = ({
 
       {/* Default Architecture Preview for other screens */}
       {!isAdminBlocked && !isLabBlocked && !isPharmacyBlocked && !(user?.role === "admin" && route === "access") && !(user?.role === "laboratory" && route === "labs") && !(user?.role === "pharmacy" && route === "prescriptions") && (
-        <Card>
+        <Card className="rounded-none border-[#EAE4D9]">
           <CardContent className="py-12 flex flex-col items-center justify-center text-center">
-            <div className="w-14 h-14 rounded-[18px] bg-[#f0fdfa] border border-[#d7eaea] flex items-center justify-center text-[#008080] mb-4 shadow-[0_6px_24px_rgba(15,23,42,0.05)]">
+            <div className="w-14 h-14 rounded-none bg-[#FAF7F2] border border-[#EAE4D9] flex items-center justify-center text-[#57477D] mb-4">
               <Icon className="w-6 h-6" />
             </div>
 
-            <h3 className="text-base font-bold text-[#172033] mb-1">
+            <h3 className="text-xl font-editorial-serif font-bold text-[#1A1918] mb-1">
               {config.title} Architecture Overview
             </h3>
-            <p className="text-xs text-[#475569] max-w-md mb-6 leading-relaxed">
+            <p className="text-xs text-[#5C574F] max-w-md mb-6 leading-relaxed">
               {config.details}
             </p>
 
-            <div className="flex items-center gap-2 p-3 bg-[#f0fdfa] border border-[#d7eaea] rounded-[12px] max-w-lg text-left text-xs text-[#475569] mb-6">
-              <Info className="w-4 h-4 text-[#008080] shrink-0" />
+            <div className="flex items-center gap-2 p-3 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none max-w-lg text-left text-xs text-[#5C574F] mb-6">
+              <Info className="w-4 h-4 text-[#57477D] shrink-0" />
               <span>
                 Backend authorization policies are active. You are authenticated as{" "}
-                <strong className="text-[#172033]">{user ? `${user.name} (${user.role})` : "Guest"}</strong>.
+                <strong className="text-[#1A1918]">{user ? `${user.name} (${user.role})` : "Guest"}</strong>.
               </span>
             </div>
 

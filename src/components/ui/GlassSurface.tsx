@@ -258,7 +258,7 @@ export const GlassSurface: React.FC<GlassSurfaceProps> = ({
     `relative flex items-center justify-center ${overflowClass} transition-all duration-200 ease-out`;
 
   const focusVisibleClasses =
-    'focus-visible:outline-2 focus-visible:outline-teal-600 focus-visible:outline-offset-2';
+    'focus-visible:outline-2 focus-visible:outline-[#1A1918] focus-visible:outline-offset-2';
 
   return (
     <div
