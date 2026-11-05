@@ -24,6 +24,7 @@ import {
   Mail,
   HelpCircle,
   ArrowLeft,
+  Clock,
 } from "lucide-react";
 import {
   createAuthChallenge,
@@ -34,6 +35,7 @@ import {
   authenticateWithGoogle,
   loginWithPassword,
   registerPatient,
+  registerUser,
   verifyEmailOtp,
   resendEmailVerification,
   forgotPassword,
@@ -164,6 +166,37 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [isPasswordLoginLoading, setIsPasswordLoginLoading] = useState<boolean>(false);
   const [showDemoOtpOptions, setShowDemoOtpOptions] = useState<boolean>(false);
 
+  // Role Selection State for Sign Up
+  const [signupRole, setSignupRole] = useState<"patient" | "doctor" | "laboratory" | "pharmacy">("patient");
+  const [roleSelectionStep, setRoleSelectionStep] = useState<boolean>(true);
+
+  // Doctor Professional Registration Fields
+  const [docQualification, setDocQualification] = useState<string>("MBBS, MD Cardiology");
+  const [docSpecialization, setDocSpecialization] = useState<string>("Cardiology");
+  const [docRegNumber, setDocRegNumber] = useState<string>("MCI-2024-8841");
+  const [docHospital, setDocHospital] = useState<string>("Apollo Care Hospital");
+  const [docAddress, setDocAddress] = useState<string>("Indiranagar, Bangalore");
+
+  // Laboratory Organization Registration Fields
+  const [labOrgName, setLabOrgName] = useState<string>("Metropolis Diagnostics");
+  const [labRepName, setLabRepName] = useState<string>("Dr. Rajesh Verma");
+  const [labRegNumber, setLabRegNumber] = useState<string>("NABL-2024-5512");
+  const [labAddress, setLabAddress] = useState<string>("Koramangala, Bangalore");
+
+  // Pharmacy Organization Registration Fields
+  const [pharmOrgName, setPharmOrgName] = useState<string>("Apollo Care Pharmacy");
+  const [pharmRepName, setPharmRepName] = useState<string>("Pooja Sharma");
+  const [pharmRegNumber, setPharmRegNumber] = useState<string>("DL-2024-9912");
+  const [pharmAddress, setPharmAddress] = useState<string>("Jayanagar, Bangalore");
+
+  // Registration Pending Approval Display (Doctor, Laboratory, Pharmacy)
+  const [registeredPendingApproval, setRegisteredPendingApproval] = useState<{
+    role: string;
+    name: string;
+    orgOrHospital?: string;
+    regNumber?: string;
+  } | null>(null);
+
   // Patient Sign Up State
   const [signupName, setSignupName] = useState<string>("");
   const [signupEmail, setSignupEmail] = useState<string>("");
@@ -276,6 +309,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     setIsGoogleLoading(false);
     setIsDemoLoading(false);
     setRegisteredPatient(null);
+    setRegisteredPendingApproval(null);
+    setRoleSelectionStep(true);
+    setSignupRole("patient");
     setCopiedPatientId(false);
     setEmailOtp("");
     setForgotOtp("");
@@ -537,6 +573,86 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     }
   };
 
+  // Professional / Organization Registration Handler (Doctor, Laboratory, Pharmacy)
+  const handleProfessionalSignup = async (e: React.FormEvent) => {
+    e.preventDefault();
+    setErrorMessage(null);
+
+    if (signupPassword.length < 8) {
+      setErrorMessage("Password must be at least 8 characters long.");
+      return;
+    }
+    if (signupPassword !== signupConfirmPassword) {
+      setErrorMessage("Passwords do not match. Please verify.");
+      return;
+    }
+
+    setIsSignupLoading(true);
+
+    try {
+      let payload: any = {
+        role: signupRole,
+        password: signupPassword,
+        confirmPassword: signupConfirmPassword,
+        phone: signupPhone.trim(),
+      };
+
+      if (signupRole === "doctor") {
+        if (!signupName.trim()) throw new Error("Doctor full name is required.");
+        if (!docRegNumber.trim()) throw new Error("Registration / license number is required.");
+        payload = {
+          ...payload,
+          name: signupName.trim(),
+          email: signupEmail.trim().toLowerCase(),
+          medicalQualification: docQualification.trim(),
+          specialization: docSpecialization.trim(),
+          registrationNumber: docRegNumber.trim(),
+          hospitalOrClinicName: docHospital.trim(),
+          address: docAddress.trim(),
+        };
+      } else if (signupRole === "laboratory") {
+        if (!labOrgName.trim()) throw new Error("Laboratory name is required.");
+        if (!labRepName.trim()) throw new Error("Authorized representative name is required.");
+        payload = {
+          ...payload,
+          name: labOrgName.trim(),
+          organizationName: labOrgName.trim(),
+          email: signupEmail.trim().toLowerCase(),
+          authorizedRepresentative: labRepName.trim(),
+          registrationNumber: labRegNumber.trim(),
+          address: labAddress.trim(),
+        };
+      } else if (signupRole === "pharmacy") {
+        if (!pharmOrgName.trim()) throw new Error("Pharmacy name is required.");
+        if (!pharmRepName.trim()) throw new Error("Authorized pharmacist name is required.");
+        payload = {
+          ...payload,
+          name: pharmOrgName.trim(),
+          organizationName: pharmOrgName.trim(),
+          email: signupEmail.trim().toLowerCase(),
+          authorizedRepresentative: pharmRepName.trim(),
+          registrationNumber: pharmRegNumber.trim(),
+          address: pharmAddress.trim(),
+        };
+      }
+
+      await registerUser(payload);
+
+      setRegisteredPendingApproval({
+        role: signupRole,
+        name: payload.name,
+        orgOrHospital: payload.hospitalOrClinicName || payload.organizationName,
+        regNumber: payload.registrationNumber,
+      });
+    } catch (err: any) {
+      setErrorMessage(
+        err instanceof ApiError ? err.message : err.message || "Registration failed. Please check details."
+      );
+    } finally {
+      setIsSignupLoading(false);
+    }
+  };
+
   // 3. Email OTP Verification Handler
   const handleVerifyEmail = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -713,7 +829,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const getTitle = () => {
     if (registeredPatient) return "Permanent Patient ID Issued";
-    if (modalMode === "SIGN_UP") return "Register as New Patient";
+    if (registeredPendingApproval) return `${registeredPendingApproval.role.toUpperCase()} Account Created`;
+    if (modalMode === "SIGN_UP") {
+      if (roleSelectionStep) return "Choose Your Account Type";
+      return `Register as ${signupRole.charAt(0).toUpperCase() + signupRole.slice(1)}`;
+    }
     if (modalMode === "EMAIL_VERIFICATION") return "Verify Your Email Address";
     if (modalMode === "FORGOT_PASSWORD") return "Reset Account Password";
     if (modalMode === "RESET_PASSWORD") return "Set New Password";
@@ -723,7 +843,14 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   const getDescription = () => {
     if (registeredPatient) return "Your account is activated and ready for health records exchange.";
-    if (modalMode === "SIGN_UP") return "Sign up using Google or register with email to receive a unique Patient ID.";
+    if (registeredPendingApproval) return "Your registration is under administrative verification.";
+    if (modalMode === "SIGN_UP") {
+      if (roleSelectionStep) return "Select one of four specialized healthcare management roles.";
+      if (signupRole === "patient") return "Sign up using Google or register with email to receive a permanent Patient ID.";
+      if (signupRole === "doctor") return "Enter your medical registration details for hospital credentialing.";
+      if (signupRole === "laboratory") return "Enter diagnostic facility details for laboratory onboarding.";
+      if (signupRole === "pharmacy") return "Enter pharmacy license and dispensation facility credentials.";
+    }
     if (modalMode === "EMAIL_VERIFICATION") return `Enter the 6-digit verification code sent to ${maskedEmailAddress || emailToVerify}.`;
     if (modalMode === "FORGOT_PASSWORD") return "Enter your Patient ID or registered email to receive a password reset code.";
     if (modalMode === "RESET_PASSWORD") return `Enter the verification code sent to ${forgotMaskedEmail} and your new password.`;
@@ -740,8 +867,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       maxWidth="md"
     >
       <div className="space-y-4 font-sans">
-        {/* Top Tab Mode Switcher: Sign In vs Patient Sign Up */}
-        {!registeredPatient && modalMode !== "EMAIL_VERIFICATION" && modalMode !== "DEMO_OTP" && modalMode !== "RESET_PASSWORD" && (
+        {/* Top Tab Mode Switcher: Sign In vs Sign Up */}
+        {!registeredPatient && !registeredPendingApproval && modalMode !== "EMAIL_VERIFICATION" && modalMode !== "DEMO_OTP" && modalMode !== "RESET_PASSWORD" && (
           <div className="flex p-1 bg-slate-100 rounded-none border border-slate-300">
             <button
               type="button"
@@ -762,6 +889,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               type="button"
               onClick={() => {
                 setModalMode("SIGN_UP");
+                setRoleSelectionStep(true);
                 setErrorMessage(null);
               }}
               className={`flex-1 flex items-center justify-center gap-2 py-2 rounded-none text-xs font-semibold transition-all cursor-pointer ${
@@ -771,9 +899,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
               }`}
             >
               <UserPlus className="w-3.5 h-3.5 text-teal-600" />
-              <span>Patient Sign Up</span>
+              <span>Create Account</span>
               <span className="text-[10px] bg-teal-50 text-teal-800 px-1.5 py-0.5 rounded-none border border-teal-300 font-mono font-bold">
-                SS-PAT
+                4 Roles
               </span>
             </button>
           </div>
@@ -1027,174 +1155,851 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         )}
 
         {/* ========================================================================= */}
-        {/* VIEW 2: PATIENT SIGN UP (Google Sign Up OR Manual Registration)           */}
+        {/* VIEW 2: ROLE SELECTION & ROLE-BASED REGISTRATION                          */}
         {/* ========================================================================= */}
-        {modalMode === "SIGN_UP" && !registeredPatient && (
+        {modalMode === "SIGN_UP" && !registeredPatient && !registeredPendingApproval && (
           <div className="space-y-4 animate-fadeIn">
-            {/* OPTION A: CONTINUE WITH GOOGLE REGISTRATION */}
-            <div>
-              <div ref={googleSignupBtnContainerRef} className="w-full min-h-[42px] flex items-center justify-center">
-                <button
-                  type="button"
-                  disabled={isGoogleLoading}
-                  onClick={() => handleGoogleOAuthFallback("register")}
-                  className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
-                >
-                  <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
-                    <path
-                      fill="#4285F4"
-                      d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
-                    />
-                    <path
-                      fill="#34A853"
-                      d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
-                    />
-                    <path
-                      fill="#FBBC05"
-                      d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
-                    />
-                    <path
-                      fill="#EA4335"
-                      d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
-                    />
-                  </svg>
-                  <span>{isGoogleLoading ? "Creating Patient Account..." : "Sign Up with Google"}</span>
-                </button>
-              </div>
-            </div>
+            {/* STEP 1: 4 VISUALLY DISTINCT ROLE CARDS */}
+            {roleSelectionStep ? (
+              <div className="space-y-4">
+                <div className="text-center space-y-1">
+                  <h3 className="text-sm font-bold text-slate-900">Select Your Healthcare Role</h3>
+                  <p className="text-xs text-slate-600">Choose the role profile corresponding to your clinical or administrative mandate</p>
+                </div>
 
-            {/* DIVIDER: OR REGISTER MANUALLY */}
-            <div className="relative flex py-1 items-center">
-              <div className="flex-grow border-t border-slate-300"></div>
-              <span className="flex-shrink mx-3 text-slate-400 text-xs font-bold uppercase tracking-wider">
-                OR REGISTER MANUALLY
-              </span>
-              <div className="flex-grow border-t border-slate-300"></div>
-            </div>
+                <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                  {/* Role 1: Patient */}
+                  <div
+                    onClick={() => setSignupRole("patient")}
+                    className={`p-3.5 border-2 rounded-none cursor-pointer transition-all ${
+                      signupRole === "patient"
+                        ? "border-[#008080] bg-teal-50/70 shadow-xs"
+                        : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
+                        signupRole === "patient" ? "bg-[#008080] text-white" : "bg-slate-100 text-slate-700"
+                      }`}>
+                        <User className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <span className="font-bold text-xs text-slate-900">Patient</span>
+                          <span className="text-[10px] font-mono font-bold bg-teal-100 text-teal-800 px-1.5 py-0.2 border border-teal-300">
+                            Instant SS-PAT
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-snug">
+                          For individuals who want to manage their personal health records.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-            {/* OPTION B: MANUAL REGISTRATION FORM */}
-            <form onSubmit={handlePatientSignup} className="space-y-3">
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Full Name <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="text"
-                  required
-                  value={signupName}
-                  onChange={(e) => setSignupName(e.target.value)}
-                  placeholder="e.g. Rahul Sharma"
-                  className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
-                />
-              </div>
+                  {/* Role 2: Doctor */}
+                  <div
+                    onClick={() => setSignupRole("doctor")}
+                    className={`p-3.5 border-2 rounded-none cursor-pointer transition-all ${
+                      signupRole === "doctor"
+                        ? "border-[#008080] bg-teal-50/70 shadow-xs"
+                        : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
+                        signupRole === "doctor" ? "bg-[#008080] text-white" : "bg-slate-100 text-slate-700"
+                      }`}>
+                        <Stethoscope className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <span className="font-bold text-xs text-slate-900">Doctor</span>
+                          <span className="text-[10px] font-semibold bg-amber-100 text-amber-800 px-1.5 py-0.2 border border-amber-300">
+                            License Review
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-snug">
+                          For registered medical practitioners who want to manage patients, view medical history, and submit clinical updates.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-              <div>
-                <label className="block text-xs font-semibold text-slate-700 mb-1">
-                  Email Address <span className="text-red-500">*</span>
-                </label>
-                <input
-                  type="email"
-                  required
-                  value={signupEmail}
-                  onChange={(e) => setSignupEmail(e.target.value)}
-                  placeholder="e.g. rahul.sharma@example.com"
-                  className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
-                />
-              </div>
+                  {/* Role 3: Laboratory */}
+                  <div
+                    onClick={() => setSignupRole("laboratory")}
+                    className={`p-3.5 border-2 rounded-none cursor-pointer transition-all ${
+                      signupRole === "laboratory"
+                        ? "border-[#008080] bg-teal-50/70 shadow-xs"
+                        : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
+                        signupRole === "laboratory" ? "bg-[#008080] text-white" : "bg-slate-100 text-slate-700"
+                      }`}>
+                        <FlaskConical className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <span className="font-bold text-xs text-slate-900">Laboratory</span>
+                          <span className="text-[10px] font-semibold bg-amber-100 text-amber-800 px-1.5 py-0.2 border border-amber-300">
+                            Facility Review
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-snug">
+                          For diagnostic laboratories that want to manage test requests and upload laboratory reports.
+                        </p>
+                      </div>
+                    </div>
+                  </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Password <span className="text-red-500">*</span>
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showSignupPassword ? "text" : "password"}
-                      required
-                      minLength={8}
-                      value={signupPassword}
-                      onChange={(e) => setSignupPassword(e.target.value)}
-                      placeholder="Min 8 chars (letter + digit)"
-                      className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white pr-8"
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowSignupPassword((prev) => !prev)}
-                      className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
-                    >
-                      {showSignupPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
-                    </button>
+                  {/* Role 4: Pharmacy */}
+                  <div
+                    onClick={() => setSignupRole("pharmacy")}
+                    className={`p-3.5 border-2 rounded-none cursor-pointer transition-all ${
+                      signupRole === "pharmacy"
+                        ? "border-[#008080] bg-teal-50/70 shadow-xs"
+                        : "border-slate-200 bg-white hover:border-slate-300 hover:bg-slate-50/60"
+                    }`}
+                  >
+                    <div className="flex items-start gap-3">
+                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${
+                        signupRole === "pharmacy" ? "bg-[#008080] text-white" : "bg-slate-100 text-slate-700"
+                      }`}>
+                        <Pill className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="flex items-center justify-between mb-0.5">
+                          <span className="font-bold text-xs text-slate-900">Pharmacy</span>
+                          <span className="text-[10px] font-semibold bg-amber-100 text-amber-800 px-1.5 py-0.2 border border-amber-300">
+                            License Review
+                          </span>
+                        </div>
+                        <p className="text-[11px] text-slate-600 leading-snug">
+                          For pharmacies that want to manage prescriptions and medicine dispensing records.
+                        </p>
+                      </div>
+                    </div>
                   </div>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Confirm Password <span className="text-red-500">*</span>
-                  </label>
-                  <input
-                    type={showSignupPassword ? "text" : "password"}
-                    required
-                    value={signupConfirmPassword}
-                    onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                    placeholder="Re-enter password"
-                    className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
-                  />
-                </div>
+                <Button
+                  type="button"
+                  variant="primary"
+                  size="md"
+                  className="w-full rounded-none mt-2"
+                  onClick={() => setRoleSelectionStep(false)}
+                  rightIcon={<ArrowRight className="w-4 h-4" />}
+                >
+                  Continue as {signupRole.charAt(0).toUpperCase() + signupRole.slice(1)}
+                </Button>
               </div>
-
-              <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Mobile Number
-                  </label>
-                  <input
-                    type="text"
-                    value={signupPhone}
-                    onChange={(e) => setSignupPhone(e.target.value)}
-                    placeholder="+91-9876543210"
-                    className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white font-mono"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Gender
-                  </label>
-                  <select
-                    value={signupGender}
-                    onChange={(e) => setSignupGender(e.target.value as "Male" | "Female" | "Other")}
-                    className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
+            ) : (
+              /* STEP 2: ROLE-SPECIFIC REGISTRATION FORM */
+              <div className="space-y-4">
+                <div className="flex items-center justify-between pb-2 border-b border-slate-200">
+                  <button
+                    type="button"
+                    onClick={() => setRoleSelectionStep(true)}
+                    className="flex items-center gap-1.5 text-xs font-semibold text-teal-700 hover:text-teal-900 cursor-pointer"
                   >
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                    <option value="Other">Other</option>
-                  </select>
+                    <ArrowLeft className="w-3.5 h-3.5" />
+                    <span>Change Role</span>
+                  </button>
+                  <span className="text-[10px] font-bold text-slate-800 uppercase tracking-wider bg-slate-100 px-2 py-0.5 border border-slate-300">
+                    Role: {signupRole}
+                  </span>
                 </div>
 
-                <div>
-                  <label className="block text-xs font-semibold text-slate-700 mb-1">
-                    Date of Birth
-                  </label>
-                  <input
-                    type="date"
-                    value={signupDob}
-                    onChange={(e) => setSignupDob(e.target.value)}
-                    className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
-                  />
-                </div>
+                {/* ROLE 1 FORM: PATIENT */}
+                {signupRole === "patient" && (
+                  <div className="space-y-4">
+                    {/* OPTION A: CONTINUE WITH GOOGLE REGISTRATION */}
+                    <div>
+                      <div ref={googleSignupBtnContainerRef} className="w-full min-h-[42px] flex items-center justify-center">
+                        <button
+                          type="button"
+                          disabled={isGoogleLoading}
+                          onClick={() => handleGoogleOAuthFallback("register")}
+                          className="w-full flex items-center justify-center gap-3 px-4 py-2.5 rounded-none border border-slate-300 bg-white hover:bg-slate-50 text-slate-800 text-xs font-bold shadow-2xs transition-all active:scale-[0.99] cursor-pointer"
+                        >
+                          <svg className="w-4 h-4 shrink-0" viewBox="0 0 24 24">
+                            <path
+                              fill="#4285F4"
+                              d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"
+                            />
+                            <path
+                              fill="#34A853"
+                              d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"
+                            />
+                            <path
+                              fill="#FBBC05"
+                              d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"
+                            />
+                            <path
+                              fill="#EA4335"
+                              d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"
+                            />
+                          </svg>
+                          <span>{isGoogleLoading ? "Creating Patient Account..." : "Sign Up with Google"}</span>
+                        </button>
+                      </div>
+                    </div>
+
+                    {/* DIVIDER: OR REGISTER MANUALLY */}
+                    <div className="relative flex py-1 items-center">
+                      <div className="flex-grow border-t border-slate-300"></div>
+                      <span className="flex-shrink mx-3 text-slate-400 text-xs font-bold uppercase tracking-wider">
+                        OR REGISTER WITH EMAIL
+                      </span>
+                      <div className="flex-grow border-t border-slate-300"></div>
+                    </div>
+
+                    {/* MANUAL PATIENT REGISTRATION FORM */}
+                    <form onSubmit={handlePatientSignup} className="space-y-3">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Full Name <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={signupName}
+                          onChange={(e) => setSignupName(e.target.value)}
+                          placeholder="e.g. Rahul Sharma"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Email Address <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={signupEmail}
+                          onChange={(e) => setSignupEmail(e.target.value)}
+                          placeholder="e.g. rahul.sharma@example.com"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                            Password <span className="text-red-500">*</span>
+                          </label>
+                          <div className="relative">
+                            <input
+                              type={showSignupPassword ? "text" : "password"}
+                              required
+                              minLength={8}
+                              value={signupPassword}
+                              onChange={(e) => setSignupPassword(e.target.value)}
+                              placeholder="Min 8 chars"
+                              className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white pr-8"
+                            />
+                            <button
+                              type="button"
+                              onClick={() => setShowSignupPassword((prev) => !prev)}
+                              className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-slate-400 hover:text-slate-600 cursor-pointer"
+                            >
+                              {showSignupPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                            </button>
+                          </div>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                            Confirm Password <span className="text-red-500">*</span>
+                          </label>
+                          <input
+                            type={showSignupPassword ? "text" : "password"}
+                            required
+                            value={signupConfirmPassword}
+                            onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                            placeholder="Re-enter password"
+                            className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 sm:grid-cols-3 gap-2.5">
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                            Mobile Number
+                          </label>
+                          <input
+                            type="text"
+                            value={signupPhone}
+                            onChange={(e) => setSignupPhone(e.target.value)}
+                            placeholder="+91-9876543210"
+                            className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white font-mono"
+                          />
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                            Gender
+                          </label>
+                          <select
+                            value={signupGender}
+                            onChange={(e) => setSignupGender(e.target.value as "Male" | "Female" | "Other")}
+                            className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
+                          >
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
+                          </select>
+                        </div>
+
+                        <div>
+                          <label className="block text-xs font-semibold text-slate-700 mb-1">
+                            Date of Birth
+                          </label>
+                          <input
+                            type="date"
+                            value={signupDob}
+                            onChange={(e) => setSignupDob(e.target.value)}
+                            className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] focus:border-[#008080] bg-white"
+                          />
+                        </div>
+                      </div>
+
+                      <Button
+                        type="submit"
+                        variant="primary"
+                        size="md"
+                        className="w-full rounded-none mt-2"
+                        isLoading={isSignupLoading}
+                        rightIcon={<ArrowRight className="w-4 h-4" />}
+                      >
+                        Continue to Email Verification
+                      </Button>
+                    </form>
+                  </div>
+                )}
+
+                {/* ROLE 2 FORM: DOCTOR */}
+                {signupRole === "doctor" && (
+                  <form onSubmit={handleProfessionalSignup} className="space-y-3">
+                    <div className="p-2.5 bg-amber-50 border border-amber-300 text-xs text-amber-900">
+                      <strong>Credentialing Notice:</strong> Doctor registrations require verification and administrator approval before access to clinical dashboards and patient records is granted.
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Full Name (with Title) <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={signupName}
+                          onChange={(e) => setSignupName(e.target.value)}
+                          placeholder="e.g. Dr. Vikram Seth"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Professional Email <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={signupEmail}
+                          onChange={(e) => setSignupEmail(e.target.value)}
+                          placeholder="e.g. dr.vikram@hospital.org"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Medical Qualification <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={docQualification}
+                          onChange={(e) => setDocQualification(e.target.value)}
+                          placeholder="e.g. MBBS, MD (Medicine)"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Specialization <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={docSpecialization}
+                          onChange={(e) => setDocSpecialization(e.target.value)}
+                          placeholder="e.g. Cardiology, Internal Medicine"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Registration / License Number <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={docRegNumber}
+                          onChange={(e) => setDocRegNumber(e.target.value)}
+                          placeholder="e.g. MCI-2024-8841"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Hospital / Clinic Affiliation <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={docHospital}
+                          onChange={(e) => setDocHospital(e.target.value)}
+                          placeholder="e.g. Apollo Care Hospital"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Phone Number <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={signupPhone}
+                          onChange={(e) => setSignupPhone(e.target.value)}
+                          placeholder="+91-9876543210"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Clinic / Hospital Address
+                        </label>
+                        <input
+                          type="text"
+                          value={docAddress}
+                          onChange={(e) => setDocAddress(e.target.value)}
+                          placeholder="City, State"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type={showSignupPassword ? "text" : "password"}
+                          required
+                          minLength={8}
+                          value={signupPassword}
+                          onChange={(e) => setSignupPassword(e.target.value)}
+                          placeholder="Min 8 chars"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Confirm Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type={showSignupPassword ? "text" : "password"}
+                          required
+                          value={signupConfirmPassword}
+                          onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                          placeholder="Re-enter password"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="md"
+                      className="w-full rounded-none mt-2"
+                      isLoading={isSignupLoading}
+                      rightIcon={<ArrowRight className="w-4 h-4" />}
+                    >
+                      Submit Doctor Registration for Approval
+                    </Button>
+                  </form>
+                )}
+
+                {/* ROLE 3 FORM: LABORATORY */}
+                {signupRole === "laboratory" && (
+                  <form onSubmit={handleProfessionalSignup} className="space-y-3">
+                    <div className="p-2.5 bg-amber-50 border border-amber-300 text-xs text-amber-900">
+                      <strong>Organization Notice:</strong> Diagnostic laboratories require organizational accreditation verification before report submission capabilities are enabled.
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        Diagnostic Laboratory Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={labOrgName}
+                        onChange={(e) => setLabOrgName(e.target.value)}
+                        placeholder="e.g. Metropolis Diagnostics Hub"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Authorized Representative <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={labRepName}
+                          onChange={(e) => setLabRepName(e.target.value)}
+                          placeholder="e.g. Dr. Rajesh Kumar"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Organization Email <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={signupEmail}
+                          onChange={(e) => setSignupEmail(e.target.value)}
+                          placeholder="e.g. lab@metropolis.com"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Registration / NABL License <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={labRegNumber}
+                          onChange={(e) => setLabRegNumber(e.target.value)}
+                          placeholder="e.g. NABL-2024-5512"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Contact Phone <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={signupPhone}
+                          onChange={(e) => setSignupPhone(e.target.value)}
+                          placeholder="+91-80-23000000"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        Facility Address
+                      </label>
+                      <input
+                        type="text"
+                        value={labAddress}
+                        onChange={(e) => setLabAddress(e.target.value)}
+                        placeholder="Street, City, Pincode"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type={showSignupPassword ? "text" : "password"}
+                          required
+                          minLength={8}
+                          value={signupPassword}
+                          onChange={(e) => setSignupPassword(e.target.value)}
+                          placeholder="Min 8 chars"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Confirm Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type={showSignupPassword ? "text" : "password"}
+                          required
+                          value={signupConfirmPassword}
+                          onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                          placeholder="Re-enter password"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="md"
+                      className="w-full rounded-none mt-2"
+                      isLoading={isSignupLoading}
+                      rightIcon={<ArrowRight className="w-4 h-4" />}
+                    >
+                      Submit Laboratory Registration for Approval
+                    </Button>
+                  </form>
+                )}
+
+                {/* ROLE 4 FORM: PHARMACY */}
+                {signupRole === "pharmacy" && (
+                  <form onSubmit={handleProfessionalSignup} className="space-y-3">
+                    <div className="p-2.5 bg-amber-50 border border-amber-300 text-xs text-amber-900">
+                      <strong>Organization Notice:</strong> Pharmacy accounts require drug authority licensing validation by administrators before medicine dispensation operations are enabled.
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        Pharmacy Name <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={pharmOrgName}
+                        onChange={(e) => setPharmOrgName(e.target.value)}
+                        placeholder="e.g. Apollo Care Pharmacy"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Authorized Pharmacist / Representative <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={pharmRepName}
+                          onChange={(e) => setPharmRepName(e.target.value)}
+                          placeholder="e.g. Pooja Sharma, R.Ph"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Organization Email <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="email"
+                          required
+                          value={signupEmail}
+                          onChange={(e) => setSignupEmail(e.target.value)}
+                          placeholder="e.g. rx@apollocare.org"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Drug License / Registration Number <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={pharmRegNumber}
+                          onChange={(e) => setPharmRegNumber(e.target.value)}
+                          placeholder="e.g. DL-2024-9912"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white font-mono"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Contact Phone <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type="text"
+                          required
+                          value={signupPhone}
+                          onChange={(e) => setSignupPhone(e.target.value)}
+                          placeholder="+91-80-26000000"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white font-mono"
+                        />
+                      </div>
+                    </div>
+
+                    <div>
+                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        Pharmacy Facility Address
+                      </label>
+                      <input
+                        type="text"
+                        value={pharmAddress}
+                        onChange={(e) => setPharmAddress(e.target.value)}
+                        placeholder="Street, City, Pincode"
+                        className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type={showSignupPassword ? "text" : "password"}
+                          required
+                          minLength={8}
+                          value={signupPassword}
+                          onChange={(e) => setSignupPassword(e.target.value)}
+                          placeholder="Min 8 chars"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+
+                      <div>
+                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                          Confirm Password <span className="text-red-500">*</span>
+                        </label>
+                        <input
+                          type={showSignupPassword ? "text" : "password"}
+                          required
+                          value={signupConfirmPassword}
+                          onChange={(e) => setSignupConfirmPassword(e.target.value)}
+                          placeholder="Re-enter password"
+                          className="w-full px-3 py-2 text-xs text-slate-900 border border-slate-300 rounded-none focus:outline-none focus:ring-1 focus:ring-[#008080] bg-white"
+                        />
+                      </div>
+                    </div>
+
+                    <Button
+                      type="submit"
+                      variant="primary"
+                      size="md"
+                      className="w-full rounded-none mt-2"
+                      isLoading={isSignupLoading}
+                      rightIcon={<ArrowRight className="w-4 h-4" />}
+                    >
+                      Submit Pharmacy Registration for Approval
+                    </Button>
+                  </form>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
+        {/* ========================================================================= */}
+        {/* VIEW 2.5: PRACTITIONER / ORG PENDING APPROVAL SCREEN                      */}
+        {/* ========================================================================= */}
+        {registeredPendingApproval && (
+          <div className="space-y-4 text-center py-2 animate-fadeIn">
+            <div className="w-12 h-12 bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center mx-auto rounded-none">
+              <Clock className="w-6 h-6" />
+            </div>
+
+            <div>
+              <h3 className="text-base font-bold text-slate-900">
+                {registeredPendingApproval.role.toUpperCase()} Registration Submitted!
+              </h3>
+              <p className="text-xs text-slate-600 mt-1 max-w-sm mx-auto">
+                Your credentials have been securely stored and queued for review. In accordance with healthcare data protection standards, accounts must be approved by an administrator before accessing clinical records.
+              </p>
+            </div>
+
+            {/* Sharp Status Card */}
+            <div className="p-4 bg-amber-50 border-2 border-amber-500 rounded-none text-left space-y-2.5">
+              <div className="flex items-center justify-between">
+                <span className="text-[11px] font-bold text-amber-900 uppercase tracking-wider">
+                  Account Verification Status
+                </span>
+                <span className="text-[10px] bg-amber-200 text-amber-950 font-bold px-2 py-0.5 rounded-none border border-amber-400">
+                  PENDING REVIEW
+                </span>
               </div>
 
-              <Button
-                type="submit"
-                variant="primary"
-                size="md"
-                className="w-full rounded-none mt-2"
-                isLoading={isSignupLoading}
-                rightIcon={<ArrowRight className="w-4 h-4" />}
-              >
-                Continue to Email Verification
-              </Button>
-            </form>
+              <div className="bg-white p-3 rounded-none border border-amber-300 text-xs space-y-1.5 text-slate-800">
+                <div>
+                  <span className="text-slate-500 font-semibold block">Registrant Name:</span>
+                  <span className="font-bold text-slate-900">{registeredPendingApproval.name}</span>
+                </div>
+                {registeredPendingApproval.orgOrHospital && (
+                  <div>
+                    <span className="text-slate-500 font-semibold block">Facility / Organization:</span>
+                    <span className="font-bold text-slate-900">{registeredPendingApproval.orgOrHospital}</span>
+                  </div>
+                )}
+                {registeredPendingApproval.regNumber && (
+                  <div>
+                    <span className="text-slate-500 font-semibold block">License / Registration Number:</span>
+                    <span className="font-mono font-bold text-slate-900">{registeredPendingApproval.regNumber}</span>
+                  </div>
+                )}
+              </div>
+
+              <div className="text-[11px] text-amber-800 flex items-start gap-1.5 pt-1">
+                <ShieldCheck className="w-4 h-4 shrink-0 text-amber-700 mt-0.5" />
+                <span>An administrator will review your medical credentials. Once approved, your role dashboard will unlock automatically.</span>
+              </div>
+            </div>
+
+            <Button
+              type="button"
+              variant="outline"
+              size="md"
+              className="w-full rounded-none"
+              onClick={() => {
+                setRegisteredPendingApproval(null);
+                resetModalState();
+                onClose();
+              }}
+            >
+              Return to Portal
+            </Button>
           </div>
         )}
 

@@ -13,15 +13,18 @@ import {
   RefreshCw,
   CheckCircle2,
   Activity,
+  Upload,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import {
   fetchLaboratoryOrders,
   fetchLaboratorySubmittedReports,
+  searchPatientByPatientId,
 } from "../../api/client";
-import type { LabOrderItem } from "../../types/api";
+import type { LabOrderItem, DiscoverablePatient } from "../../types/api";
 import { CreateLabOrderModal } from "./CreateLabOrderModal";
 import { SubmitReportModal } from "./SubmitReportModal";
+import { DirectLabUploadModal } from "./DirectLabUploadModal";
 
 export const LaboratoryDashboardView: React.FC = () => {
   const { user } = useAuth();
@@ -36,6 +39,34 @@ export const LaboratoryDashboardView: React.FC = () => {
 
   const [isOrderModalOpen, setIsOrderModalOpen] = useState<boolean>(false);
   const [selectedOrderForReport, setSelectedOrderForReport] = useState<LabOrderItem | null>(null);
+
+  // Direct Lab Report Upload & Patient Search State
+  const [isDirectUploadOpen, setIsDirectUploadOpen] = useState<boolean>(false);
+  const [patientLookupId, setPatientLookupId] = useState<string>("");
+  const [labSearchedPatient, setLabSearchedPatient] = useState<DiscoverablePatient | null>(null);
+  const [patientLookupLoading, setPatientLookupLoading] = useState<boolean>(false);
+  const [patientLookupError, setPatientLookupError] = useState<string | null>(null);
+
+  const handleLabPatientLookup = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = patientLookupId.trim();
+    if (!query) return;
+
+    setPatientLookupLoading(true);
+    setPatientLookupError(null);
+    try {
+      const pt = await searchPatientByPatientId(query);
+      setLabSearchedPatient(pt);
+      setIsDirectUploadOpen(true);
+    } catch (err: unknown) {
+      setPatientLookupError(
+        err instanceof Error ? err.message : `Patient with ID ${query} not found.`
+      );
+      setLabSearchedPatient(null);
+    } finally {
+      setPatientLookupLoading(false);
+    }
+  };
 
   const loadData = useCallback(async () => {
     setLoading(true);
@@ -129,12 +160,81 @@ export const LaboratoryDashboardView: React.FC = () => {
                 Order Lab Test
               </Button>
             )}
+            {isLab && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setIsDirectUploadOpen(true)}
+                disabled={user?.verificationStatus === "PENDING"}
+                className="inline-flex items-center gap-1.5"
+                title={user?.verificationStatus === "PENDING" ? "Account pending approval" : "Direct Structured Lab Report Upload"}
+              >
+                <Upload className="w-4 h-4" />
+                Upload Lab Report
+              </Button>
+            )}
           </div>
         }
       />
 
+      {/* Laboratory Pending Approval Notice */}
+      {isLab && user?.verificationStatus === "PENDING" && (
+        <Card className="border-amber-300 bg-amber-50 rounded-none shadow-none">
+          <CardContent className="p-4 flex items-start gap-3 text-xs text-amber-900">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <div className="font-bold uppercase tracking-wider text-[11px] text-amber-950">
+                Diagnostic Laboratory Pending Approval
+              </div>
+              <p className="mt-1 text-amber-800 leading-relaxed">
+                Your diagnostic laboratory organization ({user.organizationName || user.facility || "Diagnostic Center"} • Rep: {user.authorizedRepresentative || "Representative"}) is currently under review by an administrator. Operational diagnostic reporting is disabled until approved.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Patient Search & Quick Upload Card for Labs */}
+      {isLab && (
+        <Card className="border-[#1E1D1B] rounded-none bg-white shadow-none">
+          <CardContent className="p-4 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+            <div className="flex items-center gap-2">
+              <FlaskConical className="w-4 h-4 text-[#008080]" />
+              <span className="font-bold text-[#1E1D1B]">Find Patient by Patient ID:</span>
+            </div>
+            <form onSubmit={handleLabPatientLookup} className="flex items-center gap-2 max-w-md w-full">
+              <div className="relative flex-1">
+                <Search className="w-4 h-4 text-[#8A8780] absolute left-3 top-1/2 -translate-y-1/2" />
+                <input
+                  type="text"
+                  placeholder="Enter Patient ID (e.g. SS-PAT-000001)..."
+                  value={patientLookupId}
+                  onChange={(e) => setPatientLookupId(e.target.value)}
+                  className="w-full pl-9 pr-3 py-1.5 bg-[#FAF7F2] border border-[#1E1D1B] rounded-none text-xs font-mono font-bold text-[#1E1D1B] placeholder-[#8A8780] focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                />
+              </div>
+              <Button
+                type="submit"
+                variant="primary"
+                size="sm"
+                disabled={patientLookupLoading || !patientLookupId.trim() || user?.verificationStatus === "PENDING"}
+                leftIcon={patientLookupLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Upload className="w-3.5 h-3.5" />}
+              >
+                Upload Report
+              </Button>
+            </form>
+          </CardContent>
+          {patientLookupError && (
+            <div className="px-4 pb-3 text-xs text-rose-700 flex items-center gap-2">
+              <AlertCircle className="w-3.5 h-3.5 text-rose-600 shrink-0" />
+              <span>{patientLookupError}</span>
+            </div>
+          )}
+        </Card>
+      )}
+
       {/* Facility Notice Strip */}
-      <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[18px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-none shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
           <FlaskConical className="w-4 h-4 text-[#008080] shrink-0" />
           <span className="text-[#475569]">
@@ -386,6 +486,18 @@ export const LaboratoryDashboardView: React.FC = () => {
         isOpen={!!selectedOrderForReport}
         onClose={() => setSelectedOrderForReport(null)}
         onSuccess={() => {
+          loadData();
+          setActiveTab("reports");
+        }}
+      />
+
+      <DirectLabUploadModal
+        isOpen={isDirectUploadOpen}
+        onClose={() => setIsDirectUploadOpen(false)}
+        defaultPatientId={labSearchedPatient?.patientId || patientLookupId || "SS-PAT-000001"}
+        defaultLabName={user?.organizationName || user?.facility || "Metropolis Diagnostics Hub"}
+        onSuccess={() => {
+          setIsDirectUploadOpen(false);
           loadData();
           setActiveTab("reports");
         }}

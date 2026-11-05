@@ -17,6 +17,11 @@ import type {
   PrescriptionItem,
   DispensingRecordItem,
   DiagnosticObservationItem,
+  RegisterUserInput,
+  DoctorConsultationInput,
+  HealthAssessmentInput,
+  DirectLabReportInput,
+  DirectDispenseInput,
 } from "../types/api";
 
 export class ApiError extends Error {
@@ -318,6 +323,24 @@ export async function registerWithGoogle(credential: string): Promise<AuthVerify
   return authenticateWithGoogle({ credential, mode: "register" });
 }
 
+export async function registerUser(payload: RegisterUserInput): Promise<{
+  patientId?: string;
+  requiresVerification?: boolean;
+  challengeId?: string;
+  maskedEmail?: string;
+  resendAvailableInSeconds?: number;
+  devOtp?: string;
+  message: string;
+  user?: AuthenticatedUser;
+  role?: string;
+  verificationStatus?: string;
+}> {
+  return apiRequest("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
 /**
  * Register a new patient account with manual details
  */
@@ -339,10 +362,16 @@ export async function registerPatient(payload: {
   message: string;
   user?: AuthenticatedUser;
 }> {
-  return apiRequest("/auth/signup", {
-    method: "POST",
-    body: JSON.stringify(payload),
-  });
+  return registerUser({ ...payload, role: "patient" }) as Promise<{
+    patientId: string;
+    requiresVerification: boolean;
+    challengeId: string;
+    maskedEmail: string;
+    resendAvailableInSeconds: number;
+    devOtp?: string;
+    message: string;
+    user?: AuthenticatedUser;
+  }>;
 }
 
 /**
@@ -927,6 +956,84 @@ export async function markNotificationRead(id: string): Promise<NotificationItem
 export async function markAllNotificationsRead(): Promise<{ modifiedCount: number }> {
   return apiRequest<{ modifiedCount: number }>("/notifications/mark-all-read", {
     method: "POST",
+  });
+}
+
+// ==========================================
+// ROLE-BASED HEALTHCARE SYSTEM ENDPOINTS
+// ==========================================
+
+/**
+ * Doctor/Lab/Pharmacy: Search patient by unique Patient ID (returns minimal identification data)
+ */
+export async function searchPatientByPatientId(patientId: string): Promise<DiscoverablePatient> {
+  return apiRequest<DiscoverablePatient>(`/patients/${encodeURIComponent(patientId)}`);
+}
+
+/**
+ * Doctor: Request medical records consent for a patient
+ */
+export async function requestDoctorConsent(data: {
+  patientId: string;
+  hiTypes: string[];
+  expireDurationDays?: number;
+  purpose?: string;
+}): Promise<ConsentItem> {
+  return apiRequest<ConsentItem>("/consents", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Doctor: Add consultation report with diagnosis, prescription, and lab recommendations
+ */
+export async function createDoctorConsultation(
+  data: DoctorConsultationInput
+): Promise<{ encounterRecordId: string; healthRecord: unknown }> {
+  return apiRequest("/records/consultations", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Doctor: Update patient health assessment observations
+ */
+export async function createHealthAssessment(
+  data: HealthAssessmentInput
+): Promise<{ observationRecordId: string; healthRecord: unknown }> {
+  return apiRequest("/records/assessments", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Laboratory: Upload direct structured diagnostic test report
+ */
+export async function uploadDirectLabReport(
+  data: DirectLabReportInput
+): Promise<{ reportRecordId: string; healthRecord: unknown }> {
+  return apiRequest("/laboratory/reports", {
+    method: "POST",
+    body: JSON.stringify(data),
+  });
+}
+
+/**
+ * Pharmacy: Submit direct medication dispensing record
+ */
+export async function dispenseMedicationDirect(
+  data: DirectDispenseInput
+): Promise<{
+  prescription: PrescriptionItem;
+  dispensingEvent: DispensingRecordItem;
+  duplicate?: boolean;
+}> {
+  return apiRequest("/pharmacy/dispenses", {
+    method: "POST",
+    body: JSON.stringify(data),
   });
 }
 

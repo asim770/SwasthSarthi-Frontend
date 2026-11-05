@@ -27,12 +27,15 @@ import {
 } from "./data/syntheticData";
 
 export default function App() {
-  const { user } = useAuth();
+  const { user, checkSession } = useAuth();
 
   // Navigation State - defaults to landing page unless URL matches /dashboard
   const [currentRoute, setCurrentRoute] = useState<NavigationRoute>(() => {
-    if (typeof window !== "undefined" && window.location.pathname === "/dashboard") {
-      return "dashboard";
+    if (typeof window !== "undefined") {
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get("login") === "success" || window.location.pathname === "/dashboard") {
+        return "dashboard";
+      }
     }
     return "landing";
   });
@@ -57,8 +60,15 @@ export default function App() {
   const [selectedConsent, setSelectedConsent] = useState<SyntheticConsent | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
 
-  // Handle URL changes for /login and /dashboard
+  // Handle URL changes for /login, /dashboard, and Google OAuth callback redirect
   useEffect(() => {
+    const urlParams = new URLSearchParams(window.location.search);
+    if (urlParams.get("login") === "success") {
+      setCurrentRoute("dashboard");
+      checkSession();
+      window.history.replaceState({}, "", "/dashboard");
+    }
+
     const handlePopState = () => {
       if (window.location.pathname === "/login") {
         setIsLoginModalOpen(true);
@@ -68,7 +78,7 @@ export default function App() {
     };
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
-  }, []);
+  }, [checkSession]);
 
   const handleOpenLogin = useCallback(() => {
     setIsLoginModalOpen(true);

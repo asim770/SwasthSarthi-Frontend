@@ -24,16 +24,22 @@ import {
   ShieldAlert,
   ChevronRight,
   User,
+  Lock,
+  CheckCircle2,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import {
   fetchTimelineRecords,
   fetchDiscoverablePatients,
   fetchConsents,
+  searchPatientByPatientId,
+  requestDoctorConsent,
 } from "../../api/client";
 import type { TimelineRecordItem, DiscoverablePatient, ConsentItem } from "../../types/api";
 import { TransferModal } from "./TransferModal";
 import { FhirResourceModal } from "./FhirResourceModal";
+import { DoctorConsultationModal } from "./DoctorConsultationModal";
+import { DoctorHealthAssessmentModal } from "./DoctorHealthAssessmentModal";
 
 const RESOURCE_TYPE_FILTERS = [
   { id: "ALL", label: "All Records", icon: FileText },
@@ -84,6 +90,87 @@ export const PatientTimelineView: React.FC = () => {
   // Modals State
   const [isTransferModalOpen, setIsTransferModalOpen] = useState<boolean>(false);
   const [selectedDetailRecord, setSelectedDetailRecord] = useState<TimelineRecordItem | null>(null);
+  const [isConsultationModalOpen, setIsConsultationModalOpen] = useState<boolean>(false);
+  const [isAssessmentModalOpen, setIsAssessmentModalOpen] = useState<boolean>(false);
+
+  // Doctor Patient ID Search & Consent State
+  const [patientIdInput, setPatientIdInput] = useState<string>("");
+  const [patientLookupResult, setPatientLookupResult] = useState<DiscoverablePatient | null>(null);
+  const [searchingPatient, setSearchingPatient] = useState<boolean>(false);
+  const [patientSearchError, setPatientSearchError] = useState<string | null>(null);
+  const [requestingConsent, setRequestingConsent] = useState<boolean>(false);
+  const [consentRequestSuccess, setConsentRequestSuccess] = useState<string | null>(null);
+
+  // Resolve active Patient readable ID (SS-PAT-XXXXXX)
+  const currentPatientCustomId = useMemo(() => {
+    const pt = patients.find((p) => p.id === selectedPatientId);
+    return pt?.patientId || patientLookupResult?.patientId || selectedPatientId;
+  }, [patients, selectedPatientId, patientLookupResult]);
+
+  const handleLookupPatient = async (e?: React.FormEvent) => {
+    if (e) e.preventDefault();
+    const query = patientIdInput.trim();
+    if (!query) return;
+
+    setSearchingPatient(true);
+    setPatientSearchError(null);
+    setConsentRequestSuccess(null);
+
+    try {
+      const patient = await searchPatientByPatientId(query);
+      setPatientLookupResult(patient);
+      setSelectedPatientId(patient.id);
+      setSelectedPatientName(patient.name);
+
+      // Add to patient dropdown list if not present
+      setPatients((prev) => {
+        if (prev.some((p) => p.id === patient.id)) return prev;
+        return [patient, ...prev];
+      });
+
+      // Reload consents to check if this doctor already has access to this patient
+      const updatedConsents = await fetchConsents();
+      setConsents(updatedConsents);
+    } catch (err: unknown) {
+      setPatientSearchError(
+        err instanceof Error ? err.message : `Patient with ID ${query} was not found.`
+      );
+      setPatientLookupResult(null);
+    } finally {
+      setSearchingPatient(false);
+    }
+  };
+
+  const handleRequestConsent = async () => {
+    if (!selectedPatientId) return;
+    setRequestingConsent(true);
+    setPatientSearchError(null);
+    setConsentRequestSuccess(null);
+
+    try {
+      await requestDoctorConsent({
+        patientId: selectedPatientId,
+        hiTypes: [
+          "OPConsultation",
+          "DiagnosticReport",
+          "Prescription",
+          "DischargeSummary",
+          "ImmunizationRecord",
+        ],
+        expireDurationDays: 30,
+        purpose: "Clinical review, diagnosis, and treatment follow-up",
+      });
+      setConsentRequestSuccess(
+        "Consent request sent! The patient has received an in-app authorization notification."
+      );
+      const updated = await fetchConsents();
+      setConsents(updated);
+    } catch (err: unknown) {
+      setPatientSearchError(err instanceof Error ? err.message : "Failed to dispatch consent request.");
+    } finally {
+      setRequestingConsent(false);
+    }
+  };
 
   // 1. Initial Identity and Patient Resolution
   useEffect(() => {
@@ -289,7 +376,7 @@ export const PatientTimelineView: React.FC = () => {
           </div>
         }
         actions={
-          <div className="flex items-center gap-2">
+          <div className="flex flex-wrap items-center gap-2">
             <Button
               variant="secondary"
               size="sm"
@@ -299,66 +386,169 @@ export const PatientTimelineView: React.FC = () => {
               Refresh
             </Button>
             {user?.role === "doctor" && (
-              <Button
-                variant="primary"
-                size="sm"
-                leftIcon={<ArrowRightLeft className="w-3.5 h-3.5" />}
-                onClick={() => setIsTransferModalOpen(true)}
-              >
-                ABDM Exchange (Mock HIP)
-              </Button>
+              <>
+                <Button
+                  variant="primary"
+                  size="sm"
+                  leftIcon={<Stethoscope className="w-3.5 h-3.5" />}
+                  onClick={() => setIsConsultationModalOpen(true)}
+                  disabled={user?.verificationStatus === "PENDING"}
+                  title={user?.verificationStatus === "PENDING" ? "Account pending approval" : "Add Doctor Consultation Report"}
+                >
+                  New Consultation
+                </Button>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  leftIcon={<Activity className="w-3.5 h-3.5" />}
+                  onClick={() => setIsAssessmentModalOpen(true)}
+                  disabled={user?.verificationStatus === "PENDING"}
+                  title={user?.verificationStatus === "PENDING" ? "Account pending approval" : "Update Patient Health Assessment"}
+                >
+                  Health Assessment
+                </Button>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  leftIcon={<ArrowRightLeft className="w-3.5 h-3.5" />}
+                  onClick={() => setIsTransferModalOpen(true)}
+                >
+                  ABDM Exchange
+                </Button>
+              </>
             )}
           </div>
         }
       />
 
-      {/* Doctor Patient Context Bar */}
+      {/* Doctor Account Pending Approval Notice */}
+      {user?.role === "doctor" && user?.verificationStatus === "PENDING" && (
+        <Card className="border-amber-300 bg-amber-50 rounded-none shadow-none">
+          <CardContent className="p-4 flex items-start gap-3 text-xs text-amber-900">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <div className="font-bold uppercase tracking-wider text-[11px] text-amber-950">
+                Doctor Account Pending Administrator Approval
+              </div>
+              <p className="mt-1 text-amber-800 leading-relaxed">
+                Your medical registration (License #{user.registrationNumber || "Pending Review"} • {user.medicalQualification || "MBBS"}) is currently undergoing administrative verification. Clinical reporting and patient medical data modifications are restricted until verified by an administrator.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
+      {/* Doctor Patient Context & Patient ID Search Bar */}
       {user?.role === "doctor" && (
-        <Card className="border-[#d7eaea] bg-gradient-to-r from-[#f0fdfa] via-white to-white shadow-xs">
-          <CardContent className="p-4 flex flex-col md:flex-row md:items-center justify-between gap-4 text-xs">
-            <div className="flex flex-wrap items-center gap-3">
-              <span className="font-bold text-[#172033] flex items-center gap-1.5">
-                <User className="w-4 h-4 text-[#008080]" />
-                Select Patient:
-              </span>
-              <select
-                value={selectedPatientId}
-                onChange={(e) => {
-                  const pid = e.target.value;
-                  setSelectedPatientId(pid);
-                  const p = patients.find((pt) => pt.id === pid);
-                  if (p) setSelectedPatientName(p.name);
-                }}
-                className="bg-white border border-[#d7eaea] rounded-[12px] px-3 py-1.5 font-medium text-[#172033] shadow-xs focus:ring-2 focus:ring-[#008080] focus:border-[#008080] focus:outline-none"
-              >
-                {patients.map((p) => (
-                  <option key={p.id} value={p.id}>
-                    {p.name} {p.patientId ? `• ${p.patientId}` : `• ${p.abhaAddress}`}
-                  </option>
-                ))}
-              </select>
+        <Card className="border-[#1E1D1B] rounded-none bg-white shadow-none">
+          <CardContent className="p-4 space-y-4 text-xs">
+            {/* Top row: Patient ID Search & Quick Selection Dropdown */}
+            <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-4 pb-3 border-b border-[#E5E0D8]">
+              {/* Patient ID Search Input */}
+              <form onSubmit={handleLookupPatient} className="flex items-center gap-2 flex-1 max-w-md">
+                <div className="relative flex-1">
+                  <Search className="w-4 h-4 text-[#8A8780] absolute left-3 top-1/2 -translate-y-1/2" />
+                  <input
+                    type="text"
+                    placeholder="Enter Patient ID (e.g. SS-PAT-000001)..."
+                    value={patientIdInput}
+                    onChange={(e) => setPatientIdInput(e.target.value)}
+                    className="w-full pl-9 pr-3 py-1.5 bg-[#FAF7F2] border border-[#1E1D1B] rounded-none text-xs font-mono font-bold text-[#1E1D1B] placeholder-[#8A8780] focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                  />
+                </div>
+                <Button
+                  type="submit"
+                  variant="primary"
+                  size="sm"
+                  disabled={searchingPatient || !patientIdInput.trim()}
+                  leftIcon={searchingPatient ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
+                >
+                  Lookup
+                </Button>
+              </form>
+
+              {/* Patient Selection Dropdown */}
+              <div className="flex items-center gap-2">
+                <span className="font-bold text-[#1E1D1B] flex items-center gap-1.5 shrink-0 text-xs">
+                  <User className="w-4 h-4 text-[#008080]" />
+                  Active Patient:
+                </span>
+                <select
+                  value={selectedPatientId}
+                  onChange={(e) => {
+                    const pid = e.target.value;
+                    setSelectedPatientId(pid);
+                    const p = patients.find((pt) => pt.id === pid);
+                    if (p) setSelectedPatientName(p.name);
+                  }}
+                  className="bg-white border border-[#1E1D1B] rounded-none px-3 py-1.5 font-bold text-xs text-[#1E1D1B] focus:outline-none focus:ring-1 focus:ring-[#008080]"
+                >
+                  {patients.map((p) => (
+                    <option key={p.id} value={p.id}>
+                      {p.name} {p.patientId ? `• ${p.patientId}` : `• ${p.abhaAddress}`}
+                    </option>
+                  ))}
+                </select>
+              </div>
             </div>
 
-            {/* Active Consent Status */}
-            <div className="flex items-center gap-2">
-              {activeConsent ? (
-                <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-200 px-3 py-1.5 rounded-lg text-[11px] font-semibold">
-                  <ShieldCheck className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>
-                    Consent Active #{activeConsent.consentId} (
-                    {(activeConsent.approvedHiTypes.length > 0
-                      ? activeConsent.approvedHiTypes
-                      : activeConsent.hiTypes
-                    ).join(", ")}
-                    )
+            {/* Patient Search Feedback Messages */}
+            {patientSearchError && (
+              <div className="p-2.5 bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2">
+                <AlertCircle className="w-4 h-4 text-rose-600 shrink-0" />
+                <span>{patientSearchError}</span>
+              </div>
+            )}
+            {consentRequestSuccess && (
+              <div className="p-2.5 bg-emerald-50 border border-emerald-200 text-emerald-800 text-xs flex items-center gap-2">
+                <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                <span>{consentRequestSuccess}</span>
+              </div>
+            )}
+
+            {/* Minimal Patient Identity Card & Consent Bar */}
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3 bg-[#FAF7F2] p-3 border border-[#E5E0D8]">
+              {/* Minimal Identity Info */}
+              <div className="space-y-1">
+                <div className="flex items-center gap-3">
+                  <span className="font-bold text-sm text-[#1E1D1B]">{selectedPatientName || "Selected Patient"}</span>
+                  <span className="font-mono text-xs px-2 py-0.5 bg-[#008080]/10 text-[#008080] border border-[#008080]/30 font-bold">
+                    {currentPatientCustomId}
                   </span>
                 </div>
-              ) : (
-                <div className="flex items-center gap-2 bg-amber-50 text-amber-800 border border-amber-200 px-3 py-1.5 rounded-lg text-[11px] font-semibold">
-                  <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
-                  <span>No active consent found for this patient.</span>
-                </div>
-              )}
+                <p className="text-[11px] text-[#636059] flex items-center gap-1.5">
+                  <Lock className="w-3 h-3 text-[#008080]" />
+                  <span>Minimal patient identity disclosed per privacy regulations. Complete clinical records require patient consent.</span>
+                </p>
+              </div>
+
+              {/* Consent Status & Action */}
+              <div className="flex items-center gap-2 shrink-0">
+                {activeConsent ? (
+                  <div className="flex items-center gap-2 bg-emerald-50 text-emerald-800 border border-emerald-300 px-3 py-1.5 text-xs font-semibold">
+                    <ShieldCheck className="w-4 h-4 text-emerald-600" />
+                    <span>
+                      Consent Active #{activeConsent.consentId} (Expires: {new Date(activeConsent.expiresAt).toLocaleDateString()})
+                    </span>
+                  </div>
+                ) : (
+                  <div className="flex items-center gap-3">
+                    <div className="flex items-center gap-1.5 bg-amber-50 text-amber-800 border border-amber-300 px-2.5 py-1 text-xs font-semibold">
+                      <AlertCircle className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Consent Required</span>
+                    </div>
+                    <Button
+                      variant="primary"
+                      size="sm"
+                      onClick={handleRequestConsent}
+                      disabled={requestingConsent || !selectedPatientId}
+                      leftIcon={requestingConsent ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <ShieldCheck className="w-3.5 h-3.5" />}
+                    >
+                      Request Patient Consent
+                    </Button>
+                  </div>
+                )}
+              </div>
             </div>
           </CardContent>
         </Card>
@@ -626,6 +816,26 @@ export const PatientTimelineView: React.FC = () => {
       <FhirResourceModal
         record={selectedDetailRecord}
         onClose={() => setSelectedDetailRecord(null)}
+      />
+
+      <DoctorConsultationModal
+        isOpen={isConsultationModalOpen}
+        onClose={() => setIsConsultationModalOpen(false)}
+        defaultPatientId={currentPatientCustomId}
+        onSuccess={() => {
+          setIsConsultationModalOpen(false);
+          loadTimeline();
+        }}
+      />
+
+      <DoctorHealthAssessmentModal
+        isOpen={isAssessmentModalOpen}
+        onClose={() => setIsAssessmentModalOpen(false)}
+        defaultPatientId={currentPatientCustomId}
+        onSuccess={() => {
+          setIsAssessmentModalOpen(false);
+          loadTimeline();
+        }}
       />
     </div>
   );

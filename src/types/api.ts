@@ -53,6 +53,13 @@ export interface AuthenticatedUser {
   authProviders?: string[];
   accountStatus?: "active" | "pending_verification" | "suspended";
   isGoogleLinked?: boolean;
+  verificationStatus?: "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
+  medicalQualification?: string;
+  registrationNumber?: string;
+  hospitalOrClinicName?: string;
+  organizationName?: string;
+  authorizedRepresentative?: string;
+  address?: string;
 }
 
 export type OtpDeliveryChannel = "sms" | "email" | "mock";
@@ -413,5 +420,88 @@ export interface PatientAccessEventItem {
   outcome: "ALLOWED" | "DENIED" | "FAILED";
   denialReason?: string;
   timestamp: string;
+}
+
+export interface RegisterUserInput {
+  role?: UserRole;
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+  phone?: string;
+  gender?: "Male" | "Female" | "Other";
+  dateOfBirth?: string;
+  medicalQualification?: string;
+  specialization?: string;
+  registrationNumber?: string;
+  hospitalOrClinicName?: string;
+  organizationName?: string;
+  authorizedRepresentative?: string;
+  address?: string;
+}
+
+export interface DoctorConsultationInput {
+  patientId: string;
+  consultationDate?: string;
+  symptoms: string;
+  clinicalFindings: string;
+  diagnosis: string;
+  treatmentPlan: string;
+  prescribedMedicines?: Array<{
+    name: string;
+    dosage: string;
+    frequency: string;
+    durationDays?: number;
+    instructions?: string;
+  }>;
+  recommendedTests?: string[];
+  followUpDate?: string;
+  clinicalNotes?: string;
+  supportingDocuments?: Array<{
+    title: string;
+    url: string;
+    mimeType?: string;
+  }>;
+}
+
+export interface HealthAssessmentInput {
+  patientId: string;
+  assessment: string;
+  observations?: string;
+  treatmentProgress?: string;
+  recommendations?: string;
+  nextReviewDate?: string;
+}
+
+export interface DirectLabReportInput {
+  patientId: string;
+  testName: string;
+  testCategory?: string;
+  testDate?: string;
+  results: Array<{
+    code?: string;
+    name: string;
+    value: string | number;
+    unit?: string;
+    referenceRange?: string;
+    interpretation?: string;
+  }>;
+  technicianName?: string;
+  laboratoryName?: string;
+  notes?: string;
+  documentAttachment?: {
+    title: string;
+    url: string;
+    mimeType?: string;
+  };
+}
+
+export interface DirectDispenseInput {
+  prescriptionId: string;
+  quantityToDispense?: number;
+  batchNumber?: string;
+  pharmacistName?: string;
+  notes?: string;
+  idempotencyKey?: string;
 }
 

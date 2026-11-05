@@ -21,6 +21,7 @@ import {
 import type { PrescriptionItem, DispensingRecordItem } from "../../types/api";
 import { CreatePrescriptionModal } from "./CreatePrescriptionModal";
 import { DispenseModal } from "./DispenseModal";
+import { DirectDispenseModal } from "./DirectDispenseModal";
 
 export const PharmacyDashboardView: React.FC = () => {
   const { user } = useAuth();
@@ -34,6 +35,7 @@ export const PharmacyDashboardView: React.FC = () => {
   const [error, setError] = useState<string | null>(null);
 
   const [isCreateModalOpen, setIsCreateModalOpen] = useState<boolean>(false);
+  const [isDirectDispenseModalOpen, setIsDirectDispenseModalOpen] = useState<boolean>(false);
   const [selectedPrescriptionForDispense, setSelectedPrescriptionForDispense] =
     useState<PrescriptionItem | null>(null);
 
@@ -123,12 +125,42 @@ export const PharmacyDashboardView: React.FC = () => {
                 Write Prescription
               </Button>
             )}
+            {isPharmacist && (
+              <Button
+                variant="primary"
+                size="sm"
+                onClick={() => setIsDirectDispenseModalOpen(true)}
+                disabled={user?.verificationStatus === "PENDING"}
+                className="inline-flex items-center gap-1.5"
+                title={user?.verificationStatus === "PENDING" ? "Account pending approval" : "Direct Medication Dispensing Entry"}
+              >
+                <Pill className="w-4 h-4" />
+                Record Dispensing
+              </Button>
+            )}
           </div>
         }
       />
 
+      {/* Pharmacy Pending Approval Notice */}
+      {isPharmacist && user?.verificationStatus === "PENDING" && (
+        <Card className="border-amber-300 bg-amber-50 rounded-none shadow-none">
+          <CardContent className="p-4 flex items-start gap-3 text-xs text-amber-900">
+            <AlertCircle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
+            <div>
+              <div className="font-bold uppercase tracking-wider text-[11px] text-amber-950">
+                Pharmacy Registration Pending Approval
+              </div>
+              <p className="mt-1 text-amber-800 leading-relaxed">
+                Your pharmacy organization ({user.organizationName || user.facility || "Pharmacy Hub"} • License #{user.registrationNumber || "Pending"}) is currently undergoing administrative verification. Dispensing operational features are restricted until approved.
+              </p>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Safety & Protocol Banner */}
-      <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-[18px] shadow-xs flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+      <div className="p-3.5 bg-[#f0fdfa] border border-[#d7eaea] rounded-none shadow-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
         <div className="flex items-center gap-2.5">
           <Pill className="w-4 h-4 text-[#008080] shrink-0" />
           <span className="text-[#475569]">
@@ -462,6 +494,17 @@ export const PharmacyDashboardView: React.FC = () => {
         isOpen={!!selectedPrescriptionForDispense}
         onClose={() => setSelectedPrescriptionForDispense(null)}
         onSuccess={() => {
+          loadData();
+          setActiveTab("dispenses");
+        }}
+      />
+
+      <DirectDispenseModal
+        isOpen={isDirectDispenseModalOpen}
+        onClose={() => setIsDirectDispenseModalOpen(false)}
+        defaultPatientId="SS-PAT-000001"
+        onSuccess={() => {
+          setIsDirectDispenseModalOpen(false);
           loadData();
           setActiveTab("dispenses");
         }}
