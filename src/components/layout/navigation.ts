@@ -1,5 +1,6 @@
 import {
   House,
+  LayoutDashboard,
   FileText,
   ShieldCheck,
   Pill,
@@ -30,7 +31,7 @@ export interface NavItem {
 
 export const NAV_ITEMS: NavItem[] = [
   { id: "landing", label: "Home", icon: House, tooltip: "SwaasthSaarthi Home" },
-  { id: "dashboard", label: "Dashboard", icon: House, tooltip: "Patient Portal Dashboard" },
+  { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, tooltip: "Patient Portal Dashboard" },
   { id: "records", label: "Records", icon: FileText, badge: "12", tooltip: "Health Records" },
   { id: "consents", label: "Consent", icon: ShieldCheck, badge: "2", tooltip: "Consent Management" },
   { id: "prescriptions", label: "Rx", icon: Pill, tooltip: "Prescriptions (Rx)" },

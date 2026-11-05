@@ -293,14 +293,8 @@ export const ConsentManagementView: React.FC = () => {
   return (
     <div className="space-y-6">
       <PageHeader
-        title="Electronic Consent Management"
-        breadcrumb="Portal / ABDM Consents"
-        description="Patient-centric electronic consent artefacts governing longitudinal health records access under the Ayushman Bharat Digital Mission (ABDM)."
-        badge={
-          <Badge variant="purple" size="sm">
-            ABDM R4 Verified
-          </Badge>
-        }
+        title="Consent Management"
+        description="Manage clinical record access permissions, review practitioner requests, and revoke data access anytime."
         actions={
           <div className="flex items-center gap-2.5">
             <Button
@@ -331,42 +325,31 @@ export const ConsentManagementView: React.FC = () => {
 
       {/* Role Context Notification Banner */}
       {user?.role === "patient" && (
-        <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-start gap-3.5 text-xs text-[#1A1918] shadow-none">
-          <ShieldCheck className="w-5 h-5 text-[#57477D] shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <span className="font-bold block text-[#1A1918] font-editorial-serif text-sm">Patient Data Sovereignty Guaranteed</span>
-            <p className="text-[#5C574F] leading-relaxed">
-              No healthcare practitioner or facility can inspect your clinical records without your explicit,
-              time-bounded consent. You have granular authority to approve specific categories, deny requests,
-              or permanently revoke access at any time.
-            </p>
+        <div className="p-3.5 bg-white border border-[#EAE4D9] flex items-center justify-between gap-3 text-xs text-[#191817]">
+          <div className="flex items-center gap-2.5">
+            <ShieldCheck className="w-4 h-4 text-[#57477D] shrink-0" />
+            <span className="text-[#5C574F]">
+              Your health data is protected. Healthcare providers can only access records with your active, explicit consent.
+            </span>
           </div>
         </div>
       )}
 
       {user?.role === "doctor" && (
-        <div className="p-4 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none flex items-start gap-3.5 text-xs text-[#1A1918] shadow-none">
-          <Lock className="w-5 h-5 text-[#57477D] shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <span className="font-bold block text-[#1A1918] font-editorial-serif text-sm">Doctor Consent Request Workflow</span>
-            <p className="text-[#5C574F] leading-relaxed">
-              Submitting a consent request initiates an electronic artifact in the patient’s inbox.
-              Clinical record endpoints remain strictly locked until the patient reviews and grants permission.
-            </p>
-          </div>
+        <div className="p-3.5 bg-white border border-[#EAE4D9] flex items-center gap-2.5 text-xs text-[#5C574F]">
+          <Lock className="w-4 h-4 text-[#57477D] shrink-0" />
+          <span>
+            Consent requests sent to patients must be approved before medical records become accessible.
+          </span>
         </div>
       )}
 
       {user?.role === "admin" && (
-        <div className="p-4 bg-amber-50/70 border border-amber-200/80 rounded-none flex items-start gap-3.5 text-xs text-amber-900 shadow-none">
-          <AlertTriangle className="w-5 h-5 text-amber-600 shrink-0 mt-0.5" />
-          <div className="space-y-1">
-            <span className="font-bold block text-[#1A1918] font-editorial-serif text-sm">Administrative Metadata Access Only</span>
-            <p className="text-[#5C574F] leading-relaxed">
-              Administrators possess governance visibility into consent artifacts and expiry metadata,
-              but are strictly forbidden from approving or revoking consents on behalf of patients, or reading clinical content.
-            </p>
-          </div>
+        <div className="p-3.5 bg-amber-50/70 border border-amber-200/80 flex items-center gap-2.5 text-xs text-amber-900">
+          <AlertTriangle className="w-4 h-4 text-amber-600 shrink-0" />
+          <span>
+            Governance metadata access only. Administrators cannot approve or revoke patient consents.
+          </span>
         </div>
       )}
 
@@ -390,15 +373,17 @@ export const ConsentManagementView: React.FC = () => {
             }`}
           >
             <span>{tab.label}</span>
-            <span
-              className={`px-1.5 py-0.2 rounded-none text-[10px] font-mono ${
-                activeTab === tab.key
-                  ? "bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] font-bold"
-                  : "bg-[#FAF7F2] text-[#8C877D] border border-[#EAE4D9]"
-              }`}
-            >
-              {tab.count}
-            </span>
+            {tab.count > 0 && (
+              <span
+                className={`px-1.5 py-0.2 rounded-none text-[10px] font-mono ${
+                  activeTab === tab.key
+                    ? "bg-[#FAF7F2] text-[#57477D] border border-[#EAE4D9] font-bold"
+                    : "bg-[#FAF7F2] text-[#8C877D] border border-[#EAE4D9]"
+                }`}
+              >
+                {tab.count}
+              </span>
+            )}
           </button>
         ))}
       </div>
@@ -407,7 +392,7 @@ export const ConsentManagementView: React.FC = () => {
       {loading ? (
         <div className="py-16 text-center text-xs text-[#69655E] flex flex-col items-center justify-center gap-2">
           <RefreshCw className="w-5 h-5 text-[#57477D] animate-spin" />
-          <span>Evaluating cryptographic consent artifacts...</span>
+          <span>Loading consent permissions...</span>
         </div>
       ) : error ? (
         <Card className="border-red-200 bg-red-50/50 rounded-none shadow-none">
@@ -421,13 +406,15 @@ export const ConsentManagementView: React.FC = () => {
         </Card>
       ) : filteredConsents.length === 0 ? (
         <EmptyState
-          title={`No ${activeTab !== "ALL" ? activeTab.toLowerCase() : ""} consents found`}
+          title={activeTab === "ALL" ? "No Consents Found" : `No ${activeTab.toLowerCase()} consents found`}
           description={
             user?.role === "patient"
-              ? "You currently have no consent requests or active permissions matching this filter."
+              ? activeTab === "ALL"
+                ? "You have no active consent requests or data sharing permissions. When a hospital or physician requests record access, it will appear here for your approval."
+                : "No consent requests match this status filter."
               : "No practitioner consent artifacts exist under this category."
           }
-          icon={<ShieldCheck className="w-5 h-5 text-[#8C877D]" />}
+          icon={<ShieldCheck className="w-5 h-5 text-[#57477D]" />}
           action={
             user?.role === "doctor" ? (
               <Button

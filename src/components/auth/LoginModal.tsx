@@ -747,7 +747,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     if (registeredPatient) return "Your account is activated and ready for health records exchange.";
     if (registeredPendingApproval) return "Your registration is under administrative verification.";
     if (modalMode === "SIGN_UP") {
-      if (roleSelectionStep) return "Select one of four specialized healthcare management roles.";
+      if (roleSelectionStep) return "Select your portal role to continue with registration.";
       if (signupRole === "patient") return "Sign up using Google or register with email to receive a permanent Patient ID.";
       if (signupRole === "doctor") return "Enter your medical registration details for hospital credentialing.";
       if (signupRole === "laboratory") return "Enter diagnostic facility details for laboratory onboarding.";
@@ -979,35 +979,36 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           <div className="space-y-4 animate-fadeIn">
             {/* STEP 1: 4 VISUALLY DISTINCT ROLE CARDS */}
             {roleSelectionStep ? (
-              <div className="space-y-4">
-                <div className="text-center space-y-1">
-                  <h3 className="text-sm font-bold text-slate-900">Select Your Healthcare Role</h3>
-                  <p className="text-xs text-slate-600">Choose the role profile corresponding to your clinical or administrative mandate</p>
-                </div>
-
+              <div className="space-y-4 pt-1">
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   {/* Role 1: Patient */}
                   <div
                     onClick={() => setSignupRole("patient")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "patient"
-                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                      }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
+                      signupRole === "patient"
+                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                    }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "patient" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                        }`}>
+                      <div
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
+                          signupRole === "patient"
+                            ? "bg-[#1A1918] text-white"
+                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}
+                      >
                         <User className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-0.5">
-                          <span className="font-bold text-xs text-[#191817]">Patient</span>
-                          <span className="text-[10px] font-mono font-bold bg-[#FAF7F2] text-[#57477D] px-1.5 py-0.5 border border-[#57477D]/25">
-                            Instant SS-PAT
-                          </span>
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-xs text-[#191817]">Patient</span>
+                          {signupRole === "patient" && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                          )}
                         </div>
-                        <p className="text-[11px] text-[#5C574F] leading-snug">
-                          For individuals who want to manage their personal health records.
+                        <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
+                          Personal health records, prescriptions, and consent control.
                         </p>
                       </div>
                     </div>
@@ -1016,25 +1017,31 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 2: Doctor */}
                   <div
                     onClick={() => setSignupRole("doctor")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "doctor"
-                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                      }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
+                      signupRole === "doctor"
+                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                    }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "doctor" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                        }`}>
+                      <div
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
+                          signupRole === "doctor"
+                            ? "bg-[#1A1918] text-white"
+                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}
+                      >
                         <Stethoscope className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-0.5">
-                          <span className="font-bold text-xs text-[#191817]">Doctor</span>
-                          <span className="text-[10px] font-semibold bg-amber-50 text-amber-800 px-1.5 py-0.5 border border-amber-200">
-                            License Review
-                          </span>
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-xs text-[#191817]">Doctor</span>
+                          {signupRole === "doctor" && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                          )}
                         </div>
-                        <p className="text-[11px] text-[#5C574F] leading-snug">
-                          For registered medical practitioners who want to manage patients, view medical history, and submit clinical updates.
+                        <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
+                          Clinical history review, digital prescriptions, and care plans.
                         </p>
                       </div>
                     </div>
@@ -1043,25 +1050,31 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 3: Laboratory */}
                   <div
                     onClick={() => setSignupRole("laboratory")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "laboratory"
-                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                      }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
+                      signupRole === "laboratory"
+                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                    }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "laboratory" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                        }`}>
+                      <div
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
+                          signupRole === "laboratory"
+                            ? "bg-[#1A1918] text-white"
+                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}
+                      >
                         <FlaskConical className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-0.5">
-                          <span className="font-bold text-xs text-[#191817]">Laboratory</span>
-                          <span className="text-[10px] font-semibold bg-amber-50 text-amber-800 px-1.5 py-0.5 border border-amber-200">
-                            Facility Review
-                          </span>
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-xs text-[#191817]">Laboratory</span>
+                          {signupRole === "laboratory" && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                          )}
                         </div>
-                        <p className="text-[11px] text-[#5C574F] leading-snug">
-                          For diagnostic laboratories that want to manage test requests and upload laboratory reports.
+                        <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
+                          Diagnostic order processing and verified report publication.
                         </p>
                       </div>
                     </div>
@@ -1070,25 +1083,31 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 4: Pharmacy */}
                   <div
                     onClick={() => setSignupRole("pharmacy")}
-                    className={`p-4 border rounded-none cursor-pointer transition-all ${signupRole === "pharmacy"
-                      ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
-                      : "border-[#EAE4D9] bg-white hover:border-[#D5CEC2] hover:bg-[#FAF7F2]/40"
-                      }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
+                      signupRole === "pharmacy"
+                        ? "border-[#1A1918] bg-[#FAF7F2] shadow-2xs"
+                        : "border-[#EAE4D9] bg-white hover:border-[#C5BEB2] hover:bg-[#FAF7F2]/40"
+                    }`}
                   >
                     <div className="flex items-start gap-3">
-                      <div className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center ${signupRole === "pharmacy" ? "bg-[#57477D] text-white" : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
-                        }`}>
+                      <div
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
+                          signupRole === "pharmacy"
+                            ? "bg-[#1A1918] text-white"
+                            : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9]"
+                        }`}
+                      >
                         <Pill className="w-4 h-4" />
                       </div>
                       <div className="flex-1 min-w-0">
-                        <div className="flex items-center justify-between mb-0.5">
-                          <span className="font-bold text-xs text-[#191817]">Pharmacy</span>
-                          <span className="text-[10px] font-semibold bg-amber-100 text-amber-800 px-1.5 py-0.2 border border-amber-300">
-                            License Review
-                          </span>
+                        <div className="flex items-center justify-between">
+                          <span className="font-semibold text-xs text-[#191817]">Pharmacy</span>
+                          {signupRole === "pharmacy" && (
+                            <span className="w-1.5 h-1.5 rounded-full bg-[#57477D]" />
+                          )}
                         </div>
-                        <p className="text-[11px] text-slate-600 leading-snug">
-                          For pharmacies that want to manage prescriptions and medicine dispensing records.
+                        <p className="text-[11px] text-[#6E685F] leading-snug mt-1">
+                          Prescription verification and dispensation tracking.
                         </p>
                       </div>
                     </div>
@@ -1099,7 +1118,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   type="button"
                   variant="primary"
                   size="md"
-                  className="w-full rounded-none mt-2"
+                  className="w-full rounded-none mt-2 shadow-2xs"
                   onClick={() => setRoleSelectionStep(false)}
                   rightIcon={<ArrowRight className="w-4 h-4" />}
                 >

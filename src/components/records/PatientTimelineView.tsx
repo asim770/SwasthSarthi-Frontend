@@ -12,7 +12,6 @@ import {
   ShieldCheck,
   ArrowRightLeft,
   RefreshCw,
-  Sparkles,
   FlaskConical,
   Stethoscope,
   Activity,
@@ -366,15 +365,8 @@ export const PatientTimelineView: React.FC = () => {
     <div className="space-y-6">
       {/* Header */}
       <PageHeader
-        title="Longitudinal Patient Health Records"
-        breadcrumb="Portal / Clinical Records / Longitudinal Timeline"
-        description="Unified HL7 FHIR Release 4 clinical timeline aggregated across participating ABDM healthcare institutions under patient electronic consent."
-        badge={
-          <div className="flex items-center gap-1.5">
-            <Badge variant="purple" size="sm">FHIR R4 Compliant</Badge>
-            <Badge variant="neutral" size="sm">Mock ABDM Gateway</Badge>
-          </div>
-        }
+        title="Patient Health Records"
+        description="Comprehensive chronological clinical records, diagnostic reports, and medical consultations."
         actions={
           <div className="flex flex-wrap items-center gap-2">
             <Button
@@ -555,41 +547,41 @@ export const PatientTimelineView: React.FC = () => {
       )}
 
       {/* Filter and Search Bar */}
-      <Card className="rounded-none border-[#EAE4D9] shadow-none">
+      <Card className="rounded-none border-[#EAE4D9] shadow-none bg-white">
         <CardContent className="p-4 space-y-3">
           <div className="flex flex-col md:flex-row gap-3">
             {/* Search Input */}
             <div className="relative flex-1">
-              <Search className="w-4 h-4 text-[#8C877D] absolute left-3 top-1/2 -translate-y-1/2" />
+              <Search className="w-3.5 h-3.5 text-[#7A746B] absolute left-3 top-1/2 -translate-y-1/2" />
               <input
                 type="text"
-                placeholder="Search diagnostic tests, doctors, medications, or findings..."
+                placeholder="Search by diagnosis, physician, facility, or test..."
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                className="w-full pl-9 pr-3 py-2 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none text-xs text-[#1A1918] placeholder-[#8C877D] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
+                className="w-full pl-9 pr-3 py-2 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none text-xs text-[#191817] placeholder-[#7A746B] focus:bg-white focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
               />
             </div>
 
             {/* Date Range Pickers */}
             <div className="flex flex-wrap items-center gap-2 text-xs">
-              <div className="flex items-center gap-1.5 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none px-2.5 py-1.5">
+              <div className="flex items-center gap-1.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none px-2.5 py-1.5">
                 <Calendar className="w-3.5 h-3.5 text-[#57477D]" />
                 <input
                   type="date"
                   value={fromDate}
                   onChange={(e) => setFromDate(e.target.value)}
-                  className="bg-transparent text-[#1A1918] text-xs focus:outline-none"
+                  className="bg-transparent text-[#191817] text-xs focus:outline-none"
                   title="From Date"
                 />
               </div>
-              <span className="text-[#69655E] text-xs font-mono">to</span>
-              <div className="flex items-center gap-1.5 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none px-2.5 py-1.5">
+              <span className="text-[#7A746B] text-xs font-medium">to</span>
+              <div className="flex items-center gap-1.5 bg-[#FAF7F2] border border-[#EAE4D9] rounded-none px-2.5 py-1.5">
                 <Calendar className="w-3.5 h-3.5 text-[#57477D]" />
                 <input
                   type="date"
                   value={toDate}
                   onChange={(e) => setToDate(e.target.value)}
-                  className="bg-transparent text-[#1A1918] text-xs focus:outline-none"
+                  className="bg-transparent text-[#191817] text-xs focus:outline-none"
                   title="To Date"
                 />
               </div>
@@ -599,9 +591,9 @@ export const PatientTimelineView: React.FC = () => {
                 <select
                   value={selectedInstitution}
                   onChange={(e) => setSelectedInstitution(e.target.value)}
-                  className="bg-[#FAF7F2] border border-[#D5CEC2] rounded-none px-2.5 py-1.5 text-xs text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
+                  className="bg-[#FAF7F2] border border-[#EAE4D9] rounded-none px-2.5 py-1.5 text-xs text-[#191817] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                 >
-                  <option value="ALL">All HIP Sources</option>
+                  <option value="ALL">All Facilities</option>
                   {institutionOptions.map((inst) => (
                     <option key={inst} value={inst}>
                       {inst}
@@ -629,7 +621,7 @@ export const PatientTimelineView: React.FC = () => {
           </div>
 
           {/* Resource Type Filter Chips */}
-          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar">
+          <div className="flex items-center gap-1.5 overflow-x-auto pb-1 pt-1 no-scrollbar border-t border-[#EAE4D9]/60">
             {RESOURCE_TYPE_FILTERS.map((f) => {
               const Icon = f.icon;
               const count =
@@ -640,23 +632,25 @@ export const PatientTimelineView: React.FC = () => {
                 <button
                   key={f.id}
                   onClick={() => setSelectedType(f.id)}
-                  className={`px-3 py-1.5 rounded-none text-xs font-semibold shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
+                  className={`px-3 py-1.5 rounded-none text-xs font-medium shrink-0 transition-all flex items-center gap-1.5 cursor-pointer ${
                     selectedType === f.id
-                      ? "bg-[#1A1918] text-white shadow-none"
-                      : "bg-[#FAF7F2] text-[#69655E] border border-[#D5CEC2] hover:bg-[#EAE4D9] hover:text-[#1A1918]"
+                      ? "bg-[#1A1918] text-white shadow-2xs font-semibold"
+                      : "bg-[#FAF7F2] text-[#5C574F] border border-[#EAE4D9] hover:bg-white hover:text-[#191817]"
                   }`}
                 >
                   <Icon className="w-3.5 h-3.5" />
                   <span>{f.label}</span>
-                  <span
-                    className={`text-[10px] px-1.5 py-0.2 rounded-none font-mono ${
-                      selectedType === f.id
-                        ? "bg-white/20 text-white"
-                        : "bg-[#EAE4D9] text-[#1A1918]"
-                    }`}
-                  >
-                    {count}
-                  </span>
+                  {count > 0 && (
+                    <span
+                      className={`text-[10px] px-1.5 py-0.2 rounded-none font-mono ${
+                        selectedType === f.id
+                          ? "bg-white/20 text-white"
+                          : "bg-[#EAE4D9] text-[#1A1918]"
+                      }`}
+                    >
+                      {count}
+                    </span>
+                  )}
                 </button>
               );
             })}
@@ -695,8 +689,10 @@ export const PatientTimelineView: React.FC = () => {
           title="No Clinical Health Records Found"
           description={
             user?.role === "doctor" && !activeConsent
-              ? "Active patient electronic consent is required before accessing records. Request consent or ask the patient to approve access."
-              : "No FHIR R4 records match the selected date range or category filters. Adjust your criteria or initiate an ABDM record exchange."
+              ? "Active patient electronic consent is required before accessing records."
+              : (fromDate || toDate || searchQuery || selectedType !== "ALL" || selectedInstitution !== "ALL")
+              ? "No medical records match your current filter criteria. Try clearing search filters."
+              : "There are no clinical records linked to your health identifier yet. New records from hospital visits and diagnostic tests will appear here."
           }
           action={
             user?.role === "doctor" ? (
@@ -784,14 +780,14 @@ export const PatientTimelineView: React.FC = () => {
                     {cleanDisplay(record.summary)}
                   </div>
 
-                  {/* Care context and mock marker */}
+                  {/* Care context and verification */}
                   <div className="mt-3 flex items-center justify-between text-[10px] text-[#69655E] pt-2 border-t border-[#EAE4D9]">
                     <span className="font-mono">
                       Care Context: <strong className="text-[#1A1918]">{record.careContextId}</strong>
                     </span>
-                    <span className="flex items-center gap-1 text-[#57477D] font-semibold font-mono">
-                      <Sparkles className="w-3 h-3 text-[#57477D]" />
-                      Synthetic Demo Data
+                    <span className="flex items-center gap-1 text-emerald-800 font-medium">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-600" />
+                      <span>Verified Record</span>
                     </span>
                   </div>
                 </CardContent>

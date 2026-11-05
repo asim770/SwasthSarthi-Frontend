@@ -375,7 +375,9 @@ export interface PractitionerVerificationItem {
 export type NotificationCategory =
   | "CONSENT"
   | "CLINICAL_ACCESS"
+  | "RECORD_ACCESS"
   | "LAB_REPORT"
+  | "PRESCRIPTION"
   | "PHARMACY_DISPENSE"
   | "ONBOARDING"
   | "SECURITY"
@@ -411,11 +413,14 @@ export interface AuditChainVerificationReport {
 export interface PatientAccessEventItem {
   eventId: string;
   action: string;
-  actionLabel: string;
+  actionLabel?: string;
   actorRole?: string;
   actorName?: string;
+  accessorRole?: string;
+  accessorName?: string;
   facility?: string;
-  targetResourceType: string;
+  resourceType?: string;
+  targetResourceType?: string;
   targetResourceId?: string;
   outcome: "ALLOWED" | "DENIED" | "FAILED";
   denialReason?: string;

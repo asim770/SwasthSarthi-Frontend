@@ -349,33 +349,45 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 <h1 className="text-xl sm:text-2xl font-editorial-serif font-bold text-[#191817] tracking-tight">
                   {displayName}
                 </h1>
-                <span className="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200 font-bold uppercase tracking-wider">
+                <span className="text-[10px] bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200 font-medium">
                   Verified Patient
                 </span>
-                <span className="text-[10px] bg-[#FAF7F2] text-[#57477D] px-2 py-0.5 border border-[#57477D]/25 font-mono font-bold tracking-wider uppercase">
+                <span className="text-[10px] bg-[#FAF7F2] text-[#57477D] px-2 py-0.5 border border-[#EAE4D9] font-medium">
                   ABDM Linked
                 </span>
               </div>
 
-              <div className="flex items-center gap-3 mt-1.5 flex-wrap text-[#5C574F]">
-                <span>{user?.email || "rahul.verma@synthetic.demo"}</span>
-                <span className="text-[#D5CEC2]">•</span>
-                <span>{user?.phone || "+91-9876543210"}</span>
-                <span className="text-[#D5CEC2]">•</span>
-                <span>{user?.gender || "Male"}</span>
-                <span className="text-[#D5CEC2]">•</span>
-                <span className="font-mono">DOB: {user?.dateOfBirth || "1995-05-15"}</span>
+              <div className="flex items-center gap-2.5 mt-1.5 flex-wrap text-xs text-[#5C574F]">
+                <span>{user?.email || "patient@swaasthsaarthi.in"}</span>
+                {user?.phone && (
+                  <>
+                    <span className="text-[#D5CEC2]">•</span>
+                    <span>{user.phone}</span>
+                  </>
+                )}
+                {user?.gender && (
+                  <>
+                    <span className="text-[#D5CEC2]">•</span>
+                    <span>{user.gender}</span>
+                  </>
+                )}
+                {user?.dateOfBirth && (
+                  <>
+                    <span className="text-[#D5CEC2]">•</span>
+                    <span className="font-mono">DOB: {user.dateOfBirth}</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
 
-          {/* PERMANENT UNIQUE PATIENT ID CARD WITH PROMINENT COPY BUTTON */}
-          <div className="p-3.5 bg-[#FAF7F2] border border-[#D5CEC2] rounded-none flex items-center justify-between gap-4 min-w-[280px]">
+          {/* PERMANENT PATIENT ID BADGE */}
+          <div className="flex items-center gap-3 bg-[#FAF7F2] border border-[#EAE4D9] px-4 py-2.5 shrink-0">
             <div>
-              <div className="text-[10px] font-mono font-bold text-[#7A746B] uppercase tracking-wider">
-                Permanent Patient ID
+              <div className="text-[10px] font-mono font-medium text-[#7A746B] uppercase tracking-wider">
+                Patient ID
               </div>
-              <div className="text-base font-mono font-bold text-[#57477D] tracking-wider mt-0.5">
+              <div className="text-sm font-mono font-bold text-[#191817] tracking-wide mt-0.5">
                 {currentPatientId}
               </div>
             </div>
@@ -383,44 +395,45 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <button
               type="button"
               onClick={() => handleCopyPid(currentPatientId)}
-              className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1A1918] hover:bg-[#2E2C2A] text-white text-xs font-semibold rounded-none cursor-pointer transition-colors shadow-2xs"
+              className="flex items-center gap-1.5 px-2.5 py-1 text-xs font-medium text-[#5C574F] hover:text-[#191817] hover:bg-white border border-[#EAE4D9] rounded-none cursor-pointer transition-colors shadow-2xs"
+              title="Copy Patient ID"
             >
               {copiedPid ? (
                 <>
-                  <Check className="w-3.5 h-3.5 text-emerald-400" />
-                  <span>Copied!</span>
+                  <Check className="w-3.5 h-3.5 text-emerald-600" />
+                  <span>Copied</span>
                 </>
               ) : (
                 <>
                   <Copy className="w-3.5 h-3.5" />
-                  <span>Copy ID</span>
+                  <span>Copy</span>
                 </>
               )}
             </button>
           </div>
         </div>
 
-        {/* Quick Longitudinal Counters */}
-        <div className="grid grid-cols-2 sm:grid-cols-5 gap-2.5 pt-3 border-t border-[#EAE4D9] text-center">
-          <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9]">
-            <span className="text-[10px] text-[#7A746B] block uppercase font-mono font-semibold">Total Records</span>
-            <span className="text-lg font-editorial-serif font-bold text-[#191817]">{allUnifiedRecords.length}</span>
+        {/* Quick Longitudinal Metrics Strip */}
+        <div className="grid grid-cols-2 sm:grid-cols-5 gap-px bg-[#EAE4D9] border border-[#EAE4D9] text-center">
+          <div className="p-3 bg-[#FAF7F2]">
+            <span className="text-[11px] text-[#6E685F] block font-medium">Total Records</span>
+            <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{allUnifiedRecords.length}</span>
           </div>
-          <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9]">
-            <span className="text-[10px] text-[#7A746B] block uppercase font-mono font-semibold">Laboratory Reports</span>
-            <span className="text-lg font-editorial-serif font-bold text-[#57477D]">{labReports.length}</span>
+          <div className="p-3 bg-[#FAF7F2]">
+            <span className="text-[11px] text-[#6E685F] block font-medium">Lab Reports</span>
+            <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{labReports.length}</span>
           </div>
-          <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9]">
-            <span className="text-[10px] text-[#7A746B] block uppercase font-mono font-semibold">Doctor Reports</span>
-            <span className="text-lg font-editorial-serif font-bold text-[#191817]">{doctorReports.length}</span>
+          <div className="p-3 bg-[#FAF7F2]">
+            <span className="text-[11px] text-[#6E685F] block font-medium">Doctor Encounters</span>
+            <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{doctorReports.length}</span>
           </div>
-          <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9]">
-            <span className="text-[10px] text-[#7A746B] block uppercase font-mono font-semibold">Active Prescriptions</span>
-            <span className="text-lg font-editorial-serif font-bold text-[#4E8C78]">{currentPrescriptions.length}</span>
+          <div className="p-3 bg-[#FAF7F2]">
+            <span className="text-[11px] text-[#6E685F] block font-medium">Active Medications</span>
+            <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{currentPrescriptions.length}</span>
           </div>
-          <div className="p-2.5 bg-[#FAF7F2] border border-[#EAE4D9]">
-            <span className="text-[10px] text-[#7A746B] block uppercase font-mono font-semibold">Follow-Ups</span>
-            <span className="text-lg font-editorial-serif font-bold text-amber-700">{upcomingFollowUps.length}</span>
+          <div className="p-3 bg-[#FAF7F2]">
+            <span className="text-[11px] text-[#6E685F] block font-medium">Follow-ups</span>
+            <span className="text-xl font-editorial-serif font-bold text-[#191817] mt-0.5 block">{upcomingFollowUps.length}</span>
           </div>
         </div>
       </div>
@@ -430,12 +443,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       {/* ========================================================================= */}
       <div className="flex bg-white border border-[#EAE4D9] p-1 gap-1 overflow-x-auto scrollbar-thin">
         {[
-          { id: "overview", label: "Patient Overview", icon: Activity },
-          { id: "unified", label: `Unified Records (${allUnifiedRecords.length})`, icon: FileText },
-          { id: "labs", label: `Laboratory Reports (${labReports.length})`, icon: FlaskConical },
-          { id: "doctors", label: `Doctor Reports (${doctorReports.length})`, icon: Stethoscope },
+          { id: "overview", label: "Overview", icon: Activity },
+          { id: "unified", label: "Health Records", icon: FileText },
+          { id: "labs", label: "Laboratory Reports", icon: FlaskConical },
+          { id: "doctors", label: "Doctor Encounters", icon: Stethoscope },
           { id: "timeline", label: "Health Timeline", icon: Clock },
-          { id: "health-status", label: "Health Status & Vitals", icon: TrendingUp },
+          { id: "health-status", label: "Vitals & Trends", icon: TrendingUp },
           { id: "security", label: "Security & Profile", icon: ShieldCheck },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -445,9 +458,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               key={tab.id}
               type="button"
               onClick={() => setActiveTab(tab.id as DashboardTab)}
-              className={`flex items-center gap-1.5 px-3 py-2 text-xs font-semibold whitespace-nowrap cursor-pointer transition-all ${
+              className={`flex items-center gap-1.5 px-3.5 py-2 text-xs font-medium whitespace-nowrap cursor-pointer transition-all ${
                 isActive
-                  ? "bg-[#1A1918] text-white border border-[#1A1918] shadow-2xs"
+                  ? "bg-[#1A1918] text-white border border-[#1A1918] shadow-2xs font-semibold"
                   : "bg-transparent text-[#5C574F] hover:bg-[#FAF7F2] hover:text-[#191817]"
               }`}
             >
@@ -469,13 +482,13 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             <div className="p-5 bg-white border border-[#EAE4D9] space-y-3.5 shadow-[0_4px_20px_rgba(26,25,24,0.04)]">
               <div className="flex items-center justify-between pb-2.5 border-b border-[#EAE4D9]">
                 <div className="flex items-center gap-2 font-editorial-serif font-bold text-sm text-[#191817]">
-                  <Activity className="w-4 h-4 text-[#57477D]" />
-                  <span>Latest Clinical Updates</span>
+                  <FileText className="w-4 h-4 text-[#57477D]" />
+                  <span>Recent Clinical Records</span>
                 </div>
                 <button
                   type="button"
                   onClick={() => setActiveTab("unified")}
-                  className="text-xs font-semibold text-[#57477D] hover:underline cursor-pointer"
+                  className="text-xs font-medium text-[#57477D] hover:underline cursor-pointer"
                 >
                   View All →
                 </button>
@@ -489,7 +502,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] hover:border-[#1A1918] hover:bg-white cursor-pointer transition-all space-y-1.5"
                   >
                     <div className="flex items-center justify-between">
-                      <span className="font-bold text-xs text-[#191817]">{rec.title}</span>
+                      <span className="font-semibold text-xs text-[#191817]">{rec.title}</span>
                       <span className="text-[10px] font-mono bg-white px-2 py-0.5 border border-[#EAE4D9] text-[#5C574F]">
                         {rec.date}
                       </span>
@@ -497,7 +510,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <p className="text-[11px] text-[#5C574F] line-clamp-1">{rec.summary}</p>
                     <div className="flex items-center justify-between text-[10px] text-[#7A746B] pt-1 border-t border-[#EAE4D9]/50">
                       <span>Submitted by: <strong className="text-[#191817]">{rec.submittedBy}</strong></span>
-                      <span className="text-[#57477D] font-semibold hover:underline">Inspect Record →</span>
+                      <span className="text-[#57477D] font-medium hover:underline">Inspect →</span>
                     </div>
                   </div>
                 ))}
@@ -515,17 +528,19 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               <div className="space-y-2.5">
                 {upcomingFollowUps.map((fu, idx) => (
-                  <div key={idx} className="p-3.5 bg-amber-50/50 border border-amber-200/80 flex items-start gap-3">
-                    <div className="w-9 h-9 bg-amber-100 text-amber-900 flex items-center justify-center font-bold shrink-0">
+                  <div key={idx} className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] flex items-start gap-3.5">
+                    <div className="w-8 h-8 bg-white border border-[#EAE4D9] text-[#57477D] flex items-center justify-center shrink-0">
                       <Clock className="w-4 h-4" />
                     </div>
-                    <div>
-                      <div className="font-bold text-xs text-[#191817]">{fu.title}</div>
-                      <div className="text-[11px] text-[#5C574F] mt-0.5">
-                        Scheduled with <strong className="text-[#191817]">{fu.physician}</strong> at {fu.facility}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center justify-between">
+                        <span className="font-semibold text-xs text-[#191817]">{fu.title}</span>
+                        <span className="text-[10px] font-mono text-[#7A746B] bg-white px-1.5 py-0.5 border border-[#EAE4D9]">
+                          {fu.date}
+                        </span>
                       </div>
-                      <div className="text-[10px] font-mono font-bold text-amber-800 mt-1">
-                        Due Date: {fu.date}
+                      <div className="text-[11px] text-[#5C574F] mt-1">
+                        Scheduled with <strong className="text-[#191817]">{fu.physician}</strong> at {fu.facility}
                       </div>
                     </div>
                   </div>
@@ -533,9 +548,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
                 <div className="p-3.5 bg-[#FAF7F2] border border-[#EAE4D9] space-y-1.5">
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-[#191817]">Current Medication (Active Rx)</span>
-                    <span className="text-[10px] bg-emerald-50 text-emerald-800 font-bold px-2 py-0.5 border border-emerald-200 uppercase tracking-wider">
-                      Active
+                    <span className="font-semibold text-xs text-[#191817]">Current Medication (Active Rx)</span>
+                    <span className="text-[10px] font-medium bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200">
+                      Ongoing
                     </span>
                   </div>
                   <div className="text-xs text-[#191817] font-semibold">

@@ -3,7 +3,6 @@ import {
   Menu,
   Bell,
   CheckCircle,
-  AlertTriangle,
   User,
   Shield,
   LogOut,
@@ -259,16 +258,6 @@ export const Header: React.FC<HeaderProps> = ({
                   >
                     <User className="w-3.5 h-3.5 text-slate-400" />
                     <span>Switch Demo Persona</span>
-                  </button>
-                  <button
-                    onClick={() => {
-                      setIsProfileOpen(false);
-                      onOpenHealthModal();
-                    }}
-                    className="w-full flex items-center gap-2.5 px-3.5 py-1.5 text-xs text-slate-700 hover:bg-white/60 transition-colors text-left cursor-pointer"
-                  >
-                    <AlertTriangle className="w-3.5 h-3.5 text-slate-400" />
-                    <span>System Diagnostics</span>
                   </button>
                 </div>
 

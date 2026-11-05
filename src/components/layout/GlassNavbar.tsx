@@ -9,20 +9,72 @@ import {
   ChevronDown,
   Sparkles,
   CheckCircle,
-  AlertTriangle,
   UserRound,
   MoreHorizontal,
+  House,
 } from "lucide-react";
 import { type NavigationRoute, NAV_ITEMS, type NavItem } from "./navigation";
 import { useAuth } from "../../context/AuthContext";
-import type { HealthCheckData } from "../../types/api";
+import type { HealthCheckData, NotificationItem } from "../../types/api";
+import { fetchNotifications, markNotificationRead } from "../../api/client";
 import { GlassSurface } from "../ui/GlassSurface";
+
+const DEFAULT_NAVBAR_NOTIFICATIONS: NotificationItem[] = [
+  {
+    _id: "notif-seed-1",
+    notificationId: "NOTIF-SEED-1",
+    recipientId: "patient-1",
+    recipientAbha: "patient@abdm",
+    category: "CONSENT",
+    title: "Consent Granted",
+    message: "Apollo Hospital accessed diagnostic records",
+    isRead: false,
+    deliveryStatus: "DELIVERED",
+    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
+  },
+  {
+    _id: "notif-seed-2",
+    notificationId: "NOTIF-SEED-2",
+    recipientId: "patient-1",
+    recipientAbha: "patient@abdm",
+    category: "LAB_REPORT",
+    title: "New Lab Report",
+    message: "Metabolic & Lipid Panel verified",
+    isRead: false,
+    deliveryStatus: "DELIVERED",
+    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+  },
+  {
+    _id: "notif-seed-3",
+    notificationId: "NOTIF-SEED-3",
+    recipientId: "patient-1",
+    recipientAbha: "patient@abdm",
+    category: "ONBOARDING",
+    title: "ABDM Care Context Linked",
+    message: "Max Healthcare linked 3 FHIR resources",
+    isRead: false,
+    deliveryStatus: "DELIVERED",
+    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+  },
+];
+
+const formatTimeAgo = (isoDate?: string): string => {
+  if (!isoDate) return "";
+  const diffMs = Date.now() - new Date(isoDate).getTime();
+  const diffMin = Math.max(0, Math.floor(diffMs / 60000));
+  if (diffMin < 1) return "Just now";
+  if (diffMin < 60) return `${diffMin}m ago`;
+  const diffHours = Math.floor(diffMin / 60);
+  if (diffHours < 24) return `${diffHours}h ago`;
+  const diffDays = Math.floor(diffHours / 24);
+  return `${diffDays}d ago`;
+};
 
 interface GlassNavbarProps {
   currentRoute: NavigationRoute;
   onNavigate: (route: NavigationRoute) => void;
   healthData?: HealthCheckData | null;
-  onOpenHealthModal: () => void;
+  onOpenHealthModal?: () => void;
   onOpenLogin: () => void;
 }
 
@@ -30,7 +82,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
   currentRoute,
   onNavigate,
   healthData: _healthData,
-  onOpenHealthModal,
+  onOpenHealthModal: _onOpenHealthModal,
   onOpenLogin,
 }) => {
   const { user, isAuthenticated, logout } = useAuth();
@@ -38,10 +90,53 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
   const [isProfileOpen, setIsProfileOpen] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [isOverflowOpen, setIsOverflowOpen] = useState(false);
+  const [notifications, setNotifications] = useState<NotificationItem[]>([]);
+  const [unreadCount, setUnreadCount] = useState<number>(0);
+  const [isLoadingNotifs, setIsLoadingNotifs] = useState<boolean>(false);
 
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const overflowRef = useRef<HTMLDivElement>(null);
+
+  // Sync notifications with backend and cross-component updates
+  useEffect(() => {
+    let isMounted = true;
+
+    const loadNavbarNotifications = async () => {
+      setIsLoadingNotifs(true);
+      try {
+        const data = await fetchNotifications({ limit: 10 });
+        if (isMounted) {
+          if (data?.notifications && data.notifications.length > 0) {
+            setNotifications(data.notifications);
+            setUnreadCount(data.unreadCount ?? data.notifications.filter((n) => !n.isRead).length);
+          } else {
+            setNotifications(DEFAULT_NAVBAR_NOTIFICATIONS);
+            setUnreadCount(DEFAULT_NAVBAR_NOTIFICATIONS.filter((n) => !n.isRead).length);
+          }
+        }
+      } catch (_err) {
+        if (isMounted) {
+          setNotifications(DEFAULT_NAVBAR_NOTIFICATIONS);
+          setUnreadCount(DEFAULT_NAVBAR_NOTIFICATIONS.filter((n) => !n.isRead).length);
+        }
+      } finally {
+        if (isMounted) setIsLoadingNotifs(false);
+      }
+    };
+
+    loadNavbarNotifications();
+
+    const handleUpdate = () => {
+      loadNavbarNotifications();
+    };
+
+    window.addEventListener("swaasthsaarthi-notification-update", handleUpdate);
+    return () => {
+      isMounted = false;
+      window.removeEventListener("swaasthsaarthi-notification-update", handleUpdate);
+    };
+  }, [isAuthenticated]);
 
   // Close dropdowns on outside click or Escape key
   useEffect(() => {
@@ -103,7 +198,11 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
 
   // Center navigation items: Exclude "settings" as it belongs in the profile menu
   const getNavItemsForRole = (role?: string): NavItem[] => {
-    const baseItems = NAV_ITEMS.filter((item) => item.id !== "settings");
+    const baseItems = NAV_ITEMS.filter((item) => {
+      if (item.id === "settings") return false;
+      if (isAuthenticated && item.id === "landing") return false;
+      return true;
+    });
     if (role === "laboratory") {
       return baseItems.filter((item) =>
         ["dashboard", "labs", "records", "access", "notifications"].includes(item.id)
@@ -123,7 +222,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
   };
 
   const navItems = getNavItemsForRole(user?.role);
-  // Split: First 4 items (Home, Records, Consent, Rx) are primary desktop items.
+  // Split: First 4 items (Dashboard, Records, Consent, Rx) are primary desktop items.
   // Remaining items (Labs, History, Alerts) are secondary on tighter viewports.
   const secondaryNavItems = navItems.slice(4);
 
@@ -133,29 +232,24 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
     setIsOverflowOpen(false);
   };
 
-  const sampleNotifications = [
-    {
-      id: 1,
-      title: "Consent Granted",
-      desc: "Apollo Hospital accessed diagnostic records",
-      time: "10m ago",
-      unread: true,
-    },
-    {
-      id: 2,
-      title: "New Lab Report",
-      desc: "Metabolic & Lipid Panel verified",
-      time: "2h ago",
-      unread: true,
-    },
-    {
-      id: 3,
-      title: "ABDM Care Context Linked",
-      desc: "Max Healthcare linked 3 FHIR resources",
-      time: "1d ago",
-      unread: false,
-    },
-  ];
+  const handleNotificationItemClick = async (notif: NotificationItem) => {
+    if (!notif.isRead) {
+      try {
+        await markNotificationRead(notif.notificationId);
+      } catch (_e) {
+        // continue
+      }
+      setNotifications((prev) =>
+        prev.map((item) =>
+          item.notificationId === notif.notificationId ? { ...item, isRead: true } : item
+        )
+      );
+      setUnreadCount((prev) => Math.max(0, prev - 1));
+      window.dispatchEvent(new CustomEvent("swaasthsaarthi-notification-update"));
+    }
+    setIsNotificationsOpen(false);
+    handleSelectRoute("notifications");
+  };
 
   return (
     <>
@@ -190,9 +284,9 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                 </button>
 
                 <button
-                  onClick={() => handleSelectRoute("landing")}
+                  onClick={() => handleSelectRoute(isAuthenticated ? "dashboard" : "landing")}
                   className="flex items-center gap-2.5 text-left group cursor-pointer shrink-0"
-                  aria-label="Navigate to SwaasthSaarthi Home"
+                  aria-label="Navigate to SwaasthSaarthi"
                 >
                   <div className="relative w-8 h-8 rounded-none bg-gradient-to-tr from-[#57477D] via-[#6F5E97] to-[#7EA89B] p-0.5 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200">
                     <div className="w-full h-full bg-[#FAF7F2] rounded-none flex items-center justify-center overflow-hidden">
@@ -308,34 +402,53 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                     title="View Alerts & Notifications"
                   >
                     <Bell className="w-4 h-4" strokeWidth={1.8} />
-                    <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#57477D] rounded-full" />
+                    {unreadCount > 0 && (
+                      <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#57477D] rounded-full" />
+                    )}
                   </button>
 
                   {isNotificationsOpen && (
                     <div className="absolute right-0 mt-2.5 w-76 sm:w-80 z-50 animate-in fade-in zoom-in-95 duration-150 bg-white border border-[#EAE4D9] shadow-[0_12px_32px_rgba(26,25,24,0.08)] p-2">
                       <div className="w-full text-[#191817]">
                         <div className="px-2.5 py-2 border-b border-[#EAE4D9] flex items-center justify-between">
-                          <span className="text-xs font-semibold text-[#191817]">Alerts & Notices</span>
-                          <span className="text-[10px] font-medium text-[#57477D] bg-[#57477D]/10 border border-[#57477D]/20 px-2 py-0.5 rounded-none">
-                            FHIR Broadcast
-                          </span>
+                          <span className="text-xs font-semibold text-[#191817]">Alerts &amp; Notices</span>
+                          {unreadCount > 0 ? (
+                            <span className="text-[10px] font-medium text-[#57477D] bg-[#57477D]/10 border border-[#57477D]/20 px-2 py-0.5 rounded-none">
+                              {unreadCount} Unread
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-medium text-[#7A746B] bg-[#FAF7F2] border border-[#EAE4D9] px-2 py-0.5 rounded-none">
+                              All Read
+                            </span>
+                          )}
                         </div>
 
                         <div className="max-h-60 overflow-y-auto divide-y divide-[#EAE4D9]/60 py-1">
-                          {sampleNotifications.map((n) => (
-                            <div
-                              key={n.id}
-                              className={`p-2.5 text-left hover:bg-[#FAF7F2] transition-colors rounded-none ${
-                                n.unread ? "bg-[#FAF7F2] font-medium" : ""
-                              }`}
-                            >
-                              <div className="flex items-center justify-between gap-2">
-                                <span className="text-xs font-semibold text-[#191817]">{n.title}</span>
-                                <span className="text-[10px] text-[#7A746B]">{n.time}</span>
-                              </div>
-                              <p className="text-[11px] text-[#6E685F] mt-0.5 line-clamp-1">{n.desc}</p>
+                          {isLoadingNotifs && notifications.length === 0 ? (
+                            <div className="p-4 text-center text-xs text-[#7A746B]">
+                              Loading notifications...
                             </div>
-                          ))}
+                          ) : notifications.length === 0 ? (
+                            <div className="p-4 text-center text-xs text-[#7A746B]">
+                              No notifications
+                            </div>
+                          ) : (
+                            notifications.slice(0, 5).map((n) => (
+                              <button
+                                key={n._id || n.notificationId}
+                                onClick={() => handleNotificationItemClick(n)}
+                                className={`w-full p-2.5 text-left hover:bg-[#FAF7F2] transition-colors rounded-none block cursor-pointer ${
+                                  !n.isRead ? "bg-[#FAF7F2] font-medium" : ""
+                                }`}
+                              >
+                                <div className="flex items-center justify-between gap-2">
+                                  <span className="text-xs font-semibold text-[#191817] truncate">{n.title}</span>
+                                  <span className="text-[10px] text-[#7A746B] shrink-0">{formatTimeAgo(n.createdAt)}</span>
+                                </div>
+                                <p className="text-[11px] text-[#6E685F] mt-0.5 line-clamp-1">{n.message}</p>
+                              </button>
+                            ))
+                          )}
                         </div>
 
                         <div className="px-2.5 pt-2 pb-1 border-t border-[#EAE4D9] text-center">
@@ -346,7 +459,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                               handleSelectRoute("notifications");
                             }}
                           >
-                            Open Notification Inbox →
+                            Open Notification Inbox &rarr;
                           </button>
                         </div>
                       </div>
@@ -432,28 +545,28 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                               </span>
                             </button>
 
-                              {/* Switch Demo Persona */}
+                              {/* Public Landing Link */}
+                              <button
+                                onClick={() => {
+                                  setIsProfileOpen(false);
+                                  handleSelectRoute("landing");
+                                }}
+                                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#FAF7F2] rounded-none transition-colors text-left cursor-pointer"
+                              >
+                                <House className="w-3.5 h-3.5 text-[#7A746B]" />
+                                <span>Public Home Page</span>
+                              </button>
+
+                              {/* Switch Account */}
                               <button
                                 onClick={() => {
                                   setIsProfileOpen(false);
                                   onOpenLogin();
                                 }}
-                                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-slate-700 hover:text-slate-950 hover:bg-slate-100/70 rounded-lg transition-colors text-left cursor-pointer"
-                              >
-                                <UserRound className="w-3.5 h-3.5 text-slate-500" />
-                                <span>Switch Account</span>
-                              </button>
-
-                              {/* System Diagnostics */}
-                              <button
-                                onClick={() => {
-                                  setIsProfileOpen(false);
-                                  onOpenHealthModal();
-                                }}
                                 className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#FAF7F2] rounded-none transition-colors text-left cursor-pointer"
                               >
-                                <AlertTriangle className="w-3.5 h-3.5 text-[#7A746B]" />
-                                <span>System Diagnostics</span>
+                                <UserRound className="w-3.5 h-3.5 text-[#7A746B]" />
+                                <span>Switch Account</span>
                               </button>
                             </div>
 

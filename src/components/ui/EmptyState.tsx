@@ -17,12 +17,12 @@ export const EmptyState: React.FC<EmptyStateProps> = ({
   className = "",
 }) => {
   return (
-    <div className={`flex flex-col items-center justify-center p-8 text-center bg-[#FAF7F2]/50 rounded-none border border-dashed border-[#D5CEC2] ${className}`}>
-      <div className="w-12 h-12 rounded-none bg-white flex items-center justify-center text-[#57477D] mb-3 border border-[#EAE4D9]">
+    <div className={`flex flex-col items-center justify-center p-10 sm:p-14 text-center bg-white rounded-none border border-[#EAE4D9] shadow-[0_4px_20px_rgba(26,25,24,0.03)] ${className}`}>
+      <div className="w-12 h-12 rounded-none bg-[#FAF7F2] flex items-center justify-center text-[#57477D] mb-3.5 border border-[#EAE4D9]">
         {icon || <FolderOpen className="w-5 h-5 text-[#57477D]" />}
       </div>
-      <h4 className="text-base font-editorial-serif font-bold text-[#1A1918] mb-1">{title}</h4>
-      <p className="text-xs text-[#69655E] max-w-sm mb-4 leading-relaxed">{description}</p>
+      <h4 className="text-base font-editorial-serif font-bold text-[#191817] mb-1.5">{title}</h4>
+      <p className="text-xs text-[#5C574F] max-w-md mb-4 leading-relaxed">{description}</p>
       {action && <div>{action}</div>}
     </div>
   );
