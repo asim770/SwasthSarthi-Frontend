@@ -1,6 +1,5 @@
 import React, { useState, useRef, useEffect } from "react";
 import {
-  Activity,
   Bell,
   Settings,
   Menu,
@@ -12,12 +11,12 @@ import {
   UserRound,
   MoreHorizontal,
   House,
+  LogIn,
 } from "lucide-react";
 import { type NavigationRoute, NAV_ITEMS, type NavItem } from "./navigation";
 import { useAuth } from "../../context/AuthContext";
 import type { HealthCheckData, NotificationItem } from "../../types/api";
 import { fetchNotifications, markNotificationRead } from "../../api/client";
-import { GlassSurface } from "../ui/GlassSurface";
 
 const DEFAULT_NAVBAR_NOTIFICATIONS: NotificationItem[] = [
   {
@@ -222,7 +221,6 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
 
   const navItems = getNavItemsForRole(user?.role);
   // Split: First 5 items (Home, Dashboard, Records, Consent, Rx) are primary desktop items.
-  // Remaining items (Labs, History, Alerts) are secondary on tighter viewports.
   const secondaryNavItems = navItems.slice(5);
 
   const handleSelectRoute = (route: NavigationRoute) => {
@@ -252,343 +250,350 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
 
   return (
     <>
-      {/* Floating Compact Rounded-Rectangle Glass Navbar */}
-      <header className="sticky top-2 sm:top-3 z-40 px-3 sm:px-4 lg:px-6 w-full flex justify-center pointer-events-none box-border">
-        <div className="pointer-events-auto w-full max-w-[1400px] box-border">
-          <GlassSurface
-            width="100%"
-            height={68}
-            borderRadius={0}
-            shape="rect"
-            backgroundOpacity={0.68}
-            blur={12}
-            saturation={1.4}
-            distortionScale={-60}
-            refraction={true}
-            renderer="svg"
-            overflow="visible"
-            innerClassName="p-0"
-            className="w-full box-border border border-[#D0E5E1] rounded-none shadow-[0_4px_20px_rgba(26,25,24,0.05)]"
-          >
-            <div className="w-full h-full flex items-center justify-between px-3 sm:px-4 md:px-5 gap-1.5 sm:gap-2.5 md:gap-3 box-border min-w-0">
-              {/* Left Section: Compact Brand */}
-              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
-                {/* Mobile menu trigger */}
-                <button
-                  onClick={() => setIsMobileMenuOpen((prev) => !prev)}
-                  className="lg:hidden p-1.5 text-[#191817] hover:bg-[#D0E5E1]/40 rounded-none transition-colors cursor-pointer shrink-0"
-                  aria-label="Toggle navigation menu"
-                >
-                  {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
-                </button>
+      {/* Edge-to-Edge Frosted Glass Header matching Landing Page */}
+      <header className="sticky top-0 z-40 w-full bg-[#F0F7F6]/92 backdrop-blur-md border-b border-[#D0E5E1] shadow-[0_8px_30px_rgba(15,118,110,0.08)] transition-all duration-300">
+        <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-4">
+          {/* Left Section: Brand Logo & Stylized Emblem (identical to landing page) */}
+          <div className="flex items-center gap-3">
+            {/* Mobile menu trigger button */}
+            <button
+              onClick={() => setIsMobileMenuOpen((prev) => !prev)}
+              className="lg:hidden p-2 text-[#1A1918] hover:bg-[#D0E5E1]/40 rounded-none transition-colors cursor-pointer shrink-0"
+              aria-label="Toggle navigation menu"
+            >
+              {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            </button>
 
-                <button
-                  onClick={() => handleSelectRoute(isAuthenticated ? "dashboard" : "landing")}
-                  className="flex items-center gap-2.5 text-left group cursor-pointer shrink-0"
-                  aria-label="Navigate to SwaasthSaarthi"
-                >
-                  <div className="relative w-8 h-8 rounded-none bg-gradient-to-tr from-[#0F766E] via-[#14B8A6] to-[#7EA89B] p-0.5 flex items-center justify-center shadow-xs group-hover:scale-105 transition-transform duration-200">
-                    <div className="w-full h-full bg-[#F0F7F6] rounded-none flex items-center justify-center overflow-hidden">
-                      <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-                        <path d="M6 18C6 11.3726 11.3726 6 18 6C18 12.6274 12.6274 18 6 18Z" fill="#0F766E" />
-                        <path d="M26 14C26 20.6274 20.6274 26 14 26C14 19.3726 19.3726 14 26 14Z" fill="#4E8C78" fillOpacity="0.85" />
-                        <circle cx="16" cy="16" r="3" fill="#F0F7F6" />
-                        <circle cx="16" cy="16" r="1.5" fill="#0F766E" />
-                      </svg>
-                    </div>
-                  </div>
-                  <div className="flex flex-col shrink-0">
-                    <span className="font-editorial-serif font-bold text-[#1A1918] tracking-tight text-sm sm:text-base leading-none group-hover:text-[#0F766E] transition-colors">
-                      SwaasthSaarthi
-                    </span>
-                    <span className="text-[9px] text-[#69655E] font-medium tracking-wider uppercase mt-0.5">
-                      Unified Healthcare Network
-                    </span>
-                  </div>
-                </button>
+            <button
+              onClick={() => handleSelectRoute("landing")}
+              className="group flex items-center gap-3 transition-transform duration-200 hover:scale-[1.01] cursor-pointer text-left"
+              aria-label="SwaasthSaarthi Home"
+            >
+              {/* Stylized sharp emblem */}
+              <div className="relative w-10 h-10 rounded-none bg-gradient-to-tr from-[#0F766E] via-[#14B8A6] to-[#5EEAD4] p-0.5 flex items-center justify-center shadow-xs">
+                <div className="w-full h-full rounded-none flex items-center justify-center overflow-hidden bg-[#F0F7F6]">
+                  <svg
+                    viewBox="0 0 32 32"
+                    fill="none"
+                    xmlns="http://www.w3.org/2000/svg"
+                    className="w-6 h-6 transform group-hover:rotate-6 transition-transform duration-300"
+                  >
+                    <path
+                      d="M6 18C6 11.3726 11.3726 6 18 6C18 12.6274 12.6274 18 6 18Z"
+                      fill="#0F766E"
+                    />
+                    <path
+                      d="M26 14C26 20.6274 20.6274 26 14 26C14 19.3726 19.3726 14 26 14Z"
+                      fill="#4E8C78"
+                      fillOpacity="0.85"
+                    />
+                    <circle cx="16" cy="16" r="3.5" fill="#F0F7F6" />
+                    <circle cx="16" cy="2" fill="#0F766E" />
+                  </svg>
+                </div>
               </div>
 
-              {/* Center Section: Responsive Priority Navigation (Desktop) */}
-              <nav className="hidden lg:flex items-center gap-1 xl:gap-1.5 min-w-0 flex-nowrap shrink">
-                {navItems.map((item, index) => {
-                  const Icon = item.icon;
-                  const isActive = currentRoute === item.id;
-                  const isSecondary = index >= 5;
+              <div className="flex flex-col">
+                <span className="font-editorial-serif text-lg sm:text-xl font-bold tracking-tight text-[#1A1918] leading-none group-hover:text-[#0F766E] transition-colors">
+                  SwaasthSaarthi
+                </span>
+                <span className="text-[10px] sm:text-[11px] font-medium tracking-wider text-[#69655E] uppercase mt-0.5">
+                  Unified Healthcare Network
+                </span>
+              </div>
+            </button>
+          </div>
 
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => handleSelectRoute(item.id)}
-                      title={item.tooltip || item.label}
-                      aria-label={item.tooltip || item.label}
-                      className={`group relative items-center gap-1.5 px-3 py-1.5 rounded-none text-xs transition-all duration-150 cursor-pointer whitespace-nowrap shrink-0 ${
-                        isSecondary ? "hidden 2xl:flex" : "flex"
-                      } ${
-                        isActive
-                          ? "bg-[#1A1918] text-white border border-[#1A1918] font-medium shadow-2xs"
-                          : "text-[#5C574F] hover:text-[#191817] hover:bg-[#D0E5E1]/50 border border-transparent font-normal"
-                      }`}
-                    >
-                      <Icon
-                        className={`w-3.5 h-3.5 shrink-0 transition-all duration-150 ${
-                          isActive
-                            ? "text-white stroke-[2.2]"
-                            : "text-[#7A746B] group-hover:text-[#191817] stroke-[1.8]"
-                        }`}
-                      />
-                      <span className="tracking-tight">{item.label}</span>
-                      {item.id === "notifications" && (
-                        <span className="w-1.5 h-1.5 rounded-none bg-[#0F766E] shrink-0" />
-                      )}
-                    </button>
-                  );
-                })}
+          {/* Center Section: Editorial Navigation Links with Animated Teal Underline */}
+          <nav className="hidden lg:flex items-center gap-6 xl:gap-8 text-sm font-semibold transition-colors duration-200">
+            {navItems.map((item, index) => {
+              const Icon = item.icon;
+              const isActive = currentRoute === item.id;
+              const isSecondary = index >= 5;
 
-                {/* Responsive Overflow Dropdown (visible between lg and 2xl breakpoints) */}
-                {secondaryNavItems.length > 0 && (
-                  <div className="relative 2xl:hidden shrink-0" ref={overflowRef}>
-                    <button
-                      onClick={() => setIsOverflowOpen((prev) => !prev)}
-                      className={`p-1.5 px-2.5 rounded-none text-xs font-medium transition-colors cursor-pointer flex items-center gap-1 shrink-0 ${
-                        secondaryNavItems.some((i) => i.id === currentRoute)
-                          ? "bg-[#1A1918] text-white border border-[#1A1918]"
-                          : "text-[#5C574F] hover:text-[#191817] hover:bg-[#D0E5E1]/50 border border-[#D0E5E1]"
-                      }`}
-                      title="More navigation options"
-                      aria-label="More navigation options"
-                    >
-                      <MoreHorizontal className="w-4 h-4" />
-                      <span className="hidden xl:inline text-xs">More</span>
-                    </button>
+              return (
+                <button
+                  key={item.id}
+                  onClick={() => handleSelectRoute(item.id)}
+                  title={item.tooltip || item.label}
+                  className={`group relative items-center gap-2 py-1 transition-colors duration-200 cursor-pointer whitespace-nowrap shrink-0 flex ${
+                    isSecondary ? "hidden 2xl:flex" : "flex"
+                  } ${
+                    isActive
+                      ? "text-[#0F766E] font-bold"
+                      : "text-[#132E2B] hover:text-[#0F766E]"
+                  }`}
+                >
+                  <Icon
+                    className={`w-4 h-4 shrink-0 transition-colors duration-200 ${
+                      isActive
+                        ? "text-[#0F766E] stroke-[2.2]"
+                        : "text-[#7A746B] group-hover:text-[#0F766E] stroke-[1.8]"
+                    }`}
+                  />
+                  <span>{item.label}</span>
+                  {/* Underline matching Landing Page */}
+                  <span
+                    className={`absolute bottom-0 left-0 h-0.5 bg-[#0F766E] transition-all duration-200 ${
+                      isActive ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                  {item.id === "notifications" && unreadCount > 0 && (
+                    <span className="w-1.5 h-1.5 rounded-full bg-[#0F766E] shrink-0" />
+                  )}
+                </button>
+              );
+            })}
 
-                    {isOverflowOpen && (
-                      <div className="absolute left-0 mt-2 w-48 z-50 animate-in fade-in zoom-in-95 duration-150 bg-white border border-[#D0E5E1] shadow-[0_8px_24px_rgba(26,25,24,0.08)] p-1">
-                        <div className="w-full space-y-0.5">
-                          {secondaryNavItems.map((item) => {
-                            const Icon = item.icon;
-                            const isActive = currentRoute === item.id;
-                            return (
-                              <button
-                                key={item.id}
-                                onClick={() => handleSelectRoute(item.id)}
-                                className={`w-full flex items-center gap-2 px-2.5 py-2 text-xs font-medium text-left transition-colors cursor-pointer rounded-none ${
-                                  isActive
-                                    ? "bg-[#1A1918] text-white"
-                                    : "text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6]"
-                                }`}
-                              >
-                                <Icon className="w-3.5 h-3.5" />
-                                <span>{item.tooltip || item.label}</span>
-                              </button>
-                            );
-                          })}
-                        </div>
-                      </div>
-                    )}
+            {/* Responsive Overflow Dropdown (visible between lg and 2xl breakpoints) */}
+            {secondaryNavItems.length > 0 && (
+              <div className="relative 2xl:hidden shrink-0" ref={overflowRef}>
+                <button
+                  onClick={() => setIsOverflowOpen((prev) => !prev)}
+                  className={`group relative items-center gap-1.5 py-1 text-sm font-semibold transition-colors duration-200 cursor-pointer flex shrink-0 ${
+                    secondaryNavItems.some((i) => i.id === currentRoute)
+                      ? "text-[#0F766E] font-bold"
+                      : "text-[#132E2B] hover:text-[#0F766E]"
+                  }`}
+                  title="More navigation options"
+                >
+                  <MoreHorizontal className="w-4 h-4" />
+                  <span>More</span>
+                  <span
+                    className={`absolute bottom-0 left-0 h-0.5 bg-[#0F766E] transition-all duration-200 ${
+                      secondaryNavItems.some((i) => i.id === currentRoute) ? "w-full" : "w-0 group-hover:w-full"
+                    }`}
+                  />
+                </button>
+
+                {isOverflowOpen && (
+                  <div className="absolute left-0 mt-3 w-52 z-50 animate-in fade-in zoom-in-95 duration-150 bg-white border border-[#D0E5E1] shadow-[0_12px_32px_rgba(26,25,24,0.08)] p-1.5">
+                    <div className="w-full space-y-0.5">
+                      {secondaryNavItems.map((item) => {
+                        const Icon = item.icon;
+                        const isActive = currentRoute === item.id;
+                        return (
+                          <button
+                            key={item.id}
+                            onClick={() => handleSelectRoute(item.id)}
+                            className={`w-full flex items-center gap-2.5 px-3 py-2 text-xs font-semibold text-left transition-colors cursor-pointer rounded-none ${
+                              isActive
+                                ? "bg-[#E4F1EE] text-[#0F766E]"
+                                : "text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6]"
+                            }`}
+                          >
+                            <Icon className="w-3.5 h-3.5" />
+                            <span>{item.tooltip || item.label}</span>
+                          </button>
+                        );
+                      })}
+                    </div>
                   </div>
                 )}
-              </nav>
+              </div>
+            )}
+          </nav>
 
-              {/* Right Section: Alerts & Profile */}
-              <div className="flex items-center gap-2 sm:gap-3 shrink-0">
+          {/* Right Section: Alerts & Profile Dropdown */}
+          <div className="flex items-center gap-3 sm:gap-4 shrink-0">
+            {/* Notifications / Alerts Dropdown */}
+            <div className="relative shrink-0" ref={notifRef}>
+              <button
+                onClick={() => setIsNotificationsOpen((prev) => !prev)}
+                className="relative p-2 text-[#132E2B] hover:text-[#0F766E] hover:bg-[#E4F1EE]/60 rounded-none transition-colors cursor-pointer border border-transparent hover:border-[#D0E5E1] shrink-0"
+                aria-label="Alerts"
+                title="View Alerts & Notifications"
+              >
+                <Bell className="w-4 h-4" strokeWidth={1.8} />
+                {unreadCount > 0 && (
+                  <span className="absolute top-1.5 right-1.5 w-2 h-2 bg-[#0F766E] rounded-full ring-2 ring-white" />
+                )}
+              </button>
 
-                {/* Notifications / Alerts Dropdown */}
-                <div className="relative shrink-0" ref={notifRef}>
-                  <button
-                    onClick={() => setIsNotificationsOpen((prev) => !prev)}
-                    className="relative p-1.5 text-[#5C574F] hover:text-[#191817] hover:bg-[#D0E5E1]/40 rounded-none transition-colors cursor-pointer border border-transparent hover:border-[#D0E5E1] shrink-0"
-                    aria-label="Alerts"
-                    title="View Alerts & Notifications"
-                  >
-                    <Bell className="w-4 h-4" strokeWidth={1.8} />
-                    {unreadCount > 0 && (
-                      <span className="absolute top-1.5 right-1.5 w-1.5 h-1.5 bg-[#0F766E] rounded-full" />
-                    )}
-                  </button>
-
-                  {isNotificationsOpen && (
-                    <div className="absolute right-0 mt-2.5 w-76 sm:w-80 z-50 animate-in fade-in zoom-in-95 duration-150 bg-white border border-[#D0E5E1] shadow-[0_12px_32px_rgba(26,25,24,0.08)] p-2">
-                      <div className="w-full text-[#191817]">
-                        <div className="px-2.5 py-2 border-b border-[#D0E5E1] flex items-center justify-between">
-                          <span className="text-xs font-semibold text-[#191817]">Alerts &amp; Notices</span>
-                          {unreadCount > 0 ? (
-                            <span className="text-[10px] font-medium text-[#0F766E] bg-[#0F766E]/10 border border-[#0F766E]/20 px-2 py-0.5 rounded-none">
-                              {unreadCount} Unread
-                            </span>
-                          ) : (
-                            <span className="text-[10px] font-medium text-[#7A746B] bg-[#F0F7F6] border border-[#D0E5E1] px-2 py-0.5 rounded-none">
-                              All Read
-                            </span>
-                          )}
-                        </div>
-
-                        <div className="max-h-60 overflow-y-auto divide-y divide-[#D0E5E1]/60 py-1">
-                          {isLoadingNotifs && notifications.length === 0 ? (
-                            <div className="p-4 text-center text-xs text-[#7A746B]">
-                              Loading notifications...
-                            </div>
-                          ) : notifications.length === 0 ? (
-                            <div className="p-4 text-center text-xs text-[#7A746B]">
-                              No notifications
-                            </div>
-                          ) : (
-                            notifications.slice(0, 5).map((n) => (
-                              <button
-                                key={n._id || n.notificationId}
-                                onClick={() => handleNotificationItemClick(n)}
-                                className={`w-full p-2.5 text-left hover:bg-[#F0F7F6] transition-colors rounded-none block cursor-pointer ${
-                                  !n.isRead ? "bg-[#F0F7F6] font-medium" : ""
-                                }`}
-                              >
-                                <div className="flex items-center justify-between gap-2">
-                                  <span className="text-xs font-semibold text-[#191817] truncate">{n.title}</span>
-                                  <span className="text-[10px] text-[#7A746B] shrink-0">{formatTimeAgo(n.createdAt)}</span>
-                                </div>
-                                <p className="text-[11px] text-[#6E685F] mt-0.5 line-clamp-1">{n.message}</p>
-                              </button>
-                            ))
-                          )}
-                        </div>
-
-                        <div className="px-2.5 pt-2 pb-1 border-t border-[#D0E5E1] text-center">
-                          <button
-                            className="text-xs text-[#0F766E] font-medium hover:underline cursor-pointer"
-                            onClick={() => {
-                              setIsNotificationsOpen(false);
-                              handleSelectRoute("notifications");
-                            }}
-                          >
-                            Open Notification Inbox &rarr;
-                          </button>
-                        </div>
-                      </div>
+              {isNotificationsOpen && (
+                <div className="absolute right-0 mt-3 w-76 sm:w-80 z-50 animate-in fade-in zoom-in-95 duration-150 bg-white border border-[#D0E5E1] shadow-[0_12px_32px_rgba(26,25,24,0.08)] p-2">
+                  <div className="w-full text-[#191817]">
+                    <div className="px-2.5 py-2 border-b border-[#D0E5E1] flex items-center justify-between">
+                      <span className="text-xs font-semibold text-[#191817]">Alerts &amp; Notices</span>
+                      {unreadCount > 0 ? (
+                        <span className="text-[10px] font-bold text-[#0F766E] bg-[#E4F1EE] border border-[#0F766E]/20 px-2 py-0.5 rounded-none">
+                          {unreadCount} Unread
+                        </span>
+                      ) : (
+                        <span className="text-[10px] font-medium text-[#7A746B] bg-[#F0F7F6] border border-[#D0E5E1] px-2 py-0.5 rounded-none">
+                          All Read
+                        </span>
+                      )}
                     </div>
-                  )}
-                </div>
 
-                {/* User Account / Profile Menu */}
-                {!isAuthenticated ? (
-                  <button
-                    onClick={onOpenLogin}
-                    className="flex items-center gap-1.5 px-3 py-1.5 rounded-none text-xs font-medium bg-[#1A1918] hover:bg-[#2E2C2A] text-white shadow-xs cursor-pointer shrink-0"
-                  >
-                    <Sparkles className="w-3.5 h-3.5 text-amber-300 shrink-0" />
-                    <span className="hidden sm:inline">Sign In / Register</span>
-                    <span className="sm:hidden">Sign In</span>
-                  </button>
-                ) : (
-                  <div className="relative shrink-0" ref={profileRef}>
-                    <button
-                      onClick={() => setIsProfileOpen((prev) => !prev)}
-                      className="flex items-center gap-2 p-1 pl-1.5 pr-2 rounded-none hover:bg-[#F0F7F6] transition-colors border border-[#D0E5E1] cursor-pointer shrink-0 max-w-[150px] sm:max-w-[180px]"
-                      aria-label={`User account menu for ${user?.name}`}
+                    <div className="max-h-60 overflow-y-auto divide-y divide-[#D0E5E1]/60 py-1">
+                      {isLoadingNotifs && notifications.length === 0 ? (
+                        <div className="p-4 text-center text-xs text-[#7A746B]">
+                          Loading notifications...
+                        </div>
+                      ) : notifications.length === 0 ? (
+                        <div className="p-4 text-center text-xs text-[#7A746B]">
+                          No notifications
+                        </div>
+                      ) : (
+                        notifications.slice(0, 5).map((n) => (
+                          <button
+                            key={n._id || n.notificationId}
+                            onClick={() => handleNotificationItemClick(n)}
+                            className={`w-full p-2.5 text-left hover:bg-[#F0F7F6] transition-colors rounded-none block cursor-pointer ${
+                              !n.isRead ? "bg-[#F0F7F6] font-medium" : ""
+                            }`}
+                          >
+                            <div className="flex items-center justify-between gap-2">
+                              <span className="text-xs font-semibold text-[#191817] truncate">{n.title}</span>
+                              <span className="text-[10px] text-[#7A746B] shrink-0">{formatTimeAgo(n.createdAt)}</span>
+                            </div>
+                            <p className="text-[11px] text-[#6E685F] mt-0.5 line-clamp-1">{n.message}</p>
+                          </button>
+                        ))
+                      )}
+                    </div>
+
+                    <div className="px-2.5 pt-2 pb-1 border-t border-[#D0E5E1] text-center">
+                      <button
+                        className="text-xs text-[#0F766E] font-semibold hover:underline cursor-pointer"
+                        onClick={() => {
+                          setIsNotificationsOpen(false);
+                          handleSelectRoute("notifications");
+                        }}
+                      >
+                        Open Notification Inbox &rarr;
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              )}
+            </div>
+
+            {/* User Account / Profile Menu */}
+            {!isAuthenticated ? (
+              <button
+                onClick={onOpenLogin}
+                className="px-4 py-2 sm:px-5 sm:py-2.5 rounded-none border border-[#1A1918] bg-[#1A1918] text-white hover:bg-[#2E2C2A] text-xs sm:text-sm font-medium transition-all duration-200 cursor-pointer shadow-2xs flex items-center gap-2"
+              >
+                <LogIn className="w-3.5 h-3.5" />
+                <span>Patient Portal</span>
+              </button>
+            ) : (
+              <div className="relative shrink-0" ref={profileRef}>
+                <button
+                  onClick={() => setIsProfileOpen((prev) => !prev)}
+                  className="flex items-center gap-2.5 p-1 pl-1.5 pr-3 rounded-none bg-white hover:bg-[#F8FBFA] transition-all border border-[#D0E5E1] hover:border-[#0F766E]/40 shadow-2xs cursor-pointer shrink-0"
+                  aria-label={`User account menu for ${user?.name}`}
+                  title={user?.name}
+                >
+                  <div className="w-8 h-8 rounded-none bg-gradient-to-br from-[#0F766E] to-[#14B8A6] text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-xs border border-white">
+                    {getInitials(user?.name)}
+                  </div>
+                  <div className="hidden sm:flex flex-col text-left min-w-0">
+                    <span
+                      className="text-xs font-semibold text-[#191817] leading-tight truncate max-w-[90px] md:max-w-[120px]"
                       title={user?.name}
                     >
-                      <div className="w-7 h-7 rounded-none bg-[#0F766E] text-white font-bold text-xs flex items-center justify-center shrink-0 shadow-2xs">
-                        {getInitials(user?.name)}
-                      </div>
-                      <div className="hidden sm:flex flex-col text-left min-w-0">
-                        <span
-                          className="text-xs font-semibold text-[#191817] leading-tight truncate max-w-[80px] md:max-w-[110px]"
-                          title={user?.name}
-                        >
-                          {user?.name}
-                        </span>
-                        <span className="text-[10px] text-[#7A746B] font-mono leading-none truncate">
-                          {user?.patientId ? user.patientId : getRoleLabel(user?.role)}
-                        </span>
-                      </div>
-                      <ChevronDown className="w-3.5 h-3.5 text-[#7A746B] hidden sm:block shrink-0" />
-                    </button>
+                      {user?.name}
+                    </span>
+                    <span className="text-[10px] text-[#7A746B] font-mono leading-none truncate mt-0.5">
+                      {user?.patientId ? user.patientId : getRoleLabel(user?.role)}
+                    </span>
+                  </div>
+                  <ChevronDown className="w-3.5 h-3.5 text-[#7A746B] hidden sm:block shrink-0" />
+                </button>
 
-                    {isProfileOpen && (
-                      <div className="absolute right-0 mt-2.5 w-64 z-50 animate-in fade-in zoom-in-95 duration-150 bg-white border border-[#D0E5E1] shadow-[0_12px_32px_rgba(26,25,24,0.08)] p-2">
-                        <div className="w-full text-[#191817]">
-                          <div className="px-3 py-2 border-b border-[#D0E5E1]">
-                            <div className="flex items-center gap-1.5 mb-0.5">
-                              <span className="text-xs font-semibold text-[#191817] truncate" title={user?.name}>
-                                {user?.name}
-                              </span>
-                              <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
-                            </div>
-                            {user?.patientId && (
-                              <div className="my-1.5 flex items-center justify-between bg-[#F0F7F6] border border-[#D0E5E1] px-2 py-1">
-                                <span className="text-[10px] text-[#7A746B] font-semibold">Patient ID:</span>
-                                <span className="text-[10px] font-mono font-bold text-[#0F766E]">
-                                  {user.patientId}
-                                </span>
-                              </div>
-                            )}
-                            <p className="text-[11px] text-[#7A746B] font-mono truncate" title={user?.abhaAddress || user?.abhaId || user?.facility}>
-                              {user?.abhaAddress || user?.abhaId || user?.facility}
-                            </p>
-                            <p className="text-[10px] text-[#0F766E] font-medium mt-0.5">
-                              {getRoleLabel(user?.role)}
-                            </p>
-                          </div>
-
-                          <div className="py-1">
-                            {/* Settings in Profile Menu */}
-                            <button
-                              onClick={() => {
-                                setIsProfileOpen(false);
-                                handleSelectRoute("settings");
-                              }}
-                              className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] transition-colors text-left cursor-pointer rounded-none"
-                            >
-                              <Settings className="w-3.5 h-3.5 text-[#7A746B]" />
-                              <span>
-                                {user?.role === "admin"
-                                  ? "Institution Management"
-                                  : "Settings & Preferences"}
-                              </span>
-                            </button>
-
-                              {/* Public Landing Link */}
-                              <button
-                                onClick={() => {
-                                  setIsProfileOpen(false);
-                                  handleSelectRoute("landing");
-                                }}
-                                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] rounded-none transition-colors text-left cursor-pointer"
-                              >
-                                <House className="w-3.5 h-3.5 text-[#7A746B]" />
-                                <span>Public Home Page</span>
-                              </button>
-
-                              {/* Switch Account */}
-                              <button
-                                onClick={() => {
-                                  setIsProfileOpen(false);
-                                  onOpenLogin();
-                                }}
-                                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] rounded-none transition-colors text-left cursor-pointer"
-                              >
-                                <UserRound className="w-3.5 h-3.5 text-[#7A746B]" />
-                                <span>Switch Account</span>
-                              </button>
-                            </div>
-
-                            <div className="pt-1 border-t border-[#D0E5E1]">
-                              <button
-                                onClick={async () => {
-                                  setIsProfileOpen(false);
-                                  await logout();
-                                }}
-                                className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#991B1B] hover:bg-[#FEE2E2] rounded-none transition-colors text-left font-medium cursor-pointer"
-                              >
-                                <LogOut className="w-3.5 h-3.5 text-[#991B1B]" />
-                                <span>Sign Out</span>
-                              </button>
-                            </div>
-                          </div>
+                {isProfileOpen && (
+                  <div className="absolute right-0 mt-3 w-64 z-50 animate-in fade-in zoom-in-95 duration-150 bg-white border border-[#D0E5E1] shadow-[0_12px_32px_rgba(26,25,24,0.08)] p-2">
+                    <div className="w-full text-[#191817]">
+                      <div className="px-3 py-2 border-b border-[#D0E5E1]">
+                        <div className="flex items-center gap-1.5 mb-0.5">
+                          <span className="text-xs font-semibold text-[#191817] truncate" title={user?.name}>
+                            {user?.name}
+                          </span>
+                          <CheckCircle className="w-3.5 h-3.5 text-emerald-600 shrink-0" />
                         </div>
-                    )}
+                        {user?.patientId && (
+                          <div className="my-1.5 flex items-center justify-between bg-[#F0F7F6] border border-[#D0E5E1] px-2 py-1">
+                            <span className="text-[10px] text-[#7A746B] font-semibold">Patient ID:</span>
+                            <span className="text-[10px] font-mono font-bold text-[#0F766E]">
+                              {user.patientId}
+                            </span>
+                          </div>
+                        )}
+                        <p className="text-[11px] text-[#7A746B] font-mono truncate" title={user?.abhaAddress || user?.abhaId || user?.facility}>
+                          {user?.abhaAddress || user?.abhaId || user?.facility}
+                        </p>
+                        <p className="text-[10px] text-[#0F766E] font-medium mt-0.5">
+                          {getRoleLabel(user?.role)}
+                        </p>
+                      </div>
+
+                      <div className="py-1">
+                        {/* Settings in Profile Menu */}
+                        <button
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            handleSelectRoute("settings");
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] transition-colors text-left cursor-pointer rounded-none"
+                        >
+                          <Settings className="w-3.5 h-3.5 text-[#7A746B]" />
+                          <span>
+                            {user?.role === "admin"
+                              ? "Institution Management"
+                              : "Settings & Preferences"}
+                          </span>
+                        </button>
+
+                        {/* Public Landing Link */}
+                        <button
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            handleSelectRoute("landing");
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] rounded-none transition-colors text-left cursor-pointer"
+                        >
+                          <House className="w-3.5 h-3.5 text-[#7A746B]" />
+                          <span>Public Home Page</span>
+                        </button>
+
+                        {/* Switch Account */}
+                        <button
+                          onClick={() => {
+                            setIsProfileOpen(false);
+                            onOpenLogin();
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] rounded-none transition-colors text-left cursor-pointer"
+                        >
+                          <UserRound className="w-3.5 h-3.5 text-[#7A746B]" />
+                          <span>Switch Account</span>
+                        </button>
+                      </div>
+
+                      <div className="pt-1 border-t border-[#D0E5E1]">
+                        <button
+                          onClick={async () => {
+                            setIsProfileOpen(false);
+                            await logout();
+                            handleSelectRoute("landing");
+                            if (window.location.pathname !== "/") {
+                              window.history.pushState({}, "", "/");
+                            }
+                          }}
+                          className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#991B1B] hover:bg-[#FEE2E2] rounded-none transition-colors text-left font-medium cursor-pointer"
+                        >
+                          <LogOut className="w-3.5 h-3.5 text-[#991B1B]" />
+                          <span>Sign Out</span>
+                        </button>
+                      </div>
+                    </div>
                   </div>
                 )}
               </div>
-            </div>
-          </GlassSurface>
+            )}
+          </div>
         </div>
       </header>
 
@@ -609,8 +614,15 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                 {/* Header inside drawer */}
                 <div className="flex items-center justify-between pb-3 border-b border-[#D0E5E1]">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-7 h-7 rounded-none bg-[#0F766E] text-white flex items-center justify-center shadow-xs">
-                      <Activity className="w-4 h-4 text-[#F0F7F6]" />
+                    <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#0F766E] to-[#14B8A6] text-white flex items-center justify-center shadow-xs">
+                      <div className="w-full h-full bg-[#F0F7F6] rounded-none flex items-center justify-center p-0.5">
+                        <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
+                          <path d="M6 18C6 11.3726 11.3726 6 18 6C18 12.6274 12.6274 18 6 18Z" fill="#0F766E" />
+                          <path d="M26 14C26 20.6274 20.6274 26 14 26C14 19.3726 19.3726 14 26 14Z" fill="#4E8C78" fillOpacity="0.85" />
+                          <circle cx="16" cy="16" r="3" fill="#F0F7F6" />
+                          <circle cx="16" cy="16" r="1.5" fill="#0F766E" />
+                        </svg>
+                      </div>
                     </div>
                     <div>
                       <span className="font-editorial-serif font-bold text-[#1A1918] text-sm leading-tight block">
@@ -639,15 +651,15 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                       <button
                         key={item.id}
                         onClick={() => handleSelectRoute(item.id)}
-                        className={`w-full flex items-center gap-3 px-3 py-2 rounded-none text-xs transition-colors cursor-pointer ${
+                        className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-none text-xs transition-colors cursor-pointer ${
                           isActive
-                            ? "bg-[#1A1918] text-white font-medium shadow-2xs"
+                            ? "bg-[#E4F1EE] text-[#0F766E] font-bold border-l-2 border-[#0F766E]"
                             : "text-[#5C574F] hover:text-[#191817] hover:bg-[#D0E5E1]/40"
                         }`}
                       >
                         <Icon
                           className={`w-4 h-4 shrink-0 ${
-                            isActive ? "text-white" : "text-[#7A746B]"
+                            isActive ? "text-[#0F766E]" : "text-[#7A746B]"
                           }`}
                           strokeWidth={1.8}
                         />
@@ -664,9 +676,9 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                   {/* Settings link in mobile list */}
                   <button
                     onClick={() => handleSelectRoute("settings")}
-                    className={`w-full flex items-center gap-3 px-3 py-2 rounded-none text-xs transition-colors cursor-pointer ${
+                    className={`w-full flex items-center gap-3 px-3 py-2.5 rounded-none text-xs transition-colors cursor-pointer ${
                       currentRoute === "settings"
-                        ? "bg-[#1A1918] text-white font-medium shadow-2xs"
+                        ? "bg-[#E4F1EE] text-[#0F766E] font-bold border-l-2 border-[#0F766E]"
                         : "text-[#5C574F] hover:text-[#191817] hover:bg-[#D0E5E1]/40"
                     }`}
                   >
@@ -691,6 +703,10 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                         onClick={async () => {
                           setIsMobileMenuOpen(false);
                           await logout();
+                          handleSelectRoute("landing");
+                          if (window.location.pathname !== "/") {
+                            window.history.pushState({}, "", "/");
+                          }
                         }}
                         className="p-1 text-[#991B1B] hover:bg-[#FEE2E2] rounded-none transition-colors cursor-pointer"
                         title="Sign Out"

@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import { GlassNavbar } from "./components/layout/GlassNavbar";
 import { type NavigationRoute } from "./components/layout/navigation";
 import { DashboardView } from "./components/dashboard/DashboardView";
@@ -27,7 +27,7 @@ import {
 } from "./data/syntheticData";
 
 export default function App() {
-  const { user, checkSession } = useAuth();
+  const { user, checkSession, isAuthenticated } = useAuth();
 
   // Navigation State - defaults to landing page unless URL matches /dashboard
   const [currentRoute, setCurrentRoute] = useState<NavigationRoute>(() => {
@@ -79,6 +79,18 @@ export default function App() {
     window.addEventListener("popstate", handlePopState);
     return () => window.removeEventListener("popstate", handlePopState);
   }, [checkSession]);
+
+  // Whenever user signs out, land them on landing page
+  const prevAuthRef = useRef<boolean>(isAuthenticated);
+  useEffect(() => {
+    if (prevAuthRef.current && !isAuthenticated) {
+      setCurrentRoute("landing");
+      if (window.location.pathname !== "/" && window.location.pathname !== "/login") {
+        window.history.pushState({}, "", "/");
+      }
+    }
+    prevAuthRef.current = isAuthenticated;
+  }, [isAuthenticated]);
 
   const handleOpenLogin = useCallback(() => {
     setIsLoginModalOpen(true);
