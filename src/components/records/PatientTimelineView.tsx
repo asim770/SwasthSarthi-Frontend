@@ -333,7 +333,7 @@ export const PatientTimelineView: React.FC = () => {
               >
                 {patients.map((p) => (
                   <option key={p.id} value={p.id}>
-                    {p.name} ({p.abhaAddress})
+                    {p.name} {p.patientId ? `• ${p.patientId}` : `• ${p.abhaAddress}`}
                   </option>
                 ))}
               </select>

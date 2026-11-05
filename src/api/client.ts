@@ -5,6 +5,7 @@ import type {
   AuthChallengeResponse,
   AuthVerifyResponse,
   AuthenticatedUser,
+  AvailableChannelsData,
   MockOtpResponse,
   ConsentItem,
   ConsentDecision,
@@ -115,12 +116,23 @@ export async function checkSystemHealth(): Promise<HealthCheckData> {
 }
 
 /**
- * Step 1: Create a mock ABHA login OTP challenge
+ * Fetch supported OTP delivery channels from /api/v1/auth/channels
  */
-export async function createAuthChallenge(identifier: string): Promise<AuthChallengeResponse> {
+export async function fetchDeliveryChannels(): Promise<AvailableChannelsData> {
+  return apiRequest<AvailableChannelsData>("/auth/channels");
+}
+
+/**
+ * Step 1: Create an OTP challenge (SMS, Email, or Mock) for simulated ABHA login
+ */
+export async function createAuthChallenge(
+  identifier: string,
+  channel?: "sms" | "email" | "mock",
+  contact?: string
+): Promise<AuthChallengeResponse> {
   return apiRequest<AuthChallengeResponse>("/auth/challenge", {
     method: "POST",
-    body: JSON.stringify({ identifier }),
+    body: JSON.stringify({ identifier, channel, contact }),
   });
 }
 
@@ -134,6 +146,66 @@ export async function verifyAuthOtp(
   const data = await apiRequest<AuthVerifyResponse>("/auth/verify", {
     method: "POST",
     body: JSON.stringify({ challengeId, otp }),
+  });
+
+  if (data.csrfToken) {
+    setCsrfToken(data.csrfToken);
+  }
+
+  return data;
+}
+
+/**
+ * Register a new patient account with email & password, assigning a unique Patient ID
+ */
+export async function signUpPatient(payload: {
+  name: string;
+  email: string;
+  password: string;
+  phone?: string;
+  gender?: "Male" | "Female" | "Other";
+  dateOfBirth?: string;
+}): Promise<{
+  user: AuthenticatedUser;
+  patientId: string;
+  csrfToken: string;
+  message: string;
+}> {
+  const data = await apiRequest<{
+    user: AuthenticatedUser;
+    patientId: string;
+    csrfToken: string;
+    message: string;
+  }>("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  if (data.csrfToken) {
+    setCsrfToken(data.csrfToken);
+  }
+
+  return data;
+}
+
+/**
+ * Sign in using Patient ID or registered email + password
+ */
+export async function loginWithPassword(
+  identifier: string,
+  password: string
+): Promise<{
+  user: AuthenticatedUser;
+  csrfToken: string;
+  message: string;
+}> {
+  const data = await apiRequest<{
+    user: AuthenticatedUser;
+    csrfToken: string;
+    message: string;
+  }>("/auth/login", {
+    method: "POST",
+    body: JSON.stringify({ identifier, password }),
   });
 
   if (data.csrfToken) {
@@ -201,6 +273,181 @@ export async function logoutUser(): Promise<{ message: string }> {
  */
 export async function fetchMockDevOtp(challengeId: string): Promise<MockOtpResponse> {
   return apiRequest<MockOtpResponse>(`/auth/mock-otp?challengeId=${encodeURIComponent(challengeId)}`);
+}
+
+/**
+ * Fetch Google OAuth public configuration (Client ID and status)
+ */
+export async function fetchGoogleConfig(): Promise<{
+  clientId: string | null;
+  configured: boolean;
+  redirectUri: string;
+}> {
+  return apiRequest<{
+    clientId: string | null;
+    configured: boolean;
+    redirectUri: string;
+  }>("/auth/google");
+}
+
+/**
+ * Sign in or register using Google OAuth (ID token credential or authorization code)
+ */
+export async function authenticateWithGoogle(params: {
+  credential?: string;
+  code?: string;
+  mode?: "login" | "register";
+}): Promise<AuthVerifyResponse> {
+  const data = await apiRequest<AuthVerifyResponse>("/auth/google", {
+    method: "POST",
+    body: JSON.stringify(params),
+  });
+
+  if (data.csrfToken) {
+    setCsrfToken(data.csrfToken);
+  }
+
+  return data;
+}
+
+export async function loginWithGoogle(credential: string): Promise<AuthVerifyResponse> {
+  return authenticateWithGoogle({ credential, mode: "login" });
+}
+
+export async function registerWithGoogle(credential: string): Promise<AuthVerifyResponse> {
+  return authenticateWithGoogle({ credential, mode: "register" });
+}
+
+/**
+ * Register a new patient account with manual details
+ */
+export async function registerPatient(payload: {
+  name: string;
+  email: string;
+  password: string;
+  confirmPassword?: string;
+  phone?: string;
+  gender?: "Male" | "Female" | "Other";
+  dateOfBirth?: string;
+}): Promise<{
+  patientId: string;
+  requiresVerification: boolean;
+  challengeId: string;
+  maskedEmail: string;
+  resendAvailableInSeconds: number;
+  devOtp?: string;
+  message: string;
+  user?: AuthenticatedUser;
+}> {
+  return apiRequest("/auth/signup", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * Verify email OTP to activate a newly registered patient account
+ */
+export async function verifyEmailOtp(payload: {
+  challengeId: string;
+  otp: string;
+  email?: string;
+}): Promise<AuthVerifyResponse> {
+  const data = await apiRequest<AuthVerifyResponse>("/auth/verify-email", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+
+  if (data.csrfToken) {
+    setCsrfToken(data.csrfToken);
+  }
+
+  return data;
+}
+
+/**
+ * Resend email verification code
+ */
+export async function resendEmailVerification(payload: {
+  email: string;
+  challengeId?: string;
+}): Promise<{
+  challengeId: string;
+  maskedEmail: string;
+  resendAvailableInSeconds: number;
+  devOtp?: string;
+  message: string;
+}> {
+  return apiRequest("/auth/resend-verification", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * Request password reset OTP for a Patient ID or registered email
+ */
+export async function forgotPassword(identifier: string): Promise<{
+  challengeId: string;
+  maskedEmail: string;
+  resendAvailableInSeconds: number;
+  devOtp?: string;
+  message: string;
+}> {
+  return apiRequest("/auth/forgot-password", {
+    method: "POST",
+    body: JSON.stringify({ identifier }),
+  });
+}
+
+/**
+ * Complete password reset using verified OTP and new password
+ */
+export async function resetPassword(payload: {
+  challengeId: string;
+  otp: string;
+  newPassword: string;
+}): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  return apiRequest("/auth/reset-password", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * Change password from authenticated session
+ */
+export async function changePassword(payload: {
+  currentPassword: string;
+  newPassword: string;
+}): Promise<{
+  success: boolean;
+  message: string;
+}> {
+  return apiRequest("/auth/change-password", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
+}
+
+/**
+ * Link Google account to existing logged-in patient
+ */
+export async function linkGoogleAccount(payload: {
+  credential?: string;
+  code?: string;
+}): Promise<{
+  success: boolean;
+  patientId: string;
+  message: string;
+}> {
+  return apiRequest("/auth/link-google", {
+    method: "POST",
+    body: JSON.stringify(payload),
+  });
 }
 
 /**
@@ -296,10 +543,46 @@ export async function fetchConsentHistory(consentId: string): Promise<ConsentDec
 }
 
 /**
- * Fetch patients discoverable by practitioner
+ * Fetch patients discoverable by practitioner with optional search query
  */
-export async function fetchDiscoverablePatients(): Promise<DiscoverablePatient[]> {
-  return apiRequest<DiscoverablePatient[]>("/patients");
+export async function fetchDiscoverablePatients(searchQuery?: string): Promise<DiscoverablePatient[]> {
+  const endpoint = searchQuery && searchQuery.trim()
+    ? `/patients?query=${encodeURIComponent(searchQuery.trim())}`
+    : "/patients";
+  return apiRequest<DiscoverablePatient[]>(endpoint);
+}
+
+/**
+ * Fetch patient profile by MongoDB ID or unique Patient ID (PID-XXXXXXXX)
+ */
+export async function fetchPatientProfile(idOrPatientId: string): Promise<AuthenticatedUser> {
+  return apiRequest<AuthenticatedUser>(`/patients/${encodeURIComponent(idOrPatientId)}`);
+}
+
+/**
+ * Fetch patient profile explicitly by unique Patient ID
+ */
+export async function fetchPatientByPatientId(patientId: string): Promise<AuthenticatedUser> {
+  return apiRequest<AuthenticatedUser>(`/patients/by-patient-id/${encodeURIComponent(patientId)}`);
+}
+
+/**
+ * Comprehensive: Fetch all patient info, records, consents, and orders by Patient ID
+ */
+export async function fetchPatientComprehensiveInfo(idOrPatientId: string): Promise<{
+  patient: AuthenticatedUser;
+  recordsSummary: {
+    totalClinicalRecords: number;
+    totalConsents: number;
+    totalPrescriptions: number;
+    totalLabOrders: number;
+  };
+  clinicalRecords: unknown[];
+  consents: unknown[];
+  prescriptions: unknown[];
+  labOrders: unknown[];
+}> {
+  return apiRequest(`/patients/${encodeURIComponent(idOrPatientId)}/info`);
 }
 
 /**

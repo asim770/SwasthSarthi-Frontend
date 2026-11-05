@@ -36,6 +36,7 @@ export type UserRole = "patient" | "doctor" | "laboratory" | "pharmacy" | "admin
 
 export interface AuthenticatedUser {
   id: string;
+  patientId?: string;
   abhaId: string;
   abhaAddress: string;
   name: string;
@@ -47,22 +48,51 @@ export interface AuthenticatedUser {
   email?: string;
   gender?: string;
   dateOfBirth?: string;
+  isPhoneVerified?: boolean;
+  isEmailVerified?: boolean;
+  authProviders?: string[];
+  accountStatus?: "active" | "pending_verification" | "suspended";
+  isGoogleLinked?: boolean;
+}
+
+export type OtpDeliveryChannel = "sms" | "email" | "mock";
+
+export interface DeliveryChannelItem {
+  id: OtpDeliveryChannel;
+  label: string;
+  description: string;
+  enabled: boolean;
+  requiresConfiguration: boolean;
+  configured: boolean;
+}
+
+export interface AvailableChannelsData {
+  deliveryMode: "mock" | "real" | "hybrid";
+  channels: DeliveryChannelItem[];
+  abdmStatus: string;
 }
 
 export interface AuthChallengeResponse {
   challengeId: string;
   maskedIdentifier: string;
+  channel?: OtpDeliveryChannel;
+  maskedDestination?: string;
   role?: UserRole;
   name?: string;
   expiresAt: string;
   resendAvailableInSeconds: number;
   demoMode: boolean;
+  abdmSimulated?: boolean;
   note: string;
 }
 
 export interface AuthVerifyResponse {
   user: AuthenticatedUser;
   csrfToken: string;
+  contactVerified?: boolean;
+  channel?: OtpDeliveryChannel;
+  demoMode?: boolean;
+  abdmSimulated?: boolean;
   message: string;
 }
 
@@ -124,11 +154,15 @@ export interface ConsentItem {
 
 export interface DiscoverablePatient {
   id: string;
+  _id?: string;
+  patientId?: string;
   name: string;
   abhaId: string;
   abhaAddress: string;
   gender?: string;
   dateOfBirth?: string;
+  phone?: string;
+  email?: string;
 }
 
 export interface TimelineRecordItem {

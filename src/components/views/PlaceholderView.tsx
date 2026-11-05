@@ -15,6 +15,7 @@ import {
   Info,
   ShieldAlert,
   AlertTriangle,
+  Building2,
 } from "lucide-react";
 import type { NavigationRoute } from "../layout/navigation";
 import { useAuth } from "../../context/AuthContext";
@@ -41,6 +42,14 @@ const ROUTE_CONFIG: Record<
     details: string;
   }
 > = {
+  landing: {
+    title: "Hospital Landing",
+    breadcrumb: "Portal / Hospital Landing",
+    description: "Kim's American Hospital public showcase and patient onboarding.",
+    milestone: "Active",
+    icon: Building2,
+    details: "Editorial landing page showcasing clinical excellence and patient care.",
+  },
   dashboard: {
     title: "Dashboard",
     breadcrumb: "Portal / Overview",

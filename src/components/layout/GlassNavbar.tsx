@@ -165,7 +165,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
           <GlassSurface
             width="100%"
             height={68}
-            borderRadius={20}
+            borderRadius={0}
             shape="rect"
             backgroundOpacity={0.68}
             blur={12}
@@ -175,7 +175,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
             renderer="svg"
             overflow="visible"
             innerClassName="p-0"
-            className="w-full box-border border border-white/80 shadow-[0_6px_24px_rgba(15,23,42,0.06),0_1px_3px_rgba(15,23,42,0.03)] ring-1 ring-slate-900/[0.04]"
+            className="w-full box-border border border-[#EAE4D9] rounded-none shadow-[0_4px_20px_rgba(26,25,24,0.05)]"
           >
             <div className="w-full h-full flex items-center justify-between px-3 sm:px-4 md:px-5 gap-1.5 sm:gap-2.5 md:gap-3 box-border min-w-0">
               {/* Left Section: Compact Brand */}
@@ -190,9 +190,9 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                 </button>
 
                 <button
-                  onClick={() => handleSelectRoute("dashboard")}
+                  onClick={() => handleSelectRoute("landing")}
                   className="flex items-center gap-2 text-left group cursor-pointer shrink-0"
-                  aria-label="Navigate to home"
+                  aria-label="Navigate to hospital landing page"
                 >
                   <div className="w-7 h-7 rounded-lg bg-gradient-to-tr from-teal-600 to-teal-400 flex items-center justify-center text-white shrink-0 shadow-xs group-hover:scale-105 transition-transform duration-150">
                     <Activity className="w-4 h-4 text-white" strokeWidth={2.2} />
@@ -398,7 +398,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                     className="flex items-center gap-1.5 px-2.5 sm:px-3 py-1.5 rounded-xl text-xs font-medium bg-gradient-to-r from-teal-600 to-teal-700 hover:from-teal-500 hover:to-teal-600 text-white shadow-xs cursor-pointer shrink-0"
                   >
                     <Sparkles className="w-3.5 h-3.5 text-teal-100 shrink-0" />
-                    <span className="hidden sm:inline">Sign In with ABHA</span>
+                    <span className="hidden sm:inline">Sign In / Register</span>
                     <span className="sm:hidden">Sign In</span>
                   </button>
                 ) : (
@@ -420,7 +420,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                           {user?.name}
                         </span>
                         <span className="text-[10px] text-slate-500 leading-none truncate">
-                          {getRoleLabel(user?.role)}
+                          {user?.patientId ? user.patientId : getRoleLabel(user?.role)}
                         </span>
                       </div>
                       <ChevronDown className="w-3.5 h-3.5 text-slate-400 hidden sm:block shrink-0" />
@@ -445,6 +445,14 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                                 </span>
                                 <CheckCircle className="w-3 h-3 text-teal-600 shrink-0" />
                               </div>
+                              {user?.patientId && (
+                                <div className="my-1.5 flex items-center justify-between bg-teal-50 border border-teal-200/80 rounded-md px-2 py-1">
+                                  <span className="text-[10px] text-teal-800 font-semibold">Patient ID:</span>
+                                  <span className="text-[10px] font-mono font-bold text-[#008080]">
+                                    {user.patientId}
+                                  </span>
+                                </div>
+                              )}
                               <p className="text-[11px] text-slate-500 font-mono truncate" title={user?.abhaAddress || user?.abhaId || user?.facility}>
                                 {user?.abhaAddress || user?.abhaId || user?.facility}
                               </p>

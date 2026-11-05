@@ -21,30 +21,64 @@
     --border-subtle: #d7eaea;
     --border-glass: rgba(255, 255, 255, 0.85);
 
-    --shadow-soft: 0 6px 24px rgba(15, 23, 42, 0.05);
-    --radius-card: 18px;
-    --radius-button: 12px;
+    --shadow-soft: 0 4px 20px rgba(15, 23, 42, 0.04);
+    --radius-card: 0px;
+    --radius-button: 0px;
 
     /* Backward-compatible and typography variables */
-    --app-bg: #f0f8f8;
-    --glass-bg: rgba(255, 255, 255, 0.58);
-    --glass-bg-strong: rgba(255, 255, 255, 0.78);
-    --glass-border: rgba(255, 255, 255, 0.78);
-    --glass-highlight: rgba(255, 255, 255, 0.92);
-    --accent: #008080;
-    --accent-soft: rgba(0, 128, 128, 0.09);
+    --app-bg: #FAF7F2;
+    --glass-bg: rgba(250, 247, 242, 0.85);
+    --glass-bg-strong: rgba(250, 247, 242, 0.95);
+    --glass-border: #E8E2D8;
+    --glass-highlight: rgba(255, 255, 255, 0.95);
+    --accent: #57477D;
+    --accent-soft: rgba(87, 71, 125, 0.08);
 
-    --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif;
+    --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif;
+    --font-serif: "Playfair Display", Georgia, Cambria, "Times New Roman", serif;
     --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   }
 
   body {
     font-family: var(--font-sans);
-    background-color: var(--app-background, #f0f8f8);
+    background-color: #FAF7F2;
     color: var(--text-primary, #172033);
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     letter-spacing: -0.011em;
+  }
+}
+
+/* Sharp Edges Architectural Design System */
+*,
+::before,
+::after {
+  /* Enforce sharp div edges as requested */
+  --tw-ring-offset-shadow: 0 0 #0000;
+}
+
+.sharp-edge {
+  border-radius: 0px !important;
+}
+
+/* Editorial Landing Page Typography & Masks matching reference screenshot */
+.font-editorial-serif {
+  font-family: var(--font-serif);
+}
+
+.font-editorial-sans {
+  font-family: var(--font-sans);
+}
+
+.editorial-hero-mask {
+  mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.15) 6%, rgba(0, 0, 0, 0.7) 18%, #000 32%);
+  -webkit-mask-image: linear-gradient(to right, transparent 0%, rgba(0, 0, 0, 0.15) 6%, rgba(0, 0, 0, 0.7) 18%, #000 32%);
+}
+
+@media (max-width: 1024px) {
+  .editorial-hero-mask {
+    mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 8%, #000 22%);
+    -webkit-mask-image: linear-gradient(to bottom, transparent 0%, rgba(0, 0, 0, 0.5) 8%, #000 22%);
   }
 }
 

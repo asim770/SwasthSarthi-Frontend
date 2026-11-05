@@ -15,6 +15,7 @@ import { UploadRecordModal } from "./components/dashboard/UploadRecordModal";
 import { ConsentDetailsModal } from "./components/dashboard/ConsentDetailsModal";
 import { HealthDiagnosticsModal } from "./components/dashboard/HealthDiagnosticsModal";
 import { LoginModal } from "./components/auth/LoginModal";
+import { LandingView } from "./components/landing/LandingView";
 import { useAuth } from "./context/AuthContext";
 import { checkSystemHealth } from "./api/client";
 import type { HealthCheckData } from "./types/api";
@@ -28,8 +29,13 @@ import {
 export default function App() {
   const { user } = useAuth();
 
-  // Navigation State
-  const [currentRoute, setCurrentRoute] = useState<NavigationRoute>("dashboard");
+  // Navigation State - defaults to landing page unless URL matches /dashboard
+  const [currentRoute, setCurrentRoute] = useState<NavigationRoute>(() => {
+    if (typeof window !== "undefined" && window.location.pathname === "/dashboard") {
+      return "dashboard";
+    }
+    return "landing";
+  });
 
   // Auth Modal State
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(() => {
@@ -51,11 +57,13 @@ export default function App() {
   const [selectedConsent, setSelectedConsent] = useState<SyntheticConsent | null>(null);
   const [isUploadModalOpen, setIsUploadModalOpen] = useState<boolean>(false);
 
-  // Handle URL changes for /login
+  // Handle URL changes for /login and /dashboard
   useEffect(() => {
     const handlePopState = () => {
       if (window.location.pathname === "/login") {
         setIsLoginModalOpen(true);
+      } else if (window.location.pathname === "/dashboard") {
+        setCurrentRoute("dashboard");
       }
     };
     window.addEventListener("popstate", handlePopState);
@@ -147,6 +155,33 @@ export default function App() {
       prev.map((c) => (c.id === id ? { ...c, status: newStatus } : c))
     );
   };
+
+  if (currentRoute === "landing") {
+    return (
+      <div className="min-h-screen bg-[#FAF7F2] font-editorial-sans text-[#1E1D1B]">
+        <LandingView
+          onOpenLogin={handleOpenLogin}
+          onNavigateToDashboard={() => setCurrentRoute("dashboard")}
+        />
+
+        {/* Modals & Dialogs */}
+        <LoginModal
+          isOpen={isLoginModalOpen}
+          onClose={handleCloseLogin}
+          onSuccessfulLogin={handleSuccessfulLogin}
+        />
+
+        <HealthDiagnosticsModal
+          isOpen={isHealthModalOpen}
+          onClose={() => setIsHealthModalOpen(false)}
+          healthData={healthData}
+          isLoading={healthLoading}
+          onRefresh={probeHealth}
+          error={healthError}
+        />
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen app-light-bg flex flex-col font-sans text-[var(--text-primary,#172033)]">
