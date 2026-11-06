@@ -271,7 +271,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
             >
               {/* Stylized sharp emblem */}
               <div className="relative w-10 h-10 rounded-none bg-gradient-to-tr from-[#0F766E] via-[#14B8A6] to-[#5EEAD4] p-0.5 flex items-center justify-center shadow-xs">
-                <div className="w-full h-full rounded-none flex items-center justify-center overflow-hidden bg-[#F0F7F6]">
+                <div className="w-full h-full rounded-none flex items-center justify-center overflow-hidden bg-white">
                   <svg
                     viewBox="0 0 32 32"
                     fill="none"
@@ -279,16 +279,14 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                     className="w-6 h-6 transform group-hover:rotate-6 transition-transform duration-300"
                   >
                     <path
-                      d="M6 18C6 11.3726 11.3726 6 18 6C18 12.6274 12.6274 18 6 18Z"
+                      d="M7 18C7 11.9249 11.9249 7 18 7C18 13.0751 13.0751 18 7 18Z"
                       fill="#0F766E"
                     />
                     <path
-                      d="M26 14C26 20.6274 20.6274 26 14 26C14 19.3726 19.3726 14 26 14Z"
+                      d="M25 14C25 20.0751 20.0751 25 14 25C14 18.9249 18.9249 14 25 14Z"
                       fill="#4E8C78"
-                      fillOpacity="0.85"
                     />
-                    <circle cx="16" cy="16" r="3.5" fill="#F0F7F6" />
-                    <circle cx="16" cy="2" fill="#0F766E" />
+                    <circle cx="16" cy="16" r="3.8" fill="#FFFFFF" />
                   </svg>
                 </div>
               </div>
@@ -614,13 +612,18 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                 {/* Header inside drawer */}
                 <div className="flex items-center justify-between pb-3 border-b border-[#D0E5E1]">
                   <div className="flex items-center gap-2.5">
-                    <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#0F766E] to-[#14B8A6] text-white flex items-center justify-center shadow-xs">
-                      <div className="w-full h-full bg-[#F0F7F6] rounded-none flex items-center justify-center p-0.5">
+                    <div className="w-8 h-8 rounded-none bg-gradient-to-tr from-[#0F766E] to-[#14B8A6] p-0.5 flex items-center justify-center shadow-xs">
+                      <div className="w-full h-full bg-white rounded-none flex items-center justify-center p-0.5">
                         <svg viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-5 h-5">
-                          <path d="M6 18C6 11.3726 11.3726 6 18 6C18 12.6274 12.6274 18 6 18Z" fill="#0F766E" />
-                          <path d="M26 14C26 20.6274 20.6274 26 14 26C14 19.3726 19.3726 14 26 14Z" fill="#4E8C78" fillOpacity="0.85" />
-                          <circle cx="16" cy="16" r="3" fill="#F0F7F6" />
-                          <circle cx="16" cy="16" r="1.5" fill="#0F766E" />
+                          <path
+                            d="M7 18C7 11.9249 11.9249 7 18 7C18 13.0751 13.0751 18 7 18Z"
+                            fill="#0F766E"
+                          />
+                          <path
+                            d="M25 14C25 20.0751 20.0751 25 14 25C14 18.9249 18.9249 14 25 14Z"
+                            fill="#4E8C78"
+                          />
+                          <circle cx="16" cy="16" r="3.8" fill="#FFFFFF" />
                         </svg>
                       </div>
                     </div>

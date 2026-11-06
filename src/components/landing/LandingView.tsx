@@ -201,9 +201,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                 }`}
               >
                 <div
-                  className={`w-full h-full rounded-none flex items-center justify-center overflow-hidden transition-colors duration-300 ${
-                    isScrolled ? "bg-[#F0F7F6]" : "bg-white/95 backdrop-blur-xs"
-                  }`}
+                  className="w-full h-full rounded-none flex items-center justify-center overflow-hidden bg-white"
                 >
                   <svg
                     viewBox="0 0 32 32"
@@ -212,16 +210,14 @@ export const LandingView: React.FC<LandingViewProps> = ({
                     className="w-6 h-6 transform group-hover:rotate-6 transition-transform duration-300"
                   >
                     <path
-                      d="M6 18C6 11.3726 11.3726 6 18 6C18 12.6274 12.6274 18 6 18Z"
+                      d="M7 18C7 11.9249 11.9249 7 18 7C18 13.0751 13.0751 18 7 18Z"
                       fill="#0F766E"
                     />
                     <path
-                      d="M26 14C26 20.6274 20.6274 26 14 26C14 19.3726 19.3726 14 26 14Z"
+                      d="M25 14C25 20.0751 20.0751 25 14 25C14 18.9249 18.9249 14 25 14Z"
                       fill="#4E8C78"
-                      fillOpacity="0.85"
                     />
-                    <circle cx="16" cy="16" r="3.5" fill="#F0F7F6" />
-                    <circle cx="16" cy="2" fill="#0F766E" />
+                    <circle cx="16" cy="16" r="3.8" fill="#FFFFFF" />
                   </svg>
                 </div>
               </div>
