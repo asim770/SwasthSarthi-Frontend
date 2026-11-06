@@ -107,19 +107,16 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [docSpecialization, setDocSpecialization] = useState<string>("");
   const [docRegNumber, setDocRegNumber] = useState<string>("");
   const [docHospital, setDocHospital] = useState<string>("");
-  const [docAddress, setDocAddress] = useState<string>("");
 
   // Laboratory Organization Registration Fields
   const [labOrgName, setLabOrgName] = useState<string>("");
   const [labRepName, setLabRepName] = useState<string>("");
   const [labRegNumber, setLabRegNumber] = useState<string>("");
-  const [labAddress, setLabAddress] = useState<string>("");
 
   // Pharmacy Organization Registration Fields
   const [pharmOrgName, setPharmOrgName] = useState<string>("");
   const [pharmRepName, setPharmRepName] = useState<string>("");
   const [pharmRegNumber, setPharmRegNumber] = useState<string>("");
-  const [pharmAddress, setPharmAddress] = useState<string>("");
 
   // Registration Pending Approval Display (Doctor, Laboratory, Pharmacy)
   const [registeredPendingApproval, setRegisteredPendingApproval] = useState<{
@@ -539,7 +536,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           specialization: docSpecialization.trim(),
           registrationNumber: docRegNumber.trim(),
           hospitalOrClinicName: docHospital.trim(),
-          address: docAddress.trim(),
+          address: docHospital.trim(),
         };
       } else if (signupRole === "laboratory") {
         if (!labOrgName.trim()) throw new Error("Laboratory name is required.");
@@ -551,7 +548,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           email: signupEmail.trim().toLowerCase(),
           authorizedRepresentative: labRepName.trim(),
           registrationNumber: labRegNumber.trim(),
-          address: labAddress.trim(),
+          address: labOrgName.trim(),
         };
       } else if (signupRole === "pharmacy") {
         if (!pharmOrgName.trim()) throw new Error("Pharmacy name is required.");
@@ -563,7 +560,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           email: signupEmail.trim().toLowerCase(),
           authorizedRepresentative: pharmRepName.trim(),
           registrationNumber: pharmRegNumber.trim(),
-          address: pharmAddress.trim(),
+          address: pharmOrgName.trim(),
         };
       }
 
@@ -766,11 +763,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       onClose={handleClose}
       title={getTitle()}
       description={getDescription()}
-      maxWidth="md"
+      maxWidth={modalMode === "SIGN_UP" && !roleSelectionStep ? "lg" : "md"}
     >
       <div className="space-y-4 font-sans">
-        {/* Top Tab Mode Switcher: Sign In vs Sign Up */}
-        {!registeredPatient && !registeredPendingApproval && modalMode !== "EMAIL_VERIFICATION" && modalMode !== "DEMO_OTP" && modalMode !== "RESET_PASSWORD" && (
+        {/* Top Tab Mode Switcher: Sign In vs Sign Up (only shown in initial sign-in and role selection screens) */}
+        {!registeredPatient && !registeredPendingApproval && modalMode !== "EMAIL_VERIFICATION" && modalMode !== "DEMO_OTP" && modalMode !== "RESET_PASSWORD" && (modalMode === "SIGN_IN" || modalMode === "FORGOT_PASSWORD" || roleSelectionStep) && (
           <div className="flex p-1 bg-[#F0F7F6] rounded-none border border-[#D0E5E1]">
             <button
               type="button"
@@ -984,19 +981,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 1: Patient */}
                   <div
                     onClick={() => setSignupRole("patient")}
-                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
-                      signupRole === "patient"
-                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
-                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
-                    }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${signupRole === "patient"
+                      ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                      : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
-                          signupRole === "patient"
-                            ? "bg-[#1A1918] text-white"
-                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
-                        }`}
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${signupRole === "patient"
+                          ? "bg-[#1A1918] text-white"
+                          : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
+                          }`}
                       >
                         <User className="w-4 h-4" />
                       </div>
@@ -1017,19 +1012,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 2: Doctor */}
                   <div
                     onClick={() => setSignupRole("doctor")}
-                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
-                      signupRole === "doctor"
-                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
-                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
-                    }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${signupRole === "doctor"
+                      ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                      : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
-                          signupRole === "doctor"
-                            ? "bg-[#1A1918] text-white"
-                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
-                        }`}
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${signupRole === "doctor"
+                          ? "bg-[#1A1918] text-white"
+                          : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
+                          }`}
                       >
                         <Stethoscope className="w-4 h-4" />
                       </div>
@@ -1050,19 +1043,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 3: Laboratory */}
                   <div
                     onClick={() => setSignupRole("laboratory")}
-                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
-                      signupRole === "laboratory"
-                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
-                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
-                    }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${signupRole === "laboratory"
+                      ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                      : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
-                          signupRole === "laboratory"
-                            ? "bg-[#1A1918] text-white"
-                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
-                        }`}
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${signupRole === "laboratory"
+                          ? "bg-[#1A1918] text-white"
+                          : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
+                          }`}
                       >
                         <FlaskConical className="w-4 h-4" />
                       </div>
@@ -1083,19 +1074,17 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   {/* Role 4: Pharmacy */}
                   <div
                     onClick={() => setSignupRole("pharmacy")}
-                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${
-                      signupRole === "pharmacy"
-                        ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
-                        : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
-                    }`}
+                    className={`p-3.5 border rounded-none cursor-pointer transition-all flex flex-col justify-between ${signupRole === "pharmacy"
+                      ? "border-[#1A1918] bg-[#F0F7F6] shadow-2xs"
+                      : "border-[#D0E5E1] bg-white hover:border-[#C5BEB2] hover:bg-[#F0F7F6]/40"
+                      }`}
                   >
                     <div className="flex items-start gap-3">
                       <div
-                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${
-                          signupRole === "pharmacy"
-                            ? "bg-[#1A1918] text-white"
-                            : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
-                        }`}
+                        className={`w-9 h-9 shrink-0 rounded-none flex items-center justify-center transition-colors ${signupRole === "pharmacy"
+                          ? "bg-[#1A1918] text-white"
+                          : "bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]"
+                          }`}
                       >
                         <Pill className="w-4 h-4" />
                       </div>
@@ -1128,15 +1117,18 @@ export const LoginModal: React.FC<LoginModalProps> = ({
             ) : (
               /* STEP 2: ROLE-SPECIFIC REGISTRATION FORM */
               <div className="space-y-4">
-                <div className="flex items-center justify-between pb-1">
+                <div className="flex items-center justify-between pb-2 border-b border-[#D0E5E1]">
                   <button
                     type="button"
                     onClick={() => setRoleSelectionStep(true)}
-                    className="flex items-center gap-1.5 text-xs font-medium text-[#0F766E] hover:text-[#0D655E] transition-colors cursor-pointer"
+                    className="inline-flex items-center gap-1.5 text-xs font-semibold text-[#0F766E] hover:text-[#0D655E] transition-colors cursor-pointer group"
                   >
-                    <ArrowLeft className="w-3.5 h-3.5" />
-                    <span>Choose different role</span>
+                    <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-0.5" />
+                    <span>Change Role</span>
                   </button>
+                  <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 bg-[#E6F4F2] text-[#0F766E] border border-[#BCE3DE]">
+                    {signupRole} registration
+                  </span>
                 </div>
 
                 {/* ROLE 1 FORM: PATIENT */}
@@ -1192,10 +1184,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         <input
                           type="text"
                           required
+                          autoComplete="name"
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
                           placeholder="Full name"
-                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
 
@@ -1206,10 +1199,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         <input
                           type="email"
                           required
+                          autoComplete="email"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
-                          placeholder="Enter Your Email"
-                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                          placeholder="Enter your email"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
 
@@ -1223,10 +1217,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                               type={showSignupPassword ? "text" : "password"}
                               required
                               minLength={8}
+                              autoComplete="new-password"
                               value={signupPassword}
                               onChange={(e) => setSignupPassword(e.target.value)}
-                              placeholder="Password"
-                              className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white pr-8 transition-colors"
+                              placeholder="Min 8 characters"
+                              className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
                             />
                             <button
                               type="button"
@@ -1246,10 +1241,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           <input
                             type={showSignupPassword ? "text" : "password"}
                             required
+                            autoComplete="new-password"
                             value={signupConfirmPassword}
                             onChange={(e) => setSignupConfirmPassword(e.target.value)}
                             placeholder="Confirm password"
-                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                           />
                         </div>
                       </div>
@@ -1261,10 +1257,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           </label>
                           <input
                             type="tel"
+                            autoComplete="tel"
                             value={signupPhone}
                             onChange={(e) => setSignupPhone(e.target.value)}
-                            placeholder="Enter Mobile number"
-                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                            placeholder="+91 Mobile number"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                           />
                         </div>
 
@@ -1276,7 +1273,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             type="date"
                             value={signupDob}
                             onChange={(e) => setSignupDob(e.target.value)}
-                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white transition-colors"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                           />
                         </div>
                       </div>
@@ -1292,7 +1289,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                               type="button"
                               onClick={() => setSignupGender(g)}
                               className={`py-1.5 px-3 text-xs border rounded-none transition-all cursor-pointer text-center ${signupGender === g
-                                ? "border-[#1A1918] bg-[#1A1918] text-white font-medium shadow-2xs"
+                                ? "border-[#0F766E] bg-[#0F766E] text-white font-medium shadow-2xs"
                                 : "border-[#D0E5E1] bg-white text-[#5C574F] hover:bg-[#F0F7F6] hover:text-[#191817]"
                                 }`}
                             >
@@ -1304,58 +1301,79 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
                       <Button
                         type="submit"
-                        variant="primary"
                         size="md"
-                        className="w-full rounded-none mt-2 shadow-2xs"
+                        className="w-full rounded-none mt-2 !bg-[#0F766E] hover:!bg-[#0D655E] !border-[#0F766E] text-white font-semibold shadow-2xs py-2.5"
                         isLoading={isSignupLoading}
                         rightIcon={<ArrowRight className="w-4 h-4" />}
                       >
                         Continue to Email Verification
                       </Button>
+
+                      <p className="text-center text-xs text-[#5C574F] pt-1">
+                        Already have an account?{" "}
+                        <button
+                          type="button"
+                          onClick={() => {
+                            setModalMode("SIGN_IN");
+                            setErrorMessage(null);
+                          }}
+                          className="font-semibold text-[#0F766E] hover:text-[#0D655E] underline underline-offset-2 cursor-pointer"
+                        >
+                          Sign In
+                        </button>
+                      </p>
                     </form>
                   </div>
                 )}
 
                 {/* ROLE 2 FORM: DOCTOR */}
                 {signupRole === "doctor" && (
-                  <form onSubmit={handleProfessionalSignup} className="space-y-3">
-                    <div className="p-2.5 bg-amber-50 border border-amber-300 text-xs text-amber-900">
-                      <strong>Credentialing Notice:</strong> Doctor registrations require verification and administrator approval before access to clinical dashboards and patient records is granted.
+                  <form onSubmit={handleProfessionalSignup} className="space-y-3.5">
+                    {/* Clinical Verification Notice */}
+                    <div className="p-2.5 bg-[#F8FBFA] border border-[#D0E5E1] text-xs flex items-center gap-2.5">
+                      <div className="w-6 h-6 rounded-none bg-[#E6F4F2] border border-[#BCE3DE] flex items-center justify-center shrink-0">
+                        <ShieldCheck className="w-3.5 h-3.5 text-[#0F766E]" />
+                      </div>
+                      <p className="text-[11px] text-[#4A5D5A] leading-snug">
+                        <strong className="text-[#191817] font-semibold">Credentialing Notice:</strong> Doctor profiles are verified against national and state medical council registers before clinical dashboard access.
+                      </p>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Full Name (with Title) <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
                           required
+                          autoComplete="name"
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
-                          placeholder="e.g. Dr. Vikram Seth"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          placeholder="Enter Your Name"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Professional Email <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="email"
                           required
+                          autoComplete="email"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
-                          placeholder="e.g. dr.vikram@hospital.org"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          placeholder="Enter Your Email"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Medical Qualification <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1363,13 +1381,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={docQualification}
                           onChange={(e) => setDocQualification(e.target.value)}
-                          placeholder="e.g. MBBS, MD (Medicine)"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          placeholder="Enter Your Qualiufiaction"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Specialization <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1377,15 +1395,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={docSpecialization}
                           onChange={(e) => setDocSpecialization(e.target.value)}
-                          placeholder="e.g. Cardiology, Internal Medicine"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          placeholder="Specialization"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Registration / License Number <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1393,108 +1411,125 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={docRegNumber}
                           onChange={(e) => setDocRegNumber(e.target.value)}
-                          placeholder="e.g. MCI-2024-8841"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          placeholder="License Number"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
-                          Hospital / Clinic Affiliation <span className="text-red-500">*</span>
-                        </label>
-                        <input
-                          type="text"
-                          required
-                          value={docHospital}
-                          onChange={(e) => setDocHospital(e.target.value)}
-                          placeholder="e.g. Apollo Care Hospital"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
-                        />
-                      </div>
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Phone Number <span className="text-red-500">*</span>
                         </label>
                         <input
-                          type="text"
+                          type="tel"
                           required
+                          autoComplete="tel"
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
-                          placeholder="+91 Mobile number"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
-                        />
-                      </div>
-
-                      <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
-                          Clinic / Hospital Address
-                        </label>
-                        <input
-                          type="text"
-                          value={docAddress}
-                          onChange={(e) => setDocAddress(e.target.value)}
-                          placeholder="City, State"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          placeholder="Enter Mobile number"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div>
+                      <label className="block text-xs font-medium text-[#191817] mb-1">
+                        Hospital / Clinic Affiliation <span className="text-red-500">*</span>
+                      </label>
+                      <input
+                        type="text"
+                        required
+                        value={docHospital}
+                        onChange={(e) => setDocHospital(e.target.value)}
+                        placeholder="Enter Hospital Name"
+                        className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
+                      />
+                    </div>
+
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Password <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type={showSignupPassword ? "text" : "password"}
-                          required
-                          minLength={8}
-                          value={signupPassword}
-                          onChange={(e) => setSignupPassword(e.target.value)}
-                          placeholder="Min 8 chars"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showSignupPassword ? "text" : "password"}
+                            required
+                            minLength={8}
+                            autoComplete="new-password"
+                            value={signupPassword}
+                            onChange={(e) => setSignupPassword(e.target.value)}
+                            placeholder="Enter Password"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowSignupPassword((prev) => !prev)}
+                            className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#7A746B] hover:text-[#191817] cursor-pointer"
+                            aria-label={showSignupPassword ? "Hide password" : "Show password"}
+                          >
+                            {showSignupPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Confirm Password <span className="text-red-500">*</span>
                         </label>
                         <input
                           type={showSignupPassword ? "text" : "password"}
                           required
+                          autoComplete="new-password"
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
                           placeholder="Re-enter password"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
                     </div>
 
                     <Button
                       type="submit"
-                      variant="primary"
                       size="md"
-                      className="w-full rounded-none mt-2"
+                      className="w-full rounded-none mt-2 !bg-[#0F766E] hover:!bg-[#0D655E] !border-[#0F766E] text-white font-semibold shadow-2xs py-2.5"
                       isLoading={isSignupLoading}
                       rightIcon={<ArrowRight className="w-4 h-4" />}
                     >
-                      Submit Doctor Registration for Approval
+                      Register as Doctor
                     </Button>
+
+                    <p className="text-center text-xs text-[#5C574F] pt-1">
+                      Already registered?{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setModalMode("SIGN_IN");
+                          setErrorMessage(null);
+                        }}
+                        className="font-semibold text-[#0F766E] hover:text-[#0D655E] underline underline-offset-2 cursor-pointer"
+                      >
+                        Sign in to account
+                      </button>
+                    </p>
                   </form>
                 )}
 
                 {/* ROLE 3 FORM: LABORATORY */}
                 {signupRole === "laboratory" && (
-                  <form onSubmit={handleProfessionalSignup} className="space-y-3">
-                    <div className="p-2.5 bg-amber-50 border border-amber-300 text-xs text-amber-900">
-                      <strong>Organization Notice:</strong> Diagnostic laboratories require organizational accreditation verification before report submission capabilities are enabled.
+                  <form onSubmit={handleProfessionalSignup} className="space-y-3.5">
+                    {/* Organization Accreditation Notice */}
+                    <div className="p-2.5 bg-[#F8FBFA] border border-[#D0E5E1] text-xs flex items-center gap-2.5">
+                      <div className="w-6 h-6 rounded-none bg-[#E6F4F2] border border-[#BCE3DE] flex items-center justify-center shrink-0">
+                        <FlaskConical className="w-3.5 h-3.5 text-[#0F766E]" />
+                      </div>
+                      <p className="text-[11px] text-[#4A5D5A] leading-snug">
+                        <strong className="text-[#191817] font-semibold">Accreditation Notice:</strong> Diagnostic laboratories require NABL / state licensing validation before report submission is enabled.
+                      </p>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      <label className="block text-xs font-medium text-[#191817] mb-1">
                         Diagnostic Laboratory Name <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1502,44 +1537,46 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         required
                         value={labOrgName}
                         onChange={(e) => setLabOrgName(e.target.value)}
-                        placeholder="e.g. Metropolis Diagnostics Hub"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                        placeholder="e.g. Metropolis Diagnostics Center"
+                        className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Authorized Representative <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
                           required
+                          autoComplete="name"
                           value={labRepName}
                           onChange={(e) => setLabRepName(e.target.value)}
                           placeholder="e.g. Dr. Rajesh Kumar"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Organization Email <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="email"
                           required
+                          autoComplete="email"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
                           placeholder="e.g. lab@metropolis.com"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Registration / NABL License <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1548,91 +1585,110 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={labRegNumber}
                           onChange={(e) => setLabRegNumber(e.target.value)}
                           placeholder="e.g. NABL-2024-5512"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Contact Phone <span className="text-red-500">*</span>
                         </label>
                         <input
-                          type="text"
+                          type="tel"
                           required
+                          autoComplete="tel"
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
-                          placeholder="+91-80-23000000"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          placeholder="+91 Contact number"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">
-                        Facility Address
-                      </label>
-                      <input
-                        type="text"
-                        value={labAddress}
-                        onChange={(e) => setLabAddress(e.target.value)}
-                        placeholder="Street, City, Pincode"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Password <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type={showSignupPassword ? "text" : "password"}
-                          required
-                          minLength={8}
-                          value={signupPassword}
-                          onChange={(e) => setSignupPassword(e.target.value)}
-                          placeholder="Min 8 chars"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showSignupPassword ? "text" : "password"}
+                            required
+                            minLength={8}
+                            autoComplete="new-password"
+                            value={signupPassword}
+                            onChange={(e) => setSignupPassword(e.target.value)}
+                            placeholder="Min 8 characters"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowSignupPassword((prev) => !prev)}
+                            className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#7A746B] hover:text-[#191817] cursor-pointer"
+                            aria-label={showSignupPassword ? "Hide password" : "Show password"}
+                          >
+                            {showSignupPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Confirm Password <span className="text-red-500">*</span>
                         </label>
                         <input
                           type={showSignupPassword ? "text" : "password"}
                           required
+                          autoComplete="new-password"
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
                           placeholder="Re-enter password"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
                     </div>
 
                     <Button
                       type="submit"
-                      variant="primary"
                       size="md"
-                      className="w-full rounded-none mt-2"
+                      className="w-full rounded-none mt-2 !bg-[#0F766E] hover:!bg-[#0D655E] !border-[#0F766E] text-white font-semibold shadow-2xs py-2.5"
                       isLoading={isSignupLoading}
                       rightIcon={<ArrowRight className="w-4 h-4" />}
                     >
-                      Submit Laboratory Registration for Approval
+                      Register Laboratory
                     </Button>
+
+                    <p className="text-center text-xs text-[#5C574F] pt-1">
+                      Already registered?{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setModalMode("SIGN_IN");
+                          setErrorMessage(null);
+                        }}
+                        className="font-semibold text-[#0F766E] hover:text-[#0D655E] underline underline-offset-2 cursor-pointer"
+                      >
+                        Sign in to account
+                      </button>
+                    </p>
                   </form>
                 )}
 
                 {/* ROLE 4 FORM: PHARMACY */}
                 {signupRole === "pharmacy" && (
-                  <form onSubmit={handleProfessionalSignup} className="space-y-3">
-                    <div className="p-2.5 bg-amber-50 border border-amber-300 text-xs text-amber-900">
-                      <strong>Organization Notice:</strong> Pharmacy accounts require drug authority licensing validation by administrators before medicine dispensation operations are enabled.
+                  <form onSubmit={handleProfessionalSignup} className="space-y-3.5">
+                    {/* Organization Licensing Notice */}
+                    <div className="p-2.5 bg-[#F8FBFA] border border-[#D0E5E1] text-xs flex items-center gap-2.5">
+                      <div className="w-6 h-6 rounded-none bg-[#E6F4F2] border border-[#BCE3DE] flex items-center justify-center shrink-0">
+                        <Pill className="w-3.5 h-3.5 text-[#0F766E]" />
+                      </div>
+                      <p className="text-[11px] text-[#4A5D5A] leading-snug">
+                        <strong className="text-[#191817] font-semibold">Licensing Notice:</strong> Pharmacy accounts require drug authority licensing validation before medicine dispensation operations are enabled.
+                      </p>
                     </div>
 
                     <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">
+                      <label className="block text-xs font-medium text-[#191817] mb-1">
                         Pharmacy Name <span className="text-red-500">*</span>
                       </label>
                       <input
@@ -1641,43 +1697,45 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         value={pharmOrgName}
                         onChange={(e) => setPharmOrgName(e.target.value)}
                         placeholder="e.g. Apollo Care Pharmacy"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                        className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                       />
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Authorized Pharmacist / Representative <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="text"
                           required
+                          autoComplete="name"
                           value={pharmRepName}
                           onChange={(e) => setPharmRepName(e.target.value)}
                           placeholder="e.g. Pooja Sharma, R.Ph"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Organization Email <span className="text-red-500">*</span>
                         </label>
                         <input
                           type="email"
                           required
+                          autoComplete="email"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
                           placeholder="e.g. rx@apollocare.org"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Drug License / Registration Number <span className="text-red-500">*</span>
                         </label>
                         <input
@@ -1686,79 +1744,92 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           value={pharmRegNumber}
                           onChange={(e) => setPharmRegNumber(e.target.value)}
                           placeholder="e.g. DL-2024-9912"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Contact Phone <span className="text-red-500">*</span>
                         </label>
                         <input
-                          type="text"
+                          type="tel"
                           required
+                          autoComplete="tel"
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
-                          placeholder="+91-80-26000000"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white font-mono"
+                          placeholder="+91 Contact number"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
                     </div>
 
-                    <div>
-                      <label className="block text-xs font-semibold text-slate-700 mb-1">
-                        Pharmacy Facility Address
-                      </label>
-                      <input
-                        type="text"
-                        value={pharmAddress}
-                        onChange={(e) => setPharmAddress(e.target.value)}
-                        placeholder="Street, City, Pincode"
-                        className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
-                      />
-                    </div>
-
-                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Password <span className="text-red-500">*</span>
                         </label>
-                        <input
-                          type={showSignupPassword ? "text" : "password"}
-                          required
-                          minLength={8}
-                          value={signupPassword}
-                          onChange={(e) => setSignupPassword(e.target.value)}
-                          placeholder="Min 8 chars"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
-                        />
+                        <div className="relative">
+                          <input
+                            type={showSignupPassword ? "text" : "password"}
+                            required
+                            minLength={8}
+                            autoComplete="new-password"
+                            value={signupPassword}
+                            onChange={(e) => setSignupPassword(e.target.value)}
+                            placeholder="Min 8 characters"
+                            className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
+                          />
+                          <button
+                            type="button"
+                            onClick={() => setShowSignupPassword((prev) => !prev)}
+                            className="absolute inset-y-0 right-0 pr-2.5 flex items-center text-[#7A746B] hover:text-[#191817] cursor-pointer"
+                            aria-label={showSignupPassword ? "Hide password" : "Show password"}
+                          >
+                            {showSignupPassword ? <EyeOff className="w-3.5 h-3.5" /> : <Eye className="w-3.5 h-3.5" />}
+                          </button>
+                        </div>
                       </div>
 
                       <div>
-                        <label className="block text-xs font-semibold text-slate-700 mb-1">
+                        <label className="block text-xs font-medium text-[#191817] mb-1">
                           Confirm Password <span className="text-red-500">*</span>
                         </label>
                         <input
                           type={showSignupPassword ? "text" : "password"}
                           required
+                          autoComplete="new-password"
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
                           placeholder="Re-enter password"
-                          className="w-full px-3 py-2 text-xs text-slate-900 border border-[#B6D6D0] rounded-none focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918] bg-white"
+                          className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
                     </div>
 
                     <Button
                       type="submit"
-                      variant="primary"
                       size="md"
-                      className="w-full rounded-none mt-2"
+                      className="w-full rounded-none mt-2 !bg-[#0F766E] hover:!bg-[#0D655E] !border-[#0F766E] text-white font-semibold shadow-2xs py-2.5"
                       isLoading={isSignupLoading}
                       rightIcon={<ArrowRight className="w-4 h-4" />}
                     >
-                      Submit Pharmacy Registration for Approval
+                      Register Pharmacy
                     </Button>
+
+                    <p className="text-center text-xs text-[#5C574F] pt-1">
+                      Already registered?{" "}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setModalMode("SIGN_IN");
+                          setErrorMessage(null);
+                        }}
+                        className="font-semibold text-[#0F766E] hover:text-[#0D655E] underline underline-offset-2 cursor-pointer"
+                      >
+                        Sign in to account
+                      </button>
+                    </p>
                   </form>
                 )}
               </div>
@@ -1771,51 +1842,51 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         {/* ========================================================================= */}
         {registeredPendingApproval && (
           <div className="space-y-4 text-center py-2 animate-fadeIn">
-            <div className="w-12 h-12 bg-amber-100 border border-amber-300 text-amber-700 flex items-center justify-center mx-auto rounded-none">
+            <div className="w-12 h-12 bg-[#E6F4F2] border border-[#BCE3DE] text-[#0F766E] flex items-center justify-center mx-auto rounded-none">
               <Clock className="w-6 h-6" />
             </div>
 
             <div>
-              <h3 className="text-base font-bold text-slate-900">
+              <h3 className="text-base font-bold text-[#191817]">
                 {registeredPendingApproval.role.toUpperCase()} Registration Submitted!
               </h3>
-              <p className="text-xs text-slate-600 mt-1 max-w-sm mx-auto">
+              <p className="text-xs text-[#5C574F] mt-1 max-w-sm mx-auto leading-relaxed">
                 Your credentials have been securely stored and queued for review. In accordance with healthcare data protection standards, accounts must be approved by an administrator before accessing clinical records.
               </p>
             </div>
 
             {/* Sharp Status Card */}
-            <div className="p-4 bg-amber-50 border-2 border-amber-500 rounded-none text-left space-y-2.5">
+            <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] rounded-none text-left space-y-2.5">
               <div className="flex items-center justify-between">
-                <span className="text-[11px] font-bold text-amber-900 uppercase tracking-wider">
+                <span className="text-[11px] font-bold text-[#191817] uppercase tracking-wider">
                   Account Verification Status
                 </span>
-                <span className="text-[10px] bg-amber-200 text-amber-950 font-bold px-2 py-0.5 rounded-none border border-amber-400">
+                <span className="text-[10px] bg-amber-50 text-amber-800 font-semibold px-2 py-0.5 rounded-none border border-amber-200">
                   PENDING REVIEW
                 </span>
               </div>
 
-              <div className="bg-white p-3 rounded-none border border-amber-300 text-xs space-y-1.5 text-slate-800">
+              <div className="bg-white p-3 rounded-none border border-[#D0E5E1] text-xs space-y-1.5 text-[#191817]">
                 <div>
-                  <span className="text-slate-500 font-semibold block">Registrant Name:</span>
-                  <span className="font-bold text-slate-900">{registeredPendingApproval.name}</span>
+                  <span className="text-[#6E685F] text-[11px] font-medium block">Registrant Name:</span>
+                  <span className="font-semibold text-[#191817]">{registeredPendingApproval.name}</span>
                 </div>
                 {registeredPendingApproval.orgOrHospital && (
                   <div>
-                    <span className="text-slate-500 font-semibold block">Facility / Organization:</span>
-                    <span className="font-bold text-slate-900">{registeredPendingApproval.orgOrHospital}</span>
+                    <span className="text-[#6E685F] text-[11px] font-medium block">Facility / Organization:</span>
+                    <span className="font-semibold text-[#191817]">{registeredPendingApproval.orgOrHospital}</span>
                   </div>
                 )}
                 {registeredPendingApproval.regNumber && (
                   <div>
-                    <span className="text-slate-500 font-semibold block">License / Registration Number:</span>
-                    <span className="font-mono font-bold text-slate-900">{registeredPendingApproval.regNumber}</span>
+                    <span className="text-[#6E685F] text-[11px] font-medium block">License / Registration Number:</span>
+                    <span className="font-mono font-semibold text-[#191817]">{registeredPendingApproval.regNumber}</span>
                   </div>
                 )}
               </div>
 
-              <div className="text-[11px] text-amber-800 flex items-start gap-1.5 pt-1">
-                <ShieldCheck className="w-4 h-4 shrink-0 text-amber-700 mt-0.5" />
+              <div className="text-[11px] text-[#5C574F] flex items-start gap-1.5 pt-1">
+                <ShieldCheck className="w-4 h-4 shrink-0 text-[#0F766E] mt-0.5" />
                 <span>An administrator will review your medical credentials. Once approved, your role dashboard will unlock automatically.</span>
               </div>
             </div>
