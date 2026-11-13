@@ -92,6 +92,13 @@ export default function App() {
     prevAuthRef.current = isAuthenticated;
   }, [isAuthenticated]);
 
+  // Redirect administrator away from patient dashboard and clinical records
+  useEffect(() => {
+    if (user?.role === "admin" && (currentRoute === "dashboard" || currentRoute === "records")) {
+      setCurrentRoute("access");
+    }
+  }, [user?.role, currentRoute]);
+
   const handleOpenLogin = useCallback(() => {
     setIsLoginModalOpen(true);
     if (window.location.pathname !== "/login") {
@@ -237,7 +244,7 @@ export default function App() {
           ) : currentRoute === "prescriptions" ? (
             <PharmacyDashboardView />
           ) : currentRoute === "access" ? (
-            <PatientAccessHistoryView />
+            user?.role === "admin" ? <AdminManagementView /> : <PatientAccessHistoryView />
           ) : currentRoute === "notifications" ? (
             <NotificationListView />
           ) : currentRoute === "settings" && user?.role === "admin" ? (

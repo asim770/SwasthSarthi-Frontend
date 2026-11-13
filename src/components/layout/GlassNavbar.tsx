@@ -12,6 +12,7 @@ import {
   MoreHorizontal,
   House,
   LogIn,
+  Building2,
 } from "lucide-react";
 import { type NavigationRoute, NAV_ITEMS, type NavItem } from "./navigation";
 import { useAuth } from "../../context/AuthContext";
@@ -212,9 +213,22 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
       );
     }
     if (role === "admin") {
-      return baseItems.filter((item) =>
-        ["landing", "dashboard", "access", "records", "consents", "notifications"].includes(item.id)
-      );
+      const adminOrder: NavigationRoute[] = ["landing", "access", "consents", "notifications"];
+      return adminOrder
+        .map((id) => {
+          const item = baseItems.find((b) => b.id === id);
+          if (!item) return null;
+          if (id === "access") {
+            return {
+              ...item,
+              label: "Admin Portal",
+              icon: Building2,
+              tooltip: "Healthcare Institutions & Clinician Credentials",
+            };
+          }
+          return item;
+        })
+        .filter(Boolean) as NavItem[];
     }
     return baseItems;
   };
@@ -529,18 +543,22 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
                       </div>
 
                       <div className="py-1">
-                        {/* Settings in Profile Menu */}
+                        {/* Admin Portal or Settings */}
                         <button
                           onClick={() => {
                             setIsProfileOpen(false);
-                            handleSelectRoute("settings");
+                            handleSelectRoute(user?.role === "admin" ? "access" : "settings");
                           }}
                           className="w-full flex items-center gap-2.5 px-3 py-2 text-xs text-[#5C574F] hover:text-[#191817] hover:bg-[#F0F7F6] transition-colors text-left cursor-pointer rounded-none"
                         >
-                          <Settings className="w-3.5 h-3.5 text-[#7A746B]" />
+                          {user?.role === "admin" ? (
+                            <Building2 className="w-3.5 h-3.5 text-[#0F766E]" />
+                          ) : (
+                            <Settings className="w-3.5 h-3.5 text-[#7A746B]" />
+                          )}
                           <span>
                             {user?.role === "admin"
-                              ? "Institution Management"
+                              ? "Admin Portal & Facilities"
                               : "Settings & Preferences"}
                           </span>
                         </button>

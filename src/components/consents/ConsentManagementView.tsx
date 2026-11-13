@@ -412,6 +412,8 @@ export const ConsentManagementView: React.FC = () => {
               ? activeTab === "ALL"
                 ? "You have no active consent requests or data sharing permissions. When a hospital or physician requests record access, it will appear here for your approval."
                 : "No consent requests match this status filter."
+              : user?.role === "admin"
+              ? "No active or pending patient data consent requests recorded across the network."
               : "No practitioner consent artifacts exist under this category."
           }
           icon={<ShieldCheck className="w-5 h-5 text-[#0F766E]" />}
@@ -514,11 +516,15 @@ export const ConsentManagementView: React.FC = () => {
                         <span>
                           Record Range:{" "}
                           <strong className="text-[#1A1918] font-mono">
-                            {new Date(consent.dateRangeFrom).toLocaleDateString()}
+                            {consent.dateRangeFrom && !isNaN(new Date(consent.dateRangeFrom).getTime())
+                              ? new Date(consent.dateRangeFrom).toLocaleDateString()
+                              : "All dates"}
                           </strong>{" "}
                           to{" "}
                           <strong className="text-[#1A1918] font-mono">
-                            {new Date(consent.dateRangeTo).toLocaleDateString()}
+                            {consent.dateRangeTo && !isNaN(new Date(consent.dateRangeTo).getTime())
+                              ? new Date(consent.dateRangeTo).toLocaleDateString()
+                              : "Present"}
                           </strong>
                         </span>
                       </div>
@@ -528,12 +534,14 @@ export const ConsentManagementView: React.FC = () => {
                           Valid until:{" "}
                           <strong
                             className={
-                              new Date(consent.expiresAt) <= new Date()
+                              consent.expiresAt && new Date(consent.expiresAt) <= new Date()
                                 ? "text-red-700 font-mono"
                                 : "text-[#1A1918] font-mono"
                             }
                           >
-                            {new Date(consent.expiresAt).toLocaleDateString()}
+                            {consent.expiresAt && !isNaN(new Date(consent.expiresAt).getTime())
+                              ? new Date(consent.expiresAt).toLocaleDateString()
+                              : "N/A"}
                           </strong>
                         </span>
                       </div>
