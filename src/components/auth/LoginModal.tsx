@@ -1187,7 +1187,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="name"
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
-                          placeholder="Full name"
+                          placeholder="Enter your name"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1220,7 +1220,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                               autoComplete="new-password"
                               value={signupPassword}
                               onChange={(e) => setSignupPassword(e.target.value)}
-                              placeholder="Min 8 characters"
+                              placeholder="Enter your password"
                               className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
                             />
                             <button
@@ -1244,7 +1244,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             autoComplete="new-password"
                             value={signupConfirmPassword}
                             onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                            placeholder="Confirm password"
+                            placeholder="Confirm your password"
                             className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                           />
                         </div>
@@ -1260,7 +1260,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             autoComplete="tel"
                             value={signupPhone}
                             onChange={(e) => setSignupPhone(e.target.value)}
-                            placeholder="+91 Mobile number"
+                            placeholder="Enter your mobile number"
                             className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                           />
                         </div>
@@ -1350,7 +1350,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="name"
                           value={signupName}
                           onChange={(e) => setSignupName(e.target.value)}
-                          placeholder="Enter Your Name"
+                          placeholder="Enter your name"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1365,7 +1365,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="email"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
-                          placeholder="Enter Your Email"
+                          placeholder="Enter your email"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1381,7 +1381,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={docQualification}
                           onChange={(e) => setDocQualification(e.target.value)}
-                          placeholder="Enter Your Qualiufiaction"
+                          placeholder="Enter your qualification"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1395,7 +1395,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={docSpecialization}
                           onChange={(e) => setDocSpecialization(e.target.value)}
-                          placeholder="Specialization"
+                          placeholder="Enter your specialization"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1411,7 +1411,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={docRegNumber}
                           onChange={(e) => setDocRegNumber(e.target.value)}
-                          placeholder="License Number"
+                          placeholder="Enter your registration or license number"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
@@ -1426,7 +1426,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="tel"
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
-                          placeholder="Enter Mobile number"
+                          placeholder="Enter your mobile number"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
@@ -1441,7 +1441,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         required
                         value={docHospital}
                         onChange={(e) => setDocHospital(e.target.value)}
-                        placeholder="Enter Hospital Name"
+                        placeholder="Enter your hospital or clinic name"
                         className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                       />
                     </div>
@@ -1459,7 +1459,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             autoComplete="new-password"
                             value={signupPassword}
                             onChange={(e) => setSignupPassword(e.target.value)}
-                            placeholder="Enter Password"
+                            placeholder="Enter your password"
                             className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
                           />
                           <button
@@ -1483,7 +1483,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="new-password"
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                          placeholder="Re-enter password"
+                          placeholder="Confirm your password"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1537,7 +1537,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         required
                         value={labOrgName}
                         onChange={(e) => setLabOrgName(e.target.value)}
-                        placeholder="e.g. Metropolis Diagnostics Center"
+                        placeholder="Enter your laboratory name"
                         className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                       />
                     </div>
@@ -1553,7 +1553,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="name"
                           value={labRepName}
                           onChange={(e) => setLabRepName(e.target.value)}
-                          placeholder="e.g. Dr. Rajesh Kumar"
+                          placeholder="Enter your name"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1568,7 +1568,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="email"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
-                          placeholder="e.g. lab@metropolis.com"
+                          placeholder="Enter your email"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1584,7 +1584,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={labRegNumber}
                           onChange={(e) => setLabRegNumber(e.target.value)}
-                          placeholder="e.g. NABL-2024-5512"
+                          placeholder="Enter your registration or license number"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
@@ -1599,7 +1599,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="tel"
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
-                          placeholder="+91 Contact number"
+                          placeholder="Enter your contact number"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
@@ -1618,7 +1618,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             autoComplete="new-password"
                             value={signupPassword}
                             onChange={(e) => setSignupPassword(e.target.value)}
-                            placeholder="Min 8 characters"
+                            placeholder="Enter your password"
                             className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
                           />
                           <button
@@ -1642,7 +1642,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="new-password"
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                          placeholder="Re-enter password"
+                          placeholder="Confirm your password"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1696,7 +1696,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                         required
                         value={pharmOrgName}
                         onChange={(e) => setPharmOrgName(e.target.value)}
-                        placeholder="e.g. Apollo Care Pharmacy"
+                        placeholder="Enter your pharmacy name"
                         className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                       />
                     </div>
@@ -1712,7 +1712,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="name"
                           value={pharmRepName}
                           onChange={(e) => setPharmRepName(e.target.value)}
-                          placeholder="e.g. Pooja Sharma, R.Ph"
+                          placeholder="Enter your name"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1727,7 +1727,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="email"
                           value={signupEmail}
                           onChange={(e) => setSignupEmail(e.target.value)}
-                          placeholder="e.g. rx@apollocare.org"
+                          placeholder="Enter your email"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
@@ -1743,7 +1743,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           required
                           value={pharmRegNumber}
                           onChange={(e) => setPharmRegNumber(e.target.value)}
-                          placeholder="e.g. DL-2024-9912"
+                          placeholder="Enter your drug license number"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
@@ -1758,7 +1758,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="tel"
                           value={signupPhone}
                           onChange={(e) => setSignupPhone(e.target.value)}
-                          placeholder="+91 Contact number"
+                          placeholder="Enter your contact number"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white font-mono transition-colors"
                         />
                       </div>
@@ -1777,7 +1777,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                             autoComplete="new-password"
                             value={signupPassword}
                             onChange={(e) => setSignupPassword(e.target.value)}
-                            placeholder="Min 8 characters"
+                            placeholder="Enter your password"
                             className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white pr-8 transition-colors"
                           />
                           <button
@@ -1801,7 +1801,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           autoComplete="new-password"
                           value={signupConfirmPassword}
                           onChange={(e) => setSignupConfirmPassword(e.target.value)}
-                          placeholder="Re-enter password"
+                          placeholder="Confirm your password"
                           className="w-full px-3 py-2 text-xs text-[#191817] border border-[#D0E5E1] rounded-none focus:outline-none focus:ring-1 focus:ring-[#0F766E] focus:border-[#0F766E] bg-white transition-colors"
                         />
                       </div>
