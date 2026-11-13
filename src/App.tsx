@@ -16,6 +16,7 @@ import { ConsentDetailsModal } from "./components/dashboard/ConsentDetailsModal"
 import { HealthDiagnosticsModal } from "./components/dashboard/HealthDiagnosticsModal";
 import { LoginModal } from "./components/auth/LoginModal";
 import { LandingView } from "./components/landing/LandingView";
+import { DoctorDashboardView } from "./components/doctor/DoctorDashboardView";
 import { useAuth } from "./context/AuthContext";
 import { checkSystemHealth } from "./api/client";
 import type { HealthCheckData } from "./types/api";
@@ -119,7 +120,7 @@ export default function App() {
     if (window.location.pathname === "/login") {
       window.history.pushState({}, "", "/");
     }
-    if (role === "doctor") setCurrentRoute("records");
+    if (role === "doctor") setCurrentRoute("dashboard");
     else if (role === "laboratory") setCurrentRoute("labs");
     else if (role === "pharmacy") setCurrentRoute("prescriptions");
     else if (role === "admin") setCurrentRoute("access");
@@ -227,14 +228,18 @@ export default function App() {
       <main className="flex-1 px-3 sm:px-4 lg:px-6 py-5 w-full">
         <div className="max-w-[1400px] mx-auto w-full">
           {currentRoute === "dashboard" ? (
-            <DashboardView
-              onOpenUpload={() => setIsUploadModalOpen(true)}
-              onSelectRecord={setSelectedRecord}
-              onSelectConsent={setSelectedConsent}
-              onNavigateRoute={setCurrentRoute}
-              records={records}
-              consents={consents}
-            />
+            user?.role === "doctor" ? (
+              <DoctorDashboardView />
+            ) : (
+              <DashboardView
+                onOpenUpload={() => setIsUploadModalOpen(true)}
+                onSelectRecord={setSelectedRecord}
+                onSelectConsent={setSelectedConsent}
+                onNavigateRoute={setCurrentRoute}
+                records={records}
+                consents={consents}
+              />
+            )
           ) : currentRoute === "consents" ? (
             <ConsentManagementView />
           ) : currentRoute === "records" ? (

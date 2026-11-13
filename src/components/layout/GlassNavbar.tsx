@@ -13,6 +13,7 @@ import {
   House,
   LogIn,
   Building2,
+  Stethoscope,
 } from "lucide-react";
 import { type NavigationRoute, NAV_ITEMS, type NavItem } from "./navigation";
 import { useAuth } from "../../context/AuthContext";
@@ -202,6 +203,31 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
       if (item.id === "settings") return false;
       return true;
     });
+    if (role === "doctor") {
+      const doctorOrder: NavigationRoute[] = ["landing", "dashboard", "records", "consents", "notifications"];
+      return doctorOrder
+        .map((id) => {
+          const item = baseItems.find((b) => b.id === id);
+          if (!item) return null;
+          if (id === "dashboard") {
+            return {
+              ...item,
+              label: "Doctor Workspace",
+              icon: Stethoscope,
+              tooltip: "Treated Patients, Multi-Doctor Clinical History & Lab Reports",
+            };
+          }
+          if (id === "records") {
+            return {
+              ...item,
+              label: "Patient Records",
+              tooltip: "Longitudinal Clinical Timeline & FHIR Bundles",
+            };
+          }
+          return item;
+        })
+        .filter(Boolean) as NavItem[];
+    }
     if (role === "laboratory") {
       return baseItems.filter((item) =>
         ["landing", "dashboard", "labs", "records", "access", "notifications"].includes(item.id)

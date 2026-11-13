@@ -510,3 +510,40 @@ export interface DirectDispenseInput {
   idempotencyKey?: string;
 }
 
+export interface TreatedPatientRecord {
+  patient: {
+    _id: string;
+    id: string;
+    patientId: string;
+    name: string;
+    gender?: string;
+    dateOfBirth?: string;
+    abhaAddress?: string;
+    abhaId?: string;
+    phone?: string;
+    email?: string;
+  };
+  lastConsultationDate: string;
+  latestDiagnosis: string;
+  latestTreatmentPlan: string;
+  latestSymptoms?: string;
+  latestClinicalFindings?: string;
+  prescribedMedicines?: Array<{
+    name: string;
+    dosage: string;
+    frequency: string;
+    durationDays?: number;
+    instructions?: string;
+  }>;
+  recommendedTests?: Array<{
+    testName: string;
+    testCode?: string;
+    priority?: string;
+    instructions?: string;
+  }>;
+  followUpDate?: string;
+  clinicalNotes?: string;
+  totalConsultations: number;
+  totalPrescriptions: number;
+  totalLabOrders: number;
+}

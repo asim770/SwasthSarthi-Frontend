@@ -22,6 +22,7 @@ import type {
   HealthAssessmentInput,
   DirectLabReportInput,
   DirectDispenseInput,
+  TreatedPatientRecord,
 } from "../types/api";
 
 export class ApiError extends Error {
@@ -579,6 +580,13 @@ export async function fetchDiscoverablePatients(searchQuery?: string): Promise<D
     ? `/patients?query=${encodeURIComponent(searchQuery.trim())}`
     : "/patients";
   return apiRequest<DiscoverablePatient[]>(endpoint);
+}
+
+/**
+ * Fetch patients consulted or treated by the logged-in doctor
+ */
+export async function fetchDoctorTreatedPatients(): Promise<TreatedPatientRecord[]> {
+  return apiRequest<TreatedPatientRecord[]>("/doctor/treated-patients");
 }
 
 /**
