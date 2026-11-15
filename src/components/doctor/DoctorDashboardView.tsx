@@ -1,7 +1,8 @@
 import React, { useState, useEffect, useCallback, useMemo } from "react";
-import { Card, CardContent } from "../ui/Card";
+import { PageHeader } from "../ui/PageHeader";
 import { Button } from "../ui/Button";
 import { Badge } from "../ui/Badge";
+import { EmptyState } from "../ui/EmptyState";
 import {
   Stethoscope,
   Search,
@@ -11,7 +12,6 @@ import {
   Activity,
   Calendar,
   Building2,
-  ShieldCheck,
   Plus,
   RefreshCw,
   CheckCircle2,
@@ -21,6 +21,7 @@ import {
   Eye,
   Syringe,
   X,
+  PackageCheck,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import {
@@ -227,211 +228,255 @@ export const DoctorDashboardView: React.FC = () => {
 
   return (
     <div className="space-y-6 pb-12 font-editorial-sans text-[#191817]">
-      {/* 1. Clean, Professional Clinician Workspace Header */}
-      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-4 border-b border-stone-200">
-        <div className="space-y-1">
+      {/* 1. Page Header matching other views */}
+      <PageHeader
+        breadcrumb="HPR · HEALTHCARE PROFESSIONAL REGISTRY"
+        title="Doctor Clinical Workspace"
+        description="Review your consulted patients, diagnoses, and treatment plans. Lookup any patient by Patient ID to access complete longitudinal records, diagnostic reports, and treatments from any doctor."
+        badge={
+          <Badge variant="teal" size="sm">
+            ABDM Verified
+          </Badge>
+        }
+        actions={
           <div className="flex items-center gap-2.5">
-            <h1 className="text-2xl sm:text-3xl font-bold font-editorial-serif text-[#191817]">
-              Doctor Clinical Workspace
-            </h1>
-            <span className="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-2xs font-semibold bg-[#0F766E]/10 text-[#0F766E] border border-[#0F766E]/20">
-              <ShieldCheck className="w-3 h-3" />
-              ABDM Verified
-            </span>
+            <Button
+              variant="secondary"
+              size="sm"
+              leftIcon={<RefreshCw className={`w-3.5 h-3.5 ${treatedLoading ? "animate-spin" : ""}`} />}
+              onClick={() => {
+                loadTreatedPatients();
+                if (activePatient) {
+                  loadActivePatientRecords(activePatient.patientId || activePatient.id);
+                }
+              }}
+              disabled={treatedLoading}
+            >
+              Sync
+            </Button>
+            <Button
+              variant="primary"
+              size="sm"
+              leftIcon={<Plus className="w-3.5 h-3.5" />}
+              onClick={() => handleOpenConsultation(activePatient?.patientId || "")}
+            >
+              New Treatment & Suggestion
+            </Button>
           </div>
-          <p className="text-xs sm:text-sm text-stone-600 flex flex-wrap items-center gap-1.5">
-            <span>Welcome, <strong className="text-[#191817]">Dr. {user?.name?.replace(/^Dr\.\s*/i, "") || "Clinician"}</strong></span>
+        }
+      />
+
+      {/* 2. Facility Scope Notice Strip (Matching Laboratory & Consent Views) */}
+      <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs">
+        <div className="flex items-center gap-2.5">
+          <Building2 className="w-4 h-4 text-[#0F766E] shrink-0" />
+          <span className="text-[#5C574F]">
+            <strong className="text-[#191817]">Active Practitioner:</strong>{" "}
+            Dr. {user?.name?.replace(/^Dr\.\s*/i, "") || "Clinician"}
             {user?.facility && (
-              <span className="text-[#0F766E] font-medium">· {user.facility}</span>
+              <>
+                {" • "}
+                <strong className="text-[#191817]">Facility:</strong> {user.facility}
+              </>
             )}
             {user?.specialization && (
-              <span className="text-stone-500">({user.specialization})</span>
+              <>
+                {" • "}
+                <strong className="text-[#191817]">Specialty:</strong> {user.specialization}
+              </>
             )}
-            {user?.registrationNumber && (
-              <span className="text-stone-400 font-mono text-2xs">· Reg: {user.registrationNumber}</span>
-            )}
-          </p>
+          </span>
         </div>
-
-        <div className="flex items-center gap-2.5 shrink-0">
-          <Button
-            onClick={() => handleOpenConsultation(activePatient?.patientId || "")}
-            className="bg-[#0F766E] hover:bg-[#0D655E] text-white shadow-xs flex items-center gap-2 px-4 py-2 text-xs sm:text-sm rounded-xl font-medium transition-all"
-          >
-            <Plus className="w-4 h-4" />
-            <span>New Treatment & Suggestion</span>
-          </Button>
-          <Button
-            variant="outline"
-            onClick={() => {
-              loadTreatedPatients();
-              if (activePatient) {
-                loadActivePatientRecords(activePatient.patientId || activePatient.id);
-              }
-            }}
-            className="border-stone-300 text-stone-700 hover:bg-stone-100 flex items-center gap-1.5 px-3 py-2 text-xs sm:text-sm rounded-xl"
-            title="Refresh workspace"
-          >
-            <RefreshCw className="w-3.5 h-3.5" />
-            <span>Sync</span>
-          </Button>
-        </div>
-      </div>
-
-      {/* 2. Doctor Practice Metrics (True doctor metrics - 0 if new doctor) */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 sm:gap-4">
-        <div className="bg-white rounded-xl p-4 border border-stone-200 shadow-2xs">
-          <p className="text-2xs font-semibold text-stone-500 uppercase tracking-wider">Patients Consulted</p>
-          <p className="text-2xl font-bold font-editorial-serif text-[#191817] mt-1">
-            {treatedPatients.length}
-          </p>
-          <p className="text-2xs text-[#0F766E] mt-0.5 flex items-center gap-1">
-            <UserCheck className="w-3 h-3" />
-            Under your care
-          </p>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 border border-stone-200 shadow-2xs">
-          <p className="text-2xs font-semibold text-stone-500 uppercase tracking-wider">Clinical Plans Recorded</p>
-          <p className="text-2xl font-bold font-editorial-serif text-[#191817] mt-1">
-            {treatedPatients.reduce((acc, p) => acc + p.totalConsultations, 0)}
-          </p>
-          <p className="text-2xs text-stone-500 mt-0.5 flex items-center gap-1">
-            <CheckCircle2 className="w-3 h-3 text-[#0F766E]" />
-            Diagnoses & suggestions given
-          </p>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 border border-stone-200 shadow-2xs">
-          <p className="text-2xs font-semibold text-stone-500 uppercase tracking-wider">Prescriptions Issued</p>
-          <p className="text-2xl font-bold font-editorial-serif text-[#191817] mt-1">
-            {treatedPatients.reduce((acc, p) => acc + p.totalPrescriptions, 0)}
-          </p>
-          <p className="text-2xs text-stone-500 mt-0.5 flex items-center gap-1">
-            <Pill className="w-3 h-3 text-[#0F766E]" />
-            Medication orders
-          </p>
-        </div>
-
-        <div className="bg-white rounded-xl p-4 border border-stone-200 shadow-2xs">
-          <p className="text-2xs font-semibold text-stone-500 uppercase tracking-wider">Diagnostic Referrals</p>
-          <p className="text-2xl font-bold font-editorial-serif text-[#191817] mt-1">
-            {treatedPatients.reduce((acc, p) => acc + p.totalLabOrders, 0)}
-          </p>
-          <p className="text-2xs text-stone-500 mt-0.5 flex items-center gap-1">
-            <FlaskConical className="w-3 h-3 text-[#0F766E]" />
-            Lab & test referrals
-          </p>
-        </div>
-      </div>
-
-      {/* 3. Patient ID & ABHA Instant Access Bar (Clean, full-width, no dummy pills) */}
-      <Card className="border border-stone-200 shadow-2xs bg-white">
-        <CardContent className="p-5 sm:p-6 space-y-3">
-          <div>
-            <h2 className="text-base sm:text-lg font-bold text-[#191817] flex items-center gap-2">
-              <Search className="w-4 h-4 text-[#0F766E]" />
-              Access Patient Records by Patient ID / ABHA Address
-            </h2>
-            <p className="text-xs text-stone-500 mt-0.5">
-              Enter any unique Patient ID (e.g., <code className="font-mono bg-stone-100 text-[#0F766E] px-1.5 py-0.5 rounded text-xs font-semibold">PID-10000001</code> or <code className="font-mono bg-stone-100 text-[#0F766E] px-1.5 py-0.5 rounded text-xs font-semibold">SS-PAT-000063</code>) to retrieve their full cross-hospital history, all lab reports, and previous doctor treatments.
-            </p>
-          </div>
-
-          <form
-            onSubmit={(e) => {
-              e.preventDefault();
-              handleLookupPatient();
-            }}
-            className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1"
-          >
-            <div className="relative flex-1">
-              <Search className="w-4 h-4 absolute left-3.5 top-1/2 -translate-y-1/2 text-stone-400" />
-              <input
-                type="text"
-                value={patientLookupId}
-                onChange={(e) => setPatientLookupId(e.target.value)}
-                placeholder="Enter Patient ID (e.g. PID-10000001) or ABHA Address..."
-                className="w-full pl-10 pr-4 py-2.5 text-sm rounded-xl border border-stone-300 bg-stone-50/50 focus:bg-white focus:outline-none focus:ring-2 focus:ring-[#0F766E]/30 focus:border-[#0F766E] transition-all font-mono"
-              />
-            </div>
-            <Button
-              type="submit"
-              disabled={lookupLoading || !patientLookupId.trim()}
-              className="bg-[#0F766E] hover:bg-[#0D655E] text-white rounded-xl px-5 py-2.5 text-sm shrink-0 flex items-center justify-center gap-2 font-medium"
-            >
-              {lookupLoading ? (
-                <>
-                  <RefreshCw className="w-4 h-4 animate-spin" />
-                  <span>Looking up...</span>
-                </>
-              ) : (
-                <>
-                  <Search className="w-4 h-4" />
-                  <span>Access Records</span>
-                </>
-              )}
-            </Button>
-          </form>
-
-          {lookupError && (
-            <div className="p-3 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2 mt-2">
-              <AlertCircle className="w-4 h-4 shrink-0 text-red-500" />
-              <span>{lookupError}</span>
-            </div>
+        <div className="flex items-center gap-2">
+          {user?.registrationNumber && (
+            <span className="px-2 py-0.5 rounded-none bg-[#F0F7F6] text-[#0F766E] font-mono text-[10px] font-semibold border border-[#D0E5E1]">
+              REG: {user.registrationNumber}
+            </span>
           )}
-        </CardContent>
-      </Card>
+          <span className="px-2 py-0.5 rounded-none bg-emerald-50 text-emerald-800 font-mono text-[10px] font-semibold border border-emerald-300">
+            HPR Certified
+          </span>
+        </div>
+      </div>
 
-      {/* 4. Section: Patients Given Treatment & Suggestions */}
+      {/* 3. Practice Metric Cards (Matching DashboardView Quick Metrics Strip) */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+        {/* Metric 1 */}
+        <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none shadow-[0_4px_20px_rgba(26,25,24,0.03)] flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider text-[#6E685F] uppercase font-bold">
+              Patients Consulted
+            </span>
+            <div className="w-6 h-6 bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center rounded-none">
+              <UserCheck className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="my-2">
+            <span className="text-2xl sm:text-3xl font-editorial-serif font-bold text-[#191817] block">
+              {treatedPatients.length}
+            </span>
+          </div>
+          <div className="text-[10px] text-[#7A746B] border-t border-[#D0E5E1]/60 pt-1.5">
+            Under your direct care
+          </div>
+        </div>
+
+        {/* Metric 2 */}
+        <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none shadow-[0_4px_20px_rgba(26,25,24,0.03)] flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider text-[#6E685F] uppercase font-bold">
+              Clinical Plans
+            </span>
+            <div className="w-6 h-6 bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center rounded-none">
+              <CheckCircle2 className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="my-2">
+            <span className="text-2xl sm:text-3xl font-editorial-serif font-bold text-[#191817] block">
+              {treatedPatients.reduce((acc, p) => acc + p.totalConsultations, 0)}
+            </span>
+          </div>
+          <div className="text-[10px] text-[#7A746B] border-t border-[#D0E5E1]/60 pt-1.5">
+            Diagnoses & suggestions given
+          </div>
+        </div>
+
+        {/* Metric 3 */}
+        <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none shadow-[0_4px_20px_rgba(26,25,24,0.03)] flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider text-[#6E685F] uppercase font-bold">
+              Prescriptions
+            </span>
+            <div className="w-6 h-6 bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center rounded-none">
+              <Pill className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="my-2">
+            <span className="text-2xl sm:text-3xl font-editorial-serif font-bold text-[#191817] block">
+              {treatedPatients.reduce((acc, p) => acc + p.totalPrescriptions, 0)}
+            </span>
+          </div>
+          <div className="text-[10px] text-[#7A746B] border-t border-[#D0E5E1]/60 pt-1.5">
+            Medication orders issued
+          </div>
+        </div>
+
+        {/* Metric 4 */}
+        <div className="p-3.5 bg-white border border-[#D0E5E1] rounded-none shadow-[0_4px_20px_rgba(26,25,24,0.03)] flex flex-col justify-between">
+          <div className="flex items-center justify-between">
+            <span className="text-[10px] font-mono tracking-wider text-[#6E685F] uppercase font-bold">
+              Lab Referrals
+            </span>
+            <div className="w-6 h-6 bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center rounded-none">
+              <FlaskConical className="w-3.5 h-3.5" />
+            </div>
+          </div>
+          <div className="my-2">
+            <span className="text-2xl sm:text-3xl font-editorial-serif font-bold text-[#191817] block">
+              {treatedPatients.reduce((acc, p) => acc + p.totalLabOrders, 0)}
+            </span>
+          </div>
+          <div className="text-[10px] text-[#7A746B] border-t border-[#D0E5E1]/60 pt-1.5">
+            Diagnostic tests directed
+          </div>
+        </div>
+      </div>
+
+      {/* 4. Patient ID & ABHA Instant Access Bar (Matching theme: rounded-none, border-[#D0E5E1], font-editorial-serif) */}
+      <div className="p-5 bg-white border border-[#D0E5E1] rounded-none shadow-[0_4px_20px_rgba(26,25,24,0.03)] space-y-3">
+        <div>
+          <div className="flex items-center gap-2">
+            <Search className="w-4 h-4 text-[#0F766E]" />
+            <h3 className="text-sm md:text-base font-editorial-serif font-bold text-[#191817] tracking-tight">
+              Access Patient Records by Patient ID / ABHA Address
+            </h3>
+          </div>
+          <p className="text-xs text-[#5C574F] mt-1 leading-relaxed">
+            Enter any unique Patient ID (e.g. <span className="font-mono text-[#0F766E] font-bold">SS-PAT-000063</span>) or ABHA Address to access their longitudinal history, all diagnostic reports, and previous doctor treatments.
+          </p>
+        </div>
+
+        <form
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleLookupPatient();
+          }}
+          className="flex flex-col sm:flex-row items-stretch sm:items-center gap-2 pt-1"
+        >
+          <div className="relative flex-1">
+            <Search className="w-4 h-4 absolute left-3 top-1/2 -translate-y-1/2 text-[#7A746B]" />
+            <input
+              type="text"
+              value={patientLookupId}
+              onChange={(e) => setPatientLookupId(e.target.value)}
+              placeholder="Enter Patient ID (e.g. SS-PAT-000063) or ABHA Address..."
+              className="w-full pl-9 pr-3 py-2 text-xs font-mono rounded-none border border-[#B6D6D0] bg-[#F0F7F6]/60 focus:bg-white focus:outline-none focus:border-[#1A1918] transition-all"
+            />
+          </div>
+          <Button
+            type="submit"
+            variant="primary"
+            size="sm"
+            disabled={lookupLoading || !patientLookupId.trim()}
+            leftIcon={lookupLoading ? <RefreshCw className="w-3.5 h-3.5 animate-spin" /> : <Search className="w-3.5 h-3.5" />}
+          >
+            {lookupLoading ? "Looking up..." : "Access Records"}
+          </Button>
+        </form>
+
+        {lookupError && (
+          <div className="p-3 rounded-none bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 font-mono">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
+            <span>{lookupError}</span>
+          </div>
+        )}
+      </div>
+
+      {/* 5. Section: Patients Given Treatment & Suggestions */}
       <div className="space-y-3">
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between border-b border-[#D0E5E1] pb-2.5">
           <div>
-            <h2 className="text-lg font-bold font-editorial-serif text-[#191817] flex items-center gap-2">
+            <h2 className="text-base md:text-lg font-editorial-serif font-bold text-[#191817] flex items-center gap-2 tracking-tight">
               <Stethoscope className="w-4 h-4 text-[#0F766E]" />
               Patients Given Treatment & Suggestions
             </h2>
-            <p className="text-xs text-stone-500">
+            <p className="text-xs text-[#5C574F] mt-0.5">
               Patients you have consulted, evaluated, or provided clinical treatment plans for.
             </p>
           </div>
-          <span className="text-xs text-stone-500 bg-stone-100 px-2.5 py-1 rounded-full border border-stone-200">
+          <span className="text-[11px] font-mono text-[#5C574F] bg-[#F0F7F6] px-2.5 py-1 rounded-none border border-[#D0E5E1]">
             Total: <strong className="text-[#0F766E]">{treatedPatients.length}</strong>
           </span>
         </div>
 
         {treatedLoading ? (
-          <div className="p-8 text-center bg-white rounded-xl border border-stone-200">
+          <div className="p-8 text-center bg-white rounded-none border border-[#D0E5E1]">
             <RefreshCw className="w-5 h-5 animate-spin text-[#0F766E] mx-auto mb-2" />
-            <p className="text-xs text-stone-500">Loading your treated patient records...</p>
+            <p className="text-xs text-[#5C574F]">Loading your treated patient records...</p>
           </div>
         ) : treatedError ? (
-          <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-sm flex items-center gap-2">
-            <AlertCircle className="w-5 h-5 shrink-0" />
+          <div className="p-4 rounded-none bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 font-mono">
+            <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
             <span>{treatedError}</span>
           </div>
         ) : treatedPatients.length === 0 ? (
-          <div className="p-10 text-center bg-white rounded-xl border border-stone-200 shadow-2xs space-y-3">
-            <div className="w-12 h-12 rounded-full bg-[#0F766E]/10 text-[#0F766E] flex items-center justify-center mx-auto">
-              <Stethoscope className="w-6 h-6" />
-            </div>
-            <div className="space-y-1">
-              <h3 className="text-base font-bold font-editorial-serif text-[#191817]">
-                No Patient Consultations Recorded Yet
-              </h3>
-              <p className="text-xs text-stone-500 max-w-md mx-auto leading-relaxed">
-                You have not recorded any patient treatments yet. Look up a patient by Patient ID above to view their longitudinal records, or click below to record a new consultation.
-              </p>
-            </div>
-            <Button
-              onClick={() => handleOpenConsultation("")}
-              className="bg-[#0F766E] hover:bg-[#0D655E] text-white text-xs px-4 py-2 rounded-xl"
-            >
-              + Record Consultation
-            </Button>
-          </div>
+          <EmptyState
+            title="No Patient Consultations Recorded Yet"
+            description="You have not recorded any patient treatments yet. Look up a patient by Patient ID above to view their longitudinal records, or click below to record a new consultation."
+            icon={<Stethoscope className="w-5 h-5 text-[#0F766E]" />}
+            action={
+              <Button
+                variant="primary"
+                size="sm"
+                leftIcon={<Plus className="w-3.5 h-3.5" />}
+                onClick={() => handleOpenConsultation("")}
+              >
+                Record Consultation
+              </Button>
+            }
+          />
         ) : (
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
             {treatedPatients.map((item) => {
               const isSelected =
                 activePatient?.id === item.patient.id ||
@@ -440,43 +485,43 @@ export const DoctorDashboardView: React.FC = () => {
               return (
                 <div
                   key={item.patient.id}
-                  className={`rounded-xl border transition-all p-5 flex flex-col justify-between space-y-3.5 ${
+                  className={`rounded-none border transition-all p-4 flex flex-col justify-between space-y-3 ${
                     isSelected
-                      ? "bg-white border-[#0F766E] ring-2 ring-[#0F766E]/20 shadow-sm"
-                      : "bg-white hover:bg-stone-50/50 border-stone-200 shadow-2xs"
+                      ? "bg-white border-[#0F766E] shadow-[0_4px_16px_rgba(15,118,110,0.08)]"
+                      : "bg-white hover:border-[#1A1918] border-[#D0E5E1] shadow-2xs"
                   }`}
                 >
-                  <div className="space-y-3">
+                  <div className="space-y-2.5">
                     {/* Patient Header */}
                     <div className="flex items-start justify-between gap-3">
                       <div>
-                        <h3 className="text-base font-bold text-[#191817] flex items-center gap-2">
+                        <h3 className="text-sm font-editorial-serif font-bold text-[#191817] flex items-center gap-2">
                           {item.patient.name}
                           {isSelected && (
-                            <span className="px-1.5 py-0.5 rounded text-3xs font-bold uppercase bg-[#0F766E] text-white">
+                            <span className="px-1.5 py-0.2 rounded-none text-[9px] font-mono font-bold uppercase bg-[#0F766E] text-white">
                               Active
                             </span>
                           )}
                         </h3>
                         <div className="flex items-center gap-2 mt-0.5">
-                          <span className="font-mono text-xs text-[#0F766E] font-medium bg-[#0F766E]/10 px-1.5 py-0.5 rounded">
+                          <span className="font-mono text-xs text-[#0F766E] font-bold">
                             {item.patient.patientId}
                           </span>
                           {item.patient.gender && (
-                            <span className="text-xs text-stone-500">
-                              {item.patient.gender}
+                            <span className="text-xs text-[#5C574F]">
+                              • {item.patient.gender}
                             </span>
                           )}
                         </div>
                       </div>
-                      <Badge variant="teal" className="text-2xs bg-stone-100 border-stone-200 text-stone-700">
+                      <span className="text-[10px] font-mono text-[#5C574F] bg-[#F0F7F6] px-2 py-0.5 rounded-none border border-[#D0E5E1]">
                         {item.lastConsultationDate}
-                      </Badge>
+                      </span>
                     </div>
 
                     {/* Latest Diagnosis */}
-                    <div className="bg-stone-50 rounded-lg p-2.5 border border-stone-200 space-y-0.5">
-                      <p className="text-3xs font-semibold uppercase text-stone-500 tracking-wider">
+                    <div className="bg-[#F0F7F6] rounded-none p-2.5 border border-[#D0E5E1] space-y-0.5">
+                      <p className="text-[9px] font-mono font-bold uppercase text-[#6E685F] tracking-wider">
                         Diagnosis
                       </p>
                       <p className="text-xs font-bold text-[#191817]">
@@ -486,11 +531,11 @@ export const DoctorDashboardView: React.FC = () => {
 
                     {/* Treatment & Suggestion Given */}
                     <div className="space-y-1">
-                      <p className="text-2xs font-semibold uppercase text-[#0F766E] tracking-wider flex items-center gap-1">
+                      <p className="text-[10px] font-mono font-bold uppercase text-[#0F766E] tracking-wider flex items-center gap-1">
                         <CheckCircle2 className="w-3 h-3 text-[#0F766E]" />
                         Treatment & Suggestions:
                       </p>
-                      <p className="text-xs text-stone-700 line-clamp-3 leading-relaxed bg-white p-2.5 rounded-lg border border-stone-200">
+                      <p className="text-xs text-[#5C574F] line-clamp-3 leading-relaxed bg-white p-2.5 rounded-none border border-[#D0E5E1]">
                         {cleanDisplay(item.latestTreatmentPlan)}
                       </p>
                     </div>
@@ -498,14 +543,14 @@ export const DoctorDashboardView: React.FC = () => {
                     {/* Prescribed Medicines (if any) */}
                     {item.prescribedMedicines && item.prescribedMedicines.length > 0 && (
                       <div className="pt-0.5">
-                        <p className="text-3xs uppercase font-medium text-stone-500 mb-1">
+                        <p className="text-[9px] font-mono uppercase font-bold text-[#6E685F] mb-1">
                           Prescribed:
                         </p>
                         <div className="flex flex-wrap gap-1">
                           {item.prescribedMedicines.map((m, idx) => (
                             <span
                               key={idx}
-                              className="text-2xs bg-[#0F766E]/10 text-[#0F766E] px-2 py-0.5 rounded font-medium flex items-center gap-1"
+                              className="text-[10px] font-mono bg-[#E4F1EE] text-[#0F766E] px-2 py-0.5 rounded-none font-semibold border border-[#D0E5E1] flex items-center gap-1"
                             >
                               <Pill className="w-2.5 h-2.5" />
                               {m.name} ({m.dosage})
@@ -517,28 +562,24 @@ export const DoctorDashboardView: React.FC = () => {
                   </div>
 
                   {/* Actions */}
-                  <div className="pt-2 border-t border-stone-100 flex items-center gap-2">
+                  <div className="pt-2 border-t border-[#D0E5E1] flex items-center gap-2">
                     <Button
                       size="sm"
+                      variant={isSelected ? "primary" : "secondary"}
                       onClick={() => setActivePatient(item.patient)}
-                      className={`flex-1 text-xs rounded-lg flex items-center justify-center gap-1.5 ${
-                        isSelected
-                          ? "bg-[#0F766E] text-white hover:bg-[#0D655E]"
-                          : "bg-white border border-stone-300 text-stone-700 hover:bg-stone-50"
-                      }`}
+                      className="flex-1"
+                      leftIcon={<Eye className="w-3.5 h-3.5" />}
                     >
-                      <Eye className="w-3.5 h-3.5" />
-                      <span>{isSelected ? "Viewing File" : "Access Records"}</span>
+                      {isSelected ? "Viewing File" : "Access Records"}
                     </Button>
                     <Button
                       size="sm"
                       variant="outline"
                       onClick={() => handleOpenConsultation(item.patient.patientId)}
-                      className="text-xs rounded-lg border-stone-300 text-[#0F766E] hover:bg-[#0F766E]/10 px-2.5"
                       title="Add follow-up treatment"
+                      leftIcon={<Plus className="w-3.5 h-3.5" />}
                     >
-                      <Plus className="w-3.5 h-3.5" />
-                      <span>Follow-up</span>
+                      Follow-up
                     </Button>
                   </div>
                 </div>
@@ -548,35 +589,34 @@ export const DoctorDashboardView: React.FC = () => {
         )}
       </div>
 
-      {/* 5. Section: Comprehensive Patient Medical Dossier & Multi-Doctor History */}
+      {/* 6. Section: Comprehensive Patient Medical Dossier & Multi-Doctor History */}
       {/* Shown ONLY when a patient is actively looked up or selected */}
       {activePatient && (
-        <div className="space-y-4 pt-2 border-t border-stone-200">
+        <div className="space-y-4 pt-4 border-t border-[#D0E5E1]">
           {/* Active Patient Dossier Banner */}
-          <div className="bg-white rounded-xl border border-stone-200 p-5 shadow-2xs space-y-4">
+          <div className="bg-white rounded-none border border-[#D0E5E1] p-4 sm:p-5 shadow-[0_4px_20px_rgba(26,25,24,0.03)] space-y-3.5">
             <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-              <div className="flex items-center gap-3.5">
-                <div className="w-11 h-11 rounded-xl bg-[#0F766E]/10 text-[#0F766E] flex items-center justify-center font-bold text-base font-editorial-serif shrink-0 border border-[#0F766E]/20">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-none bg-[#F0F7F6] text-[#0F766E] flex items-center justify-center font-bold text-sm font-editorial-serif shrink-0 border border-[#D0E5E1]">
                   {activePatient.name[0]}
                 </div>
                 <div>
                   <div className="flex flex-wrap items-center gap-2">
-                    <h3 className="text-lg sm:text-xl font-bold font-editorial-serif text-[#191817]">
+                    <h3 className="text-base sm:text-lg font-editorial-serif font-bold text-[#191817]">
                       {activePatient.name}
                     </h3>
-                    <span className="font-mono text-xs font-bold text-[#0F766E] bg-[#0F766E]/10 px-2 py-0.5 rounded border border-[#0F766E]/20">
+                    <span className="font-mono text-xs font-bold text-[#0F766E] bg-[#E4F1EE] px-2 py-0.5 rounded-none border border-[#D0E5E1]">
                       {activePatient.patientId}
                     </span>
-                    <span className="inline-flex items-center gap-1 text-2xs px-2 py-0.5 rounded bg-emerald-50 text-emerald-700 font-medium border border-emerald-200">
-                      <ShieldCheck className="w-3 h-3" />
-                      ABDM Verified
-                    </span>
+                    <Badge variant="success" size="sm">
+                      ABDM Linked
+                    </Badge>
                   </div>
-                  <div className="flex flex-wrap items-center gap-2 text-xs text-stone-500 mt-0.5">
+                  <div className="flex flex-wrap items-center gap-2 text-xs text-[#5C574F] mt-0.5">
                     {activePatient.abhaAddress && <span className="font-mono">ABHA: {activePatient.abhaAddress}</span>}
-                    {activePatient.gender && <span>· Gender: {activePatient.gender}</span>}
-                    {activePatient.dateOfBirth && <span>· DOB: {activePatient.dateOfBirth}</span>}
-                    {activePatient.phone && <span>· Ph: {activePatient.phone}</span>}
+                    {activePatient.gender && <span>• Gender: {activePatient.gender}</span>}
+                    {activePatient.dateOfBirth && <span>• DOB: {activePatient.dateOfBirth}</span>}
+                    {activePatient.phone && <span>• Ph: {activePatient.phone}</span>}
                   </div>
                 </div>
               </div>
@@ -584,99 +624,92 @@ export const DoctorDashboardView: React.FC = () => {
               {/* Dossier Quick Buttons */}
               <div className="flex items-center gap-2 shrink-0">
                 <Button
+                  variant="primary"
+                  size="sm"
+                  leftIcon={<Plus className="w-3.5 h-3.5" />}
                   onClick={() => handleOpenConsultation(activePatient.patientId)}
-                  className="bg-[#0F766E] hover:bg-[#0D655E] text-white text-xs px-3.5 py-2 rounded-xl flex items-center gap-1.5 font-medium"
                 >
-                  <Plus className="w-3.5 h-3.5" />
-                  <span>Add Treatment / Suggestion</span>
+                  Add Treatment / Suggestion
                 </Button>
                 <Button
-                  variant="outline"
+                  variant="secondary"
+                  size="sm"
                   onClick={() => loadActivePatientRecords(activePatient.patientId || activePatient.id)}
                   disabled={recordsLoading}
-                  className="border-stone-300 text-stone-600 hover:bg-stone-100 text-xs px-3 py-2 rounded-xl"
                   title="Refresh records"
                 >
                   <RefreshCw className={`w-3.5 h-3.5 ${recordsLoading ? "animate-spin" : ""}`} />
                 </Button>
                 <Button
                   variant="outline"
+                  size="sm"
                   onClick={() => setActivePatient(null)}
-                  className="border-stone-300 text-stone-500 hover:bg-stone-100 text-xs px-3 py-2 rounded-xl flex items-center gap-1"
                   title="Close dossier"
+                  leftIcon={<X className="w-3.5 h-3.5" />}
                 >
-                  <X className="w-3.5 h-3.5" />
-                  <span>Close</span>
+                  Close
                 </Button>
               </div>
             </div>
 
-            {/* Dossier Tabs */}
-            <div className="flex flex-wrap items-center gap-2 pt-3 border-t border-stone-100">
+            {/* Dossier Tabs (Matching LaboratoryDashboardView Tab Styling) */}
+            <div className="flex items-center gap-1 border-b border-[#D0E5E1] overflow-x-auto pt-1">
               <button
                 onClick={() => setActiveDossierTab("other_doctors")}
-                className={`text-xs px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                className={`pb-2.5 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors rounded-none ${
                   activeDossierTab === "other_doctors"
-                    ? "bg-[#0F766E] text-white shadow-2xs"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    ? "border-[#1A1918] text-[#1A1918] font-bold"
+                    : "border-transparent text-[#69655E] hover:text-[#1A1918]"
                 }`}
               >
-                <Stethoscope className="w-3.5 h-3.5" />
-                <span>Previous Treatments by Other Doctors</span>
-                <span className={`text-2xs px-1.5 py-0.2 rounded-full ${
-                  activeDossierTab === "other_doctors" ? "bg-white/20 text-white" : "bg-[#0F766E]/10 text-[#0F766E]"
-                }`}>
+                <Stethoscope className="w-3.5 h-3.5 text-[#0F766E]" />
+                Previous Treatments by Other Doctors
+                <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
                   {otherDoctorsTreatments.length}
                 </span>
               </button>
 
               <button
                 onClick={() => setActiveDossierTab("reports")}
-                className={`text-xs px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                className={`pb-2.5 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors rounded-none ${
                   activeDossierTab === "reports"
-                    ? "bg-[#0F766E] text-white shadow-2xs"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    ? "border-[#1A1918] text-[#1A1918] font-bold"
+                    : "border-transparent text-[#69655E] hover:text-[#1A1918]"
                 }`}
               >
-                <FlaskConical className="w-3.5 h-3.5" />
-                <span>All Diagnostic Reports & Lab Tests</span>
-                <span className={`text-2xs px-1.5 py-0.2 rounded-full ${
-                  activeDossierTab === "reports" ? "bg-white/20 text-white" : "bg-[#0F766E]/10 text-[#0F766E]"
-                }`}>
+                <FlaskConical className="w-3.5 h-3.5 text-[#0F766E]" />
+                Diagnostic Reports & Lab Tests
+                <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
                   {diagnosticReports.length}
                 </span>
               </button>
 
               <button
                 onClick={() => setActiveDossierTab("prescriptions")}
-                className={`text-xs px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                className={`pb-2.5 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors rounded-none ${
                   activeDossierTab === "prescriptions"
-                    ? "bg-[#0F766E] text-white shadow-2xs"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    ? "border-[#1A1918] text-[#1A1918] font-bold"
+                    : "border-transparent text-[#69655E] hover:text-[#1A1918]"
                 }`}
               >
-                <Pill className="w-3.5 h-3.5" />
-                <span>Prescriptions & Medications</span>
-                <span className={`text-2xs px-1.5 py-0.2 rounded-full ${
-                  activeDossierTab === "prescriptions" ? "bg-white/20 text-white" : "bg-[#0F766E]/10 text-[#0F766E]"
-                }`}>
+                <Pill className="w-3.5 h-3.5 text-[#0F766E]" />
+                Prescriptions & Medications
+                <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
                   {medicationRecords.length}
                 </span>
               </button>
 
               <button
                 onClick={() => setActiveDossierTab("all_records")}
-                className={`text-xs px-3.5 py-1.5 rounded-lg font-medium transition-all flex items-center gap-2 ${
+                className={`pb-2.5 px-3 text-xs font-semibold flex items-center gap-2 border-b-2 cursor-pointer transition-colors rounded-none ${
                   activeDossierTab === "all_records"
-                    ? "bg-[#0F766E] text-white shadow-2xs"
-                    : "bg-stone-100 text-stone-600 hover:bg-stone-200"
+                    ? "border-[#1A1918] text-[#1A1918] font-bold"
+                    : "border-transparent text-[#69655E] hover:text-[#1A1918]"
                 }`}
               >
-                <FileText className="w-3.5 h-3.5" />
-                <span>Full Timeline</span>
-                <span className={`text-2xs px-1.5 py-0.2 rounded-full ${
-                  activeDossierTab === "all_records" ? "bg-white/20 text-white" : "bg-[#0F766E]/10 text-[#0F766E]"
-                }`}>
+                <FileText className="w-3.5 h-3.5 text-[#0F766E]" />
+                Full Timeline
+                <span className="ml-1 px-1.5 py-0.2 rounded-none bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1] text-[10px] font-mono">
                   {patientRecords.length}
                 </span>
               </button>
@@ -685,14 +718,14 @@ export const DoctorDashboardView: React.FC = () => {
 
           {/* Dossier Tab Content */}
           {recordsLoading ? (
-            <div className="p-10 text-center bg-white rounded-xl border border-stone-200">
+            <div className="p-10 text-center bg-white rounded-none border border-[#D0E5E1]">
               <RefreshCw className="w-6 h-6 animate-spin text-[#0F766E] mx-auto mb-2" />
-              <p className="text-sm font-medium text-[#191817]">Retrieving Patient Records...</p>
-              <p className="text-xs text-stone-500 mt-0.5">Fetching cross-hospital clinical records via ABDM network.</p>
+              <p className="text-sm font-editorial-serif font-bold text-[#191817]">Retrieving Patient Records...</p>
+              <p className="text-xs text-[#5C574F] mt-0.5">Fetching cross-hospital clinical records via ABDM network.</p>
             </div>
           ) : recordsError ? (
-            <div className="p-4 rounded-xl bg-red-50 border border-red-200 text-red-700 text-xs flex items-center gap-2">
-              <AlertCircle className="w-4 h-4 shrink-0" />
+            <div className="p-4 rounded-none bg-rose-50 border border-rose-200 text-rose-800 text-xs flex items-center gap-2 font-mono">
+              <AlertCircle className="w-4 h-4 shrink-0 text-rose-600" />
               <span>{recordsError}</span>
             </div>
           ) : (
@@ -701,32 +734,32 @@ export const DoctorDashboardView: React.FC = () => {
               {activeDossierTab === "other_doctors" && (
                 <div className="space-y-3">
                   {otherDoctorsTreatments.length === 0 ? (
-                    <div className="p-8 text-center bg-white rounded-xl border border-stone-200">
-                      <Stethoscope className="w-6 h-6 text-stone-400 mx-auto mb-1.5" />
-                      <p className="text-sm font-medium text-[#191817]">No Previous Treatments by Other Doctors</p>
-                      <p className="text-xs text-stone-500 mt-0.5">No cross-network doctor encounters found for this patient.</p>
-                    </div>
+                    <EmptyState
+                      title="No Previous Treatments by Other Doctors"
+                      description="No cross-network doctor encounters found for this patient."
+                      icon={<Stethoscope className="w-5 h-5 text-[#0F766E]" />}
+                    />
                   ) : (
                     otherDoctorsTreatments.map((item) => (
                       <div
                         key={item.id}
-                        className="bg-white rounded-xl border border-stone-200 p-4 sm:p-5 hover:border-stone-300 shadow-2xs space-y-2.5"
+                        className="bg-white rounded-none border border-[#D0E5E1] p-4 hover:border-[#0F766E] shadow-2xs space-y-2.5 transition-all"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="flex items-start sm:items-center gap-3">
-                            <div className="w-8 h-8 rounded-lg bg-[#0F766E]/10 text-[#0F766E] flex items-center justify-center shrink-0">
+                            <div className="w-8 h-8 rounded-none bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center shrink-0 border border-[#D0E5E1]">
                               <Stethoscope className="w-4 h-4" />
                             </div>
                             <div>
-                              <h5 className="text-sm sm:text-base font-bold text-[#191817]">
+                              <h5 className="text-sm font-editorial-serif font-bold text-[#191817]">
                                 {cleanDisplay(item.title)}
                               </h5>
                               <p className="text-xs text-[#0F766E] font-medium flex items-center gap-1.5">
                                 <span>{cleanDisplay(item.doctorName)}</span>
                                 {item.providerFacility && (
                                   <>
-                                    <span>·</span>
-                                    <span className="text-stone-500 flex items-center gap-1">
+                                    <span>•</span>
+                                    <span className="text-[#5C574F] flex items-center gap-1">
                                       <Building2 className="w-3 h-3 text-[#0F766E]" />
                                       {cleanDisplay(item.providerFacility)}
                                     </span>
@@ -737,15 +770,14 @@ export const DoctorDashboardView: React.FC = () => {
                           </div>
 
                           <div className="flex items-center gap-2 self-start sm:self-auto">
-                            <span className="text-xs text-stone-500 font-mono bg-stone-100 px-2.5 py-1 rounded-md border border-stone-200 flex items-center gap-1">
+                            <span className="text-[11px] font-mono text-[#5C574F] bg-[#F0F7F6] px-2 py-0.5 rounded-none border border-[#D0E5E1] flex items-center gap-1">
                               <Calendar className="w-3 h-3 text-[#0F766E]" />
                               {item.date}
                             </span>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => setSelectedRecordForDetail(item)}
-                              className="text-xs rounded-lg border-stone-300 text-[#0F766E] hover:bg-stone-50"
                             >
                               View
                             </Button>
@@ -753,12 +785,12 @@ export const DoctorDashboardView: React.FC = () => {
                         </div>
 
                         {/* Summary & Suggestions Given by This Other Doctor */}
-                        <div className="bg-stone-50 rounded-lg p-3 border border-stone-200 space-y-1">
-                          <p className="text-3xs font-semibold uppercase text-stone-500 tracking-wider flex items-center gap-1">
+                        <div className="bg-[#F0F7F6] rounded-none p-3 border border-[#D0E5E1] space-y-1">
+                          <p className="text-[9px] font-mono font-bold uppercase text-[#6E685F] tracking-wider flex items-center gap-1">
                             <CheckCircle2 className="w-3 h-3 text-[#0F766E]" />
                             Treatment & Suggestions Given:
                           </p>
-                          <p className="text-xs text-stone-800 leading-relaxed">
+                          <p className="text-xs text-[#191817] leading-relaxed">
                             {cleanDisplay(item.summary)}
                           </p>
                         </div>
@@ -772,61 +804,60 @@ export const DoctorDashboardView: React.FC = () => {
               {activeDossierTab === "reports" && (
                 <div className="space-y-3">
                   {diagnosticReports.length === 0 ? (
-                    <div className="p-8 text-center bg-white rounded-xl border border-stone-200">
-                      <FlaskConical className="w-6 h-6 text-stone-400 mx-auto mb-1.5" />
-                      <p className="text-sm font-medium text-[#191817]">No Diagnostic Reports Found</p>
-                      <p className="text-xs text-stone-500 mt-0.5">No lab or pathology reports recorded for this patient.</p>
-                    </div>
+                    <EmptyState
+                      title="No Diagnostic Reports Found"
+                      description="No lab or pathology reports recorded for this patient."
+                      icon={<FlaskConical className="w-5 h-5 text-[#0F766E]" />}
+                    />
                   ) : (
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
                       {diagnosticReports.map((item) => (
                         <div
                           key={item.id}
-                          className="bg-white rounded-xl border border-stone-200 p-4 hover:border-stone-300 shadow-2xs space-y-2.5 flex flex-col justify-between"
+                          className="bg-white rounded-none border border-[#D0E5E1] p-4 hover:border-[#0F766E] shadow-2xs space-y-2.5 flex flex-col justify-between transition-all"
                         >
                           <div className="space-y-2">
                             <div className="flex items-start justify-between gap-2">
                               <div className="flex items-start gap-2">
-                                <div className="w-7 h-7 rounded-lg bg-[#0F766E]/10 text-[#0F766E] flex items-center justify-center shrink-0 mt-0.5">
+                                <div className="w-7 h-7 rounded-none bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center shrink-0 mt-0.5 border border-[#D0E5E1]">
                                   <FlaskConical className="w-3.5 h-3.5" />
                                 </div>
                                 <div>
-                                  <h5 className="text-xs sm:text-sm font-bold text-[#191817]">
+                                  <h5 className="text-xs sm:text-sm font-editorial-serif font-bold text-[#191817]">
                                     {cleanDisplay(item.title)}
                                   </h5>
-                                  <p className="text-2xs text-[#0F766E] font-medium">
+                                  <p className="text-[11px] text-[#0F766E] font-medium">
                                     {cleanDisplay(item.providerFacility || item.sourceInstitution || "Diagnostic Facility")}
                                   </p>
                                 </div>
                               </div>
-                              <span className="text-3xs uppercase px-1.5 py-0.5 rounded bg-emerald-50 text-emerald-700 font-semibold border border-emerald-200">
+                              <span className="text-[9px] font-mono uppercase px-1.5 py-0.5 rounded-none bg-emerald-50 text-emerald-800 font-semibold border border-emerald-300">
                                 {item.status || "final"}
                               </span>
                             </div>
 
-                            <div className="bg-stone-50 rounded-lg p-2.5 border border-stone-200 space-y-0.5">
-                              <p className="text-3xs font-semibold uppercase text-stone-500">
+                            <div className="bg-[#F0F7F6] rounded-none p-2.5 border border-[#D0E5E1] space-y-0.5">
+                              <p className="text-[9px] font-mono font-bold uppercase text-[#6E685F]">
                                 Findings / Conclusion
                               </p>
-                              <p className="text-xs text-stone-800 leading-relaxed">
+                              <p className="text-xs text-[#191817] leading-relaxed">
                                 {cleanDisplay(item.summary)}
                               </p>
                             </div>
                           </div>
 
-                          <div className="pt-2 border-t border-stone-100 flex items-center justify-between text-xs">
-                            <span className="text-stone-500 font-mono text-2xs flex items-center gap-1">
+                          <div className="pt-2 border-t border-[#D0E5E1] flex items-center justify-between text-xs">
+                            <span className="text-[#5C574F] font-mono text-[11px] flex items-center gap-1">
                               <Calendar className="w-3 h-3 text-[#0F766E]" />
                               {item.date}
                             </span>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => setSelectedRecordForDetail(item)}
-                              className="text-2xs rounded-lg border-stone-300 text-[#0F766E] hover:bg-stone-50 flex items-center gap-1 py-1 px-2"
+                              rightIcon={<ChevronRight className="w-3 h-3" />}
                             >
-                              <span>View Specimen</span>
-                              <ChevronRight className="w-3 h-3" />
+                              View Specimen
                             </Button>
                           </div>
                         </div>
@@ -840,48 +871,47 @@ export const DoctorDashboardView: React.FC = () => {
               {activeDossierTab === "prescriptions" && (
                 <div className="space-y-3">
                   {medicationRecords.length === 0 ? (
-                    <div className="p-8 text-center bg-white rounded-xl border border-stone-200">
-                      <Pill className="w-6 h-6 text-stone-400 mx-auto mb-1.5" />
-                      <p className="text-sm font-medium text-[#191817]">No Prescriptions on Record</p>
-                      <p className="text-xs text-stone-500 mt-0.5">No medication orders or dispenses recorded for this patient.</p>
-                    </div>
+                    <EmptyState
+                      title="No Prescriptions on Record"
+                      description="No medication orders or dispenses recorded for this patient."
+                      icon={<Pill className="w-5 h-5 text-[#0F766E]" />}
+                    />
                   ) : (
                     medicationRecords.map((item) => (
                       <div
                         key={item.id}
-                        className="bg-white rounded-xl border border-stone-200 p-4 hover:border-stone-300 shadow-2xs space-y-2"
+                        className="bg-white rounded-none border border-[#D0E5E1] p-4 hover:border-[#0F766E] shadow-2xs space-y-2 transition-all"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="flex items-start sm:items-center gap-2.5">
-                            <div className="w-7 h-7 rounded-lg bg-teal-50 text-teal-700 flex items-center justify-center shrink-0">
+                            <div className="w-7 h-7 rounded-none bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center shrink-0 border border-[#D0E5E1]">
                               <Pill className="w-3.5 h-3.5" />
                             </div>
                             <div>
-                              <h5 className="text-xs sm:text-sm font-bold text-[#191817]">
+                              <h5 className="text-xs sm:text-sm font-editorial-serif font-bold text-[#191817]">
                                 {cleanDisplay(item.title)}
                               </h5>
-                              <p className="text-2xs text-stone-500">
-                                {cleanDisplay(item.doctorName || "Prescribing Clinician")} · {cleanDisplay(item.providerFacility || "Facility")}
+                              <p className="text-[11px] text-[#5C574F]">
+                                {cleanDisplay(item.doctorName || "Prescribing Clinician")} • {cleanDisplay(item.providerFacility || "Facility")}
                               </p>
                             </div>
                           </div>
                           <div className="flex items-center gap-2">
-                            <span className="text-2xs text-stone-500 font-mono bg-stone-100 px-2 py-0.5 rounded border border-stone-200">
+                            <span className="text-[10px] text-[#5C574F] font-mono bg-[#F0F7F6] px-2 py-0.5 rounded-none border border-[#D0E5E1]">
                               {item.date}
                             </span>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => setSelectedRecordForDetail(item)}
-                              className="text-2xs rounded-lg border-stone-300 text-[#0F766E] hover:bg-stone-50 py-1 px-2"
                             >
                               View
                             </Button>
                           </div>
                         </div>
 
-                        <div className="bg-stone-50 rounded-lg p-2.5 border border-stone-200">
-                          <p className="text-xs text-stone-800 leading-relaxed">
+                        <div className="bg-[#F0F7F6] rounded-none p-2.5 border border-[#D0E5E1]">
+                          <p className="text-xs text-[#191817] leading-relaxed">
                             {cleanDisplay(item.summary)}
                           </p>
                         </div>
@@ -895,26 +925,28 @@ export const DoctorDashboardView: React.FC = () => {
               {activeDossierTab === "all_records" && (
                 <div className="space-y-2.5">
                   {patientRecords.length === 0 ? (
-                    <div className="p-8 text-center bg-white rounded-xl border border-stone-200">
-                      <FileText className="w-6 h-6 text-stone-400 mx-auto mb-1.5" />
-                      <p className="text-sm font-medium text-[#191817]">No Timeline Records Found</p>
-                      <p className="text-xs text-stone-500 mt-0.5">No records in this patient's vault.</p>
-                    </div>
+                    <EmptyState
+                      title="No Timeline Records Found"
+                      description="No records in this patient's vault."
+                      icon={<FileText className="w-5 h-5 text-[#0F766E]" />}
+                    />
                   ) : (
                     patientRecords.map((item) => (
                       <div
                         key={item.id}
-                        className="bg-white rounded-xl border border-stone-200 p-3.5 hover:border-stone-300 shadow-2xs space-y-2"
+                        className="bg-white rounded-none border border-[#D0E5E1] p-3.5 hover:border-[#0F766E] shadow-2xs space-y-2 transition-all"
                       >
                         <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
                           <div className="flex items-start sm:items-center gap-2.5">
-                            <span className="w-7 h-7 rounded-lg bg-[#0F766E]/10 text-[#0F766E] flex items-center justify-center shrink-0">
+                            <span className="w-7 h-7 rounded-none bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center shrink-0 border border-[#D0E5E1]">
                               {item.resourceType === "DiagnosticReport" ? (
                                 <FlaskConical className="w-3.5 h-3.5" />
                               ) : item.resourceType === "Encounter" ? (
                                 <Stethoscope className="w-3.5 h-3.5" />
                               ) : item.resourceType === "MedicationRequest" ? (
                                 <Pill className="w-3.5 h-3.5" />
+                              ) : item.resourceType === "MedicationDispense" ? (
+                                <PackageCheck className="w-3.5 h-3.5" />
                               ) : item.resourceType === "Immunization" ? (
                                 <Syringe className="w-3.5 h-3.5" />
                               ) : (
@@ -922,34 +954,33 @@ export const DoctorDashboardView: React.FC = () => {
                               )}
                             </span>
                             <div>
-                              <h5 className="text-xs sm:text-sm font-bold text-[#191817]">
+                              <h5 className="text-xs sm:text-sm font-editorial-serif font-bold text-[#191817]">
                                 {cleanDisplay(item.title)}
                               </h5>
-                              <p className="text-2xs text-[#0F766E]">
-                                {cleanDisplay(item.doctorName)} · {cleanDisplay(item.providerFacility || item.sourceInstitution)}
+                              <p className="text-[11px] text-[#0F766E]">
+                                {cleanDisplay(item.doctorName)} • {cleanDisplay(item.providerFacility || item.sourceInstitution)}
                               </p>
                             </div>
                           </div>
 
                           <div className="flex items-center gap-2 self-start sm:self-auto">
-                            <span className="text-3xs uppercase font-semibold px-1.5 py-0.5 rounded bg-stone-100 text-stone-700 border border-stone-200">
+                            <span className="text-[9px] font-mono uppercase font-semibold px-1.5 py-0.5 rounded-none bg-[#F0F7F6] text-[#5C574F] border border-[#D0E5E1]">
                               {item.resourceType}
                             </span>
-                            <span className="text-2xs font-mono text-stone-500">
+                            <span className="text-[11px] font-mono text-[#5C574F]">
                               {item.date}
                             </span>
                             <Button
                               size="sm"
-                              variant="outline"
+                              variant="secondary"
                               onClick={() => setSelectedRecordForDetail(item)}
-                              className="text-2xs rounded-lg border-stone-300 text-[#0F766E] hover:bg-stone-50 py-1 px-2"
                             >
                               View
                             </Button>
                           </div>
                         </div>
 
-                        <p className="text-xs text-stone-700 leading-relaxed bg-stone-50 p-2 rounded border border-stone-200">
+                        <p className="text-xs text-[#5C574F] leading-relaxed bg-[#F0F7F6] p-2.5 rounded-none border border-[#D0E5E1]">
                           {cleanDisplay(item.summary)}
                         </p>
                       </div>
@@ -962,7 +993,7 @@ export const DoctorDashboardView: React.FC = () => {
         </div>
       )}
 
-      {/* 6. Modals */}
+      {/* 7. Modals */}
       <DoctorConsultationModal
         isOpen={isConsultationModalOpen}
         onClose={() => setIsConsultationModalOpen(false)}

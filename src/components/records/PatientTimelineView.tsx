@@ -183,10 +183,17 @@ export const PatientTimelineView: React.FC = () => {
       fetchDiscoverablePatients()
         .then((pts) => {
           if (!mounted) return;
-          setPatients(pts);
-          if (pts.length > 0) {
-            setSelectedPatientId(pts[0].id);
-            setSelectedPatientName(pts[0].name);
+          const cleanPts = pts.filter(
+            (p) =>
+              p.name !== "Rahul Verma" &&
+              p.patientId !== "PID-10000001" &&
+              !p.email?.includes("synthetic.demo") &&
+              p.abhaAddress !== "rahul.verma@sbx"
+          );
+          setPatients(cleanPts);
+          if (cleanPts.length > 0) {
+            setSelectedPatientId(cleanPts[0].id);
+            setSelectedPatientName(cleanPts[0].name);
           }
         })
         .catch((err) => console.warn("Patient discovery warning:", err));
@@ -475,11 +482,13 @@ export const PatientTimelineView: React.FC = () => {
                   }}
                   className="bg-white border border-[#B6D6D0] rounded-none px-3 py-1.5 font-bold text-xs text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918]"
                 >
-                  {patients.map((p) => (
-                    <option key={p.id} value={p.id}>
-                      {p.name} {p.patientId ? `• ${p.patientId}` : `• ${p.abhaAddress}`}
-                    </option>
-                  ))}
+                  {patients
+                    .filter((p) => p.name !== "Rahul Verma" && p.patientId !== "PID-10000001")
+                    .map((p) => (
+                      <option key={p.id} value={p.id}>
+                        {p.name} {p.patientId ? `• ${p.patientId}` : `• ${p.abhaAddress}`}
+                      </option>
+                    ))}
                 </select>
               </div>
             </div>

@@ -472,7 +472,7 @@ export const ConsentManagementView: React.FC = () => {
                           <strong className="text-[#1A1918]">
                             {typeof consent.requesterDoctorId === "object"
                               ? consent.requesterDoctorId.name
-                              : "Dr. Ananya Sharma"}
+                              : user?.name || "Attending Physician"}
                           </strong>
                         </span>
                         {typeof consent.patientId === "object" && user?.role === "doctor" && (
@@ -638,7 +638,7 @@ export const ConsentManagementView: React.FC = () => {
                 <span className="font-bold text-[#1A1918]">
                   {typeof selectedConsent.requesterDoctorId === "object"
                     ? selectedConsent.requesterDoctorId.name
-                    : "Dr. Ananya Sharma"}
+                    : user?.name || "Attending Physician"}
                 </span>
               </div>
               <div className="flex justify-between">

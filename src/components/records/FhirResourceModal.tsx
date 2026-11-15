@@ -54,8 +54,8 @@ export const FhirResourceModal: React.FC<FhirResourceModalProps> = ({
       text: cleanDisplay(record.title),
     },
     subject: {
-      reference: "Patient/synthetic-abha-subject",
-      display: "Rahul Verma",
+      reference: `Patient/${record.recordId || "subject"}`,
+      display: "Verified Patient Record",
     },
     effectiveDateTime: `${record.date}T10:00:00Z`,
     performer: [

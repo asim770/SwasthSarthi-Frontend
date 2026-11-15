@@ -36,7 +36,6 @@ import {
   ApiError,
 } from "../../api/client";
 import {
-  SYNTHETIC_PATIENT,
   type SyntheticHealthRecord,
   type SyntheticConsent,
 } from "../../data/syntheticData";
@@ -65,14 +64,14 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
   onSelectRecord: _onSelectRecord,
   onSelectConsent: _onSelectConsent,
   onNavigateRoute,
-  records: fallbackRecords,
+  records: _fallbackRecords,
   consents,
 }) => {
   const { user } = useAuth();
 
   const [activeTab, setActiveTab] = useState<DashboardTab>("overview");
-  const displayName = user?.name || SYNTHETIC_PATIENT.name;
-  const currentPatientId = user?.patientId || "SS-PAT-000001";
+  const displayName = user?.name || "Patient";
+  const currentPatientId = user?.patientId || "";
   const [copiedPid, setCopiedPid] = useState(false);
 
   // Live Patient Comprehensive Info State
@@ -102,8 +101,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
   // Load Patient Comprehensive Medical Records
   const loadPatientData = useCallback(async () => {
+    const pidToFetch = user?.patientId || user?.id;
+    if (!pidToFetch) {
+      setLiveInfo(null);
+      return;
+    }
     try {
-      const pidToFetch = user?.patientId || user?.id || "SS-PAT-000001";
       const data = await fetchPatientComprehensiveInfo(pidToFetch);
       setLiveInfo(data);
     } catch {
@@ -221,9 +224,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           title: `Prescription: ${rx.medications?.map((m: any) => m.name).join(", ")}`,
           category: "MedicationRequest",
           submittedBy: rx.doctorName || "Treating Physician",
-          provider: rx.facility || "Apollo Clinics",
-          date: rx.prescribedAt ? new Date(rx.prescribedAt).toISOString().split("T")[0] : "2026-11-05",
-          time: "11:00 AM",
+          provider: rx.facility || "Healthcare Facility",
+          date: rx.prescribedAt ? new Date(rx.prescribedAt).toISOString().split("T")[0] : "",
+          time: rx.prescribedAt ? new Date(rx.prescribedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "11:00 AM",
           status: rx.status || "ACTIVE",
           summary: `Medications prescribed: ${rx.medications?.map((m: any) => `${m.name} ${m.dosage}`).join("; ")}`,
           clinicalData: { medications: rx.medications, instructions: rx.medications?.[0]?.instructions },
@@ -241,9 +244,9 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           title: `Medication Dispensed: ${ev.medicineName || "Prescription Fulfillment"}`,
           category: "MedicationDispense",
           submittedBy: ev.pharmacistName || "Dispensing Pharmacist",
-          provider: ev.pharmacyFacility || "Apollo Care Pharmacy",
-          date: ev.dispensedAt ? new Date(ev.dispensedAt).toISOString().split("T")[0] : "2026-11-05",
-          time: "02:15 PM",
+          provider: ev.pharmacyFacility || "Network Pharmacy",
+          date: ev.dispensedAt ? new Date(ev.dispensedAt).toISOString().split("T")[0] : "",
+          time: ev.dispensedAt ? new Date(ev.dispensedAt).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" }) : "02:15 PM",
           status: "FULFILLED",
           summary: `Quantity: ${ev.quantityDispensed} units (Batch: ${ev.batchNumber || "VERIFIED"}). ${ev.notes || ""}`,
           clinicalData: { batchNumber: ev.batchNumber, quantity: ev.quantityDispensed, notes: ev.notes },
@@ -253,28 +256,8 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
       });
     }
 
-    // Add baseline fallback records if live records are empty
-    if (list.length === 0) {
-      fallbackRecords.forEach((r) => {
-        list.push({
-          id: r.id,
-          title: r.title,
-          category: r.resourceType,
-          submittedBy: r.doctor || r.provider,
-          provider: r.provider,
-          date: r.date,
-          time: "10:00 AM",
-          status: r.status,
-          summary: r.summary,
-          clinicalData: {},
-          isDoctorReviewed: r.resourceType === "Encounter",
-          raw: r,
-        });
-      });
-    }
-
     return list;
-  }, [liveInfo, fallbackRecords]);
+  }, [liveInfo]);
 
   // Filtered Unified Records
   const filteredRecords = useMemo(() => {
@@ -309,26 +292,140 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
     );
   }, [allUnifiedRecords]);
 
-  // Health Status Measurable Observations
-  const latestVitals = {
-    bp: { current: "138/88", unit: "mmHg", previous: "142/92", status: "Improved", delta: "-4 mmHg", trend: [142, 140, 138] },
-    glucose: { current: "94", unit: "mg/dL", previous: "106", status: "Normal", delta: "-12 mg/dL", trend: [106, 98, 94] },
-    cholesterol: { current: "195", unit: "mg/dL", previous: "220", status: "Borderline", delta: "-25 mg/dL", trend: [220, 205, 195] },
-    heartRate: { current: "74", unit: "bpm", previous: "78", status: "Optimal", delta: "Stable", trend: [78, 76, 74] },
-  };
+  // Health Status Measurable Observations derived dynamically from live records
+  const latestVitals = useMemo(() => {
+    if (!liveInfo?.clinicalRecords || !Array.isArray(liveInfo.clinicalRecords)) return null;
 
-  const activeConditions = [
-    { name: "Stage 1 Essential Hypertension", diagnosedDate: "2026-11-05", physician: "Dr. Vikram Seth", icd: "I10" },
-    { name: "Mild Borderline Dyslipidemia", diagnosedDate: "2026-11-05", physician: "Dr. Vikram Seth", icd: "E78.5" },
-  ];
+    let foundVitals: any = null;
+    for (const r of liveInfo.clinicalRecords) {
+      const v = r.clinicalData?.vitals;
+      if (v && (v.bp || v.systolic || v.bloodPressure || v.heartRate || v.glucose || v.cholesterol)) {
+        foundVitals = v;
+        break;
+      }
+    }
 
-  const currentPrescriptions = [
-    { name: "Telmisartan", dosage: "40mg", frequency: "Once daily morning", duration: "30 days", prescriber: "Dr. Vikram Seth" },
-  ];
+    if (!foundVitals) return null;
 
-  const upcomingFollowUps = [
-    { date: "03 Dec 2026", time: "10:30 AM", title: "Cardiology Review & BP Evaluation", physician: "Dr. Vikram Seth", facility: "Apollo Care Hospital", dept: "Department of Cardiology" },
-  ];
+    const bpVal = foundVitals.bp || (foundVitals.systolic ? `${foundVitals.systolic}/${foundVitals.diastolic || 80}` : null);
+    const gluVal = foundVitals.glucose || foundVitals.bloodSugar;
+    const cholVal = foundVitals.cholesterol || foundVitals.serumLipid;
+    const hrVal = foundVitals.heartRate || foundVitals.pulse;
+
+    if (!bpVal && !gluVal && !cholVal && !hrVal) return null;
+
+    return {
+      bp: bpVal ? {
+        current: bpVal,
+        unit: "mmHg",
+        previous: foundVitals.priorBp || null,
+        status: foundVitals.bpStatus || "Recorded",
+        delta: foundVitals.bpDelta || "Baseline",
+      } : null,
+      glucose: gluVal ? {
+        current: String(gluVal),
+        unit: "mg/dL",
+        previous: foundVitals.priorGlucose || null,
+        status: foundVitals.glucoseStatus || "Normal",
+        delta: foundVitals.glucoseDelta || "Baseline",
+      } : null,
+      cholesterol: cholVal ? {
+        current: String(cholVal),
+        unit: "mg/dL",
+        previous: foundVitals.priorCholesterol || null,
+        status: foundVitals.cholesterolStatus || "Borderline",
+        delta: foundVitals.cholesterolDelta || "Baseline",
+      } : null,
+      heartRate: hrVal ? {
+        current: String(hrVal),
+        unit: "bpm",
+        previous: foundVitals.priorHeartRate || null,
+        status: foundVitals.heartRateStatus || "Optimal",
+        delta: foundVitals.heartRateDelta || "Stable",
+      } : null,
+    };
+  }, [liveInfo]);
+
+  const activeConditions = useMemo(() => {
+    if (!liveInfo?.clinicalRecords || !Array.isArray(liveInfo.clinicalRecords)) return [];
+    const list: Array<{
+      name: string;
+      diagnosedDate: string;
+      physician: string;
+      icd?: string;
+    }> = [];
+    liveInfo.clinicalRecords.forEach((r: any) => {
+      const diag = r.clinicalData?.diagnosis || (r.resourceType === "Encounter" && r.clinicalData?.assessment);
+      if (diag && typeof diag === "string") {
+        list.push({
+          name: diag,
+          diagnosedDate: r.date ? new Date(r.date).toISOString().split("T")[0] : "Recent",
+          physician: r.doctorName || "Consulting Physician",
+          icd: r.clinicalData?.icdCode || undefined,
+        });
+      }
+    });
+    return list;
+  }, [liveInfo]);
+
+  const currentPrescriptions = useMemo(() => {
+    if (!liveInfo?.prescriptions || !Array.isArray(liveInfo.prescriptions)) return [];
+    const items: Array<{
+      name: string;
+      dosage: string;
+      frequency: string;
+      duration: string;
+      prescriber: string;
+      route?: string;
+    }> = [];
+    liveInfo.prescriptions.forEach((rx: any) => {
+      if (rx.status === "ACTIVE" || !rx.status) {
+        (rx.medications || []).forEach((m: any) => {
+          items.push({
+            name: m.name || "Medication",
+            dosage: m.dosage || "",
+            frequency: m.frequency || "As prescribed",
+            duration: m.durationDays ? `${m.durationDays} days` : "Active",
+            prescriber: rx.doctorName || "Treating Physician",
+            route: m.route || "Oral",
+          });
+        });
+      }
+    });
+    return items;
+  }, [liveInfo]);
+
+  const upcomingFollowUps = useMemo(() => {
+    if (!liveInfo?.clinicalRecords || !Array.isArray(liveInfo.clinicalRecords)) return [];
+    const list: Array<{
+      date: string;
+      month: string;
+      day: string;
+      time: string;
+      title: string;
+      physician: string;
+      facility: string;
+      dept: string;
+    }> = [];
+    liveInfo.clinicalRecords.forEach((r: any) => {
+      const fu = r.clinicalData?.followUpDate || r.clinicalData?.followUp;
+      if (fu) {
+        const d = new Date(fu);
+        const isValid = !isNaN(d.getTime());
+        list.push({
+          date: isValid ? d.toLocaleDateString("en-US", { day: "2-digit", month: "short", year: "numeric" }) : String(fu),
+          month: isValid ? d.toLocaleDateString("en-US", { month: "short" }).toUpperCase() : "REV",
+          day: isValid ? d.toLocaleDateString("en-US", { day: "2-digit" }) : "—",
+          time: r.clinicalData?.followUpTime || "10:00 AM",
+          title: r.clinicalData?.followUpReason || `Clinical Follow-up: ${r.title || "Consultation"}`,
+          physician: r.doctorName || "Treating Physician",
+          facility: r.providerFacility || "Healthcare Facility",
+          dept: r.clinicalData?.department || "Outpatient Department",
+        });
+      }
+    });
+    return list;
+  }, [liveInfo]);
 
   const getAbnormalFlagBadge = (flag?: string) => {
     const norm = (flag || "Normal").toLowerCase();
@@ -439,8 +536,12 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                     <span className="font-mono">DOB: {user.dateOfBirth}</span>
                   </>
                 )}
-                <span className="text-[#B6D6D0]">•</span>
-                <span className="text-[#0F766E] font-medium">Apollo Care Network</span>
+                {user?.facility && (
+                  <>
+                    <span className="text-[#B6D6D0]">•</span>
+                    <span className="text-[#0F766E] font-medium">{user.facility}</span>
+                  </>
+                )}
               </div>
             </div>
           </div>
@@ -598,7 +699,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
             </div>
             <div className="text-[10px] text-[#7A746B] flex items-center justify-between border-t border-[#D0E5E1]/60 pt-1.5">
-              <span>Active Rx Regimen</span>
+              <span>{currentPrescriptions.length > 0 ? "Active Rx Regimen" : "No active regimen"}</span>
               <span className="text-[#0F766E] font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Prescriptions →</span>
             </div>
           </div>
@@ -622,7 +723,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </span>
             </div>
             <div className="text-[10px] text-[#7A746B] flex items-center justify-between border-t border-[#D0E5E1]/60 pt-1.5">
-              <span>Next: 03 Dec</span>
+              <span>{upcomingFollowUps.length > 0 ? `Next: ${upcomingFollowUps[0].date}` : "None scheduled"}</span>
               <span className="text-[#0F766E] font-semibold opacity-0 group-hover:opacity-100 transition-opacity">Schedule →</span>
             </div>
           </div>
@@ -639,7 +740,7 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           { id: "labs", label: "Laboratory Reports", icon: FlaskConical, count: labReports.length },
           { id: "doctors", label: "Doctor Encounters", icon: Stethoscope, count: doctorReports.length },
           { id: "timeline", label: "Medical Timeline", icon: Clock, count: null },
-          { id: "health-status", label: "Vitals & Trends", icon: TrendingUp, count: 4 },
+          { id: "health-status", label: "Vitals & Trends", icon: TrendingUp, count: latestVitals ? 4 : 0 },
           { id: "security", label: "Security & Profile", icon: ShieldCheck, count: null },
         ].map((tab) => {
           const Icon = tab.icon;
@@ -700,103 +801,113 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
               </button>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
-              {/* BP Metric */}
-              <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
-                <div className="flex items-center justify-between text-[#5C574F]">
-                  <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                    <Heart className="w-3.5 h-3.5 text-rose-600" />
-                    <span>Blood Pressure</span>
-                  </span>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2">
-                    {latestVitals.bp.status}
-                  </span>
+            {!latestVitals ? (
+              <div className="p-8 bg-[#F8FBFA] border border-[#D0E5E1] text-center space-y-2">
+                <div className="w-10 h-10 mx-auto bg-[#E4F1EE] text-[#0F766E] flex items-center justify-center">
+                  <Activity className="w-5 h-5" />
                 </div>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.bp.current}</span>
-                  <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.bp.unit}</span>
+                <div className="font-editorial-serif font-bold text-sm text-[#191817]">
+                  No Clinical Vitals Recorded Yet
                 </div>
-                <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
-                  <span>Prior: {latestVitals.bp.previous}</span>
-                  <span className="text-emerald-700 font-semibold">{latestVitals.bp.delta}</span>
-                </div>
-                <svg className="w-full h-6 stroke-[#0F766E] fill-none mt-1" viewBox="0 0 100 20">
-                  <path d="M 0,18 Q 30,14 60,11 T 100,5" strokeWidth="2" />
-                </svg>
+                <p className="text-xs text-[#7A746B] max-w-md mx-auto">
+                  Physiological observations (blood pressure, fasting blood glucose, lipid panel, and resting heart rate) will automatically populate and track trends here once documented by your healthcare provider.
+                </p>
               </div>
+            ) : (
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
+                {/* BP Metric */}
+                {latestVitals.bp && (
+                  <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
+                    <div className="flex items-center justify-between text-[#5C574F]">
+                      <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                        <Heart className="w-3.5 h-3.5 text-rose-600" />
+                        <span>Blood Pressure</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2">
+                        {latestVitals.bp.status}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.bp.current}</span>
+                      <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.bp.unit}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
+                      <span>{latestVitals.bp.previous ? `Prior: ${latestVitals.bp.previous}` : "Baseline"}</span>
+                      <span className="text-emerald-700 font-semibold">{latestVitals.bp.delta}</span>
+                    </div>
+                  </div>
+                )}
 
-              {/* Glucose Metric */}
-              <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
-                <div className="flex items-center justify-between text-[#5C574F]">
-                  <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                    <Droplet className="w-3.5 h-3.5 text-sky-600" />
-                    <span>Fasting Blood Sugar</span>
-                  </span>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2">
-                    {latestVitals.glucose.status}
-                  </span>
-                </div>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.glucose.current}</span>
-                  <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.glucose.unit}</span>
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
-                  <span>Prior: {latestVitals.glucose.previous}</span>
-                  <span className="text-emerald-700 font-semibold">{latestVitals.glucose.delta}</span>
-                </div>
-                <svg className="w-full h-6 stroke-[#14B8A6] fill-none mt-1" viewBox="0 0 100 20">
-                  <path d="M 0,16 Q 35,14 70,8 T 100,4" strokeWidth="2" />
-                </svg>
-              </div>
+                {/* Glucose Metric */}
+                {latestVitals.glucose && (
+                  <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
+                    <div className="flex items-center justify-between text-[#5C574F]">
+                      <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                        <Droplet className="w-3.5 h-3.5 text-sky-600" />
+                        <span>Fasting Blood Sugar</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2">
+                        {latestVitals.glucose.status}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.glucose.current}</span>
+                      <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.glucose.unit}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
+                      <span>{latestVitals.glucose.previous ? `Prior: ${latestVitals.glucose.previous}` : "Baseline"}</span>
+                      <span className="text-emerald-700 font-semibold">{latestVitals.glucose.delta}</span>
+                    </div>
+                  </div>
+                )}
 
-              {/* Cholesterol Metric */}
-              <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
-                <div className="flex items-center justify-between text-[#5C574F]">
-                  <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                    <FlaskConical className="w-3.5 h-3.5 text-amber-600" />
-                    <span>Total Serum Lipid</span>
-                  </span>
-                  <span className="text-[10px] font-bold text-amber-900 bg-amber-50 border border-amber-200 px-1.5 py-0.2">
-                    {latestVitals.cholesterol.status}
-                  </span>
-                </div>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.cholesterol.current}</span>
-                  <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.cholesterol.unit}</span>
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
-                  <span>Prior: {latestVitals.cholesterol.previous}</span>
-                  <span className="text-emerald-700 font-semibold">{latestVitals.cholesterol.delta}</span>
-                </div>
-                <svg className="w-full h-6 stroke-amber-600 fill-none mt-1" viewBox="0 0 100 20">
-                  <path d="M 0,18 Q 40,14 70,10 T 100,6" strokeWidth="2" />
-                </svg>
-              </div>
+                {/* Cholesterol Metric */}
+                {latestVitals.cholesterol && (
+                  <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
+                    <div className="flex items-center justify-between text-[#5C574F]">
+                      <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                        <FlaskConical className="w-3.5 h-3.5 text-amber-600" />
+                        <span>Total Serum Lipid</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-amber-900 bg-amber-50 border border-amber-200 px-1.5 py-0.2">
+                        {latestVitals.cholesterol.status}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.cholesterol.current}</span>
+                      <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.cholesterol.unit}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
+                      <span>{latestVitals.cholesterol.previous ? `Prior: ${latestVitals.cholesterol.previous}` : "Baseline"}</span>
+                      <span className="text-emerald-700 font-semibold">{latestVitals.cholesterol.delta}</span>
+                    </div>
+                  </div>
+                )}
 
-              {/* Heart Rate Metric */}
-              <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
-                <div className="flex items-center justify-between text-[#5C574F]">
-                  <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                    <Activity className="w-3.5 h-3.5 text-emerald-600" />
-                    <span>Resting Heart Rate</span>
-                  </span>
-                  <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2">
-                    {latestVitals.heartRate.status}
-                  </span>
-                </div>
-                <div className="flex items-baseline gap-1.5">
-                  <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.heartRate.current}</span>
-                  <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.heartRate.unit}</span>
-                </div>
-                <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
-                  <span>Prior: {latestVitals.heartRate.previous}</span>
-                  <span className="text-emerald-700 font-semibold">Optimal</span>
-                </div>
-                <svg className="w-full h-6 stroke-emerald-600 fill-none mt-1" viewBox="0 0 100 20">
-                  <path d="M 0,12 Q 25,5 50,12 T 100,9" strokeWidth="2" />
-                </svg>
+                {/* Heart Rate Metric */}
+                {latestVitals.heartRate && (
+                  <div className="p-3.5 bg-[#F0F7F6]/70 border border-[#D0E5E1] hover:border-[#0F766E]/50 transition-all space-y-1.5">
+                    <div className="flex items-center justify-between text-[#5C574F]">
+                      <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                        <Activity className="w-3.5 h-3.5 text-emerald-600" />
+                        <span>Resting Heart Rate</span>
+                      </span>
+                      <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2">
+                        {latestVitals.heartRate.status}
+                      </span>
+                    </div>
+                    <div className="flex items-baseline gap-1.5">
+                      <span className="text-xl font-bold font-mono text-[#191817]">{latestVitals.heartRate.current}</span>
+                      <span className="text-[11px] font-mono text-[#7A746B]">{latestVitals.heartRate.unit}</span>
+                    </div>
+                    <div className="flex items-center justify-between text-[11px] text-[#7A746B]">
+                      <span>{latestVitals.heartRate.previous ? `Prior: ${latestVitals.heartRate.previous}` : "Baseline"}</span>
+                      <span className="text-emerald-700 font-semibold">Optimal</span>
+                    </div>
+                  </div>
+                )}
               </div>
-            </div>
+            )}
           </div>
 
           {/* B. Two-Column Split: Recent Records & Action Items */}
@@ -825,46 +936,64 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                 </button>
               </div>
 
-              <div className="space-y-3">
-                {allUnifiedRecords.slice(0, 3).map((rec, idx) => {
-                  const meta = getCategoryMeta(rec.category);
-                  const MetaIcon = meta.icon;
-                  return (
-                    <div
-                      key={idx}
-                      onClick={() => setActiveDetailRecord(rec)}
-                      className="p-4 bg-white border border-[#D0E5E1] border-l-4 border-l-[#0F766E] hover:border-[#0F766E] hover:shadow-[0_4px_16px_rgba(15,118,110,0.06)] cursor-pointer transition-all space-y-2 group"
-                    >
-                      <div className="flex items-center justify-between flex-wrap gap-2">
-                        <div className="flex items-center gap-2">
-                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 border ${meta.color} inline-flex items-center gap-1`}>
-                            <MetaIcon className="w-3 h-3" />
-                            {meta.label}
-                          </span>
-                          <span className="font-bold text-xs text-[#191817] group-hover:text-[#0F766E] transition-colors">
-                            {rec.title}
+              {allUnifiedRecords.length === 0 ? (
+                <div className="p-8 bg-[#F8FBFA] border border-dashed border-[#D0E5E1] text-center space-y-2">
+                  <FileText className="w-8 h-8 text-[#B6D6D0] mx-auto" />
+                  <p className="font-editorial-serif font-bold text-sm text-[#191817]">No Clinical Records Available</p>
+                  <p className="text-xs text-[#7A746B] max-w-sm mx-auto">
+                    Consultation notes, prescriptions, and diagnostic reports uploaded by healthcare providers will appear here.
+                  </p>
+                  <button
+                    type="button"
+                    onClick={onOpenUpload}
+                    className="mt-2 inline-flex items-center gap-1.5 px-3 py-1.5 bg-[#0F766E] text-white text-xs font-semibold hover:bg-[#0D655E] transition-colors cursor-pointer"
+                  >
+                    <Upload className="w-3.5 h-3.5" />
+                    Upload Personal Health Document
+                  </button>
+                </div>
+              ) : (
+                <div className="space-y-3">
+                  {allUnifiedRecords.slice(0, 3).map((rec, idx) => {
+                    const meta = getCategoryMeta(rec.category);
+                    const MetaIcon = meta.icon;
+                    return (
+                      <div
+                        key={idx}
+                        onClick={() => setActiveDetailRecord(rec)}
+                        className="p-4 bg-white border border-[#D0E5E1] border-l-4 border-l-[#0F766E] hover:border-[#0F766E] hover:shadow-[0_4px_16px_rgba(15,118,110,0.06)] cursor-pointer transition-all space-y-2 group"
+                      >
+                        <div className="flex items-center justify-between flex-wrap gap-2">
+                          <div className="flex items-center gap-2">
+                            <span className={`text-[10px] font-mono font-bold px-2 py-0.5 border ${meta.color} inline-flex items-center gap-1`}>
+                              <MetaIcon className="w-3 h-3" />
+                              {meta.label}
+                            </span>
+                            <span className="font-bold text-xs text-[#191817] group-hover:text-[#0F766E] transition-colors">
+                              {rec.title}
+                            </span>
+                          </div>
+                          <span className="text-[10px] font-mono bg-[#F0F7F6] px-2 py-0.5 border border-[#D0E5E1] text-[#5C574F] flex items-center gap-1">
+                            <Calendar className="w-2.5 h-2.5 text-[#7A746B]" />
+                            {rec.date}
                           </span>
                         </div>
-                        <span className="text-[10px] font-mono bg-[#F0F7F6] px-2 py-0.5 border border-[#D0E5E1] text-[#5C574F] flex items-center gap-1">
-                          <Calendar className="w-2.5 h-2.5 text-[#7A746B]" />
-                          {rec.date}
-                        </span>
-                      </div>
 
-                      <p className="text-[11px] text-[#5C574F] line-clamp-2 leading-relaxed">
-                        {rec.summary}
-                      </p>
+                        <p className="text-[11px] text-[#5C574F] line-clamp-2 leading-relaxed">
+                          {rec.summary}
+                        </p>
 
-                      <div className="flex items-center justify-between text-[10px] text-[#7A746B] pt-2 border-t border-[#D0E5E1]/60">
-                        <span>Submitted by: <strong className="text-[#191817]">{rec.submittedBy}</strong> • {rec.provider}</span>
-                        <span className="text-[#0F766E] font-semibold group-hover:underline inline-flex items-center gap-0.5">
-                          Inspect Record <ChevronRight className="w-3 h-3" />
-                        </span>
+                        <div className="flex items-center justify-between text-[10px] text-[#7A746B] pt-2 border-t border-[#D0E5E1]/60">
+                          <span>Submitted by: <strong className="text-[#191817]">{rec.submittedBy}</strong> • {rec.provider}</span>
+                          <span className="text-[#0F766E] font-semibold group-hover:underline inline-flex items-center gap-0.5">
+                            Inspect Record <ChevronRight className="w-3 h-3" />
+                          </span>
+                        </div>
                       </div>
-                    </div>
-                  );
-                })}
-              </div>
+                    );
+                  })}
+                </div>
+              )}
             </div>
 
             {/* Right Column: Upcoming Follow-ups & Active Prescriptions */}
@@ -888,62 +1017,97 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
 
               <div className="space-y-3">
                 {/* Scheduled Follow-up Card */}
-                {upcomingFollowUps.map((fu, idx) => (
-                  <div key={idx} className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] flex items-start gap-3.5">
-                    <div className="w-10 h-10 bg-white border border-[#0F766E]/30 text-[#0F766E] flex flex-col items-center justify-center shrink-0 shadow-2xs">
-                      <span className="text-[8px] font-mono uppercase font-bold text-[#7A746B]">DEC</span>
-                      <span className="text-sm font-bold font-mono text-[#0F766E] leading-none">03</span>
+                {upcomingFollowUps.length === 0 ? (
+                  <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] flex items-center gap-3">
+                    <div className="w-9 h-9 bg-white border border-[#D0E5E1] text-[#7A746B] flex items-center justify-center shrink-0">
+                      <Calendar className="w-4 h-4" />
                     </div>
-                    <div className="flex-1 min-w-0 space-y-1">
-                      <div className="flex items-center justify-between flex-wrap gap-1">
-                        <span className="font-bold text-xs text-[#191817]">{fu.title}</span>
-                        <span className="text-[10px] font-mono bg-white px-2 py-0.5 border border-[#D0E5E1] text-[#0F766E] font-semibold">
-                          {fu.time}
-                        </span>
-                      </div>
-                      <div className="text-[11px] text-[#5C574F]">
-                        Consultant: <strong className="text-[#191817]">{fu.physician}</strong> ({fu.dept})
-                      </div>
-                      <div className="text-[10px] text-[#7A746B] flex items-center gap-1">
-                        <Hospital className="w-3 h-3 text-[#7A746B]" />
-                        <span>Facility: {fu.facility}</span>
-                      </div>
+                    <div>
+                      <div className="text-xs font-bold text-[#191817]">No Scheduled Follow-ups</div>
+                      <div className="text-[11px] text-[#7A746B]">You currently have no pending follow-up consultations scheduled.</div>
                     </div>
                   </div>
-                ))}
+                ) : (
+                  upcomingFollowUps.map((fu, idx) => (
+                    <div key={idx} className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] flex items-start gap-3.5">
+                      <div className="w-10 h-10 bg-white border border-[#0F766E]/30 text-[#0F766E] flex flex-col items-center justify-center shrink-0 shadow-2xs">
+                        <span className="text-[8px] font-mono uppercase font-bold text-[#7A746B]">{fu.month}</span>
+                        <span className="text-sm font-bold font-mono text-[#0F766E] leading-none">{fu.day}</span>
+                      </div>
+                      <div className="flex-1 min-w-0 space-y-1">
+                        <div className="flex items-center justify-between flex-wrap gap-1">
+                          <span className="font-bold text-xs text-[#191817]">{fu.title}</span>
+                          <span className="text-[10px] font-mono bg-white px-2 py-0.5 border border-[#D0E5E1] text-[#0F766E] font-semibold">
+                            {fu.time}
+                          </span>
+                        </div>
+                        <div className="text-[11px] text-[#5C574F]">
+                          Consultant: <strong className="text-[#191817]">{fu.physician}</strong> ({fu.dept})
+                        </div>
+                        <div className="text-[10px] text-[#7A746B] flex items-center gap-1">
+                          <Hospital className="w-3 h-3 text-[#7A746B]" />
+                          <span>Facility: {fu.facility}</span>
+                        </div>
+                      </div>
+                    </div>
+                  ))
+                )}
 
                 {/* Active Medication Regimen Card */}
-                <div className="p-4 bg-[#F0F7F6] border border-[#0F766E]/30 space-y-2">
-                  <div className="flex items-center justify-between">
-                    <span className="font-bold text-xs text-[#191817] flex items-center gap-1.5">
-                      <Pill className="w-3.5 h-3.5 text-[#0F766E]" />
-                      <span>Active Prescription Regimen</span>
-                    </span>
-                    <span className="text-[10px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200 uppercase tracking-wide flex items-center gap-1">
-                      <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
-                      Ongoing · 30 Days
-                    </span>
+                {currentPrescriptions.length === 0 ? (
+                  <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] flex items-center justify-between">
+                    <div className="flex items-center gap-2.5">
+                      <div className="w-8 h-8 bg-white border border-[#D0E5E1] text-[#7A746B] flex items-center justify-center shrink-0">
+                        <Pill className="w-4 h-4" />
+                      </div>
+                      <div>
+                        <div className="font-bold text-xs text-[#191817]">No Active Prescriptions</div>
+                        <div className="text-[10px] text-[#7A746B]">No active medication regimen is currently prescribed.</div>
+                      </div>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => onNavigateRoute("prescriptions")}
+                      className="text-xs font-semibold text-[#0F766E] hover:underline cursor-pointer"
+                    >
+                      View History →
+                    </button>
                   </div>
-                  <div className="bg-white p-3 border border-[#D0E5E1] space-y-1">
-                    <div className="text-xs font-bold text-[#191817] flex items-center justify-between">
-                      <span>Telmisartan 40mg Tablet</span>
-                      <span className="text-[10px] font-mono font-bold text-[#0F766E]">Oral Route</span>
+                ) : (
+                  <div className="p-4 bg-[#F0F7F6] border border-[#0F766E]/30 space-y-2">
+                    <div className="flex items-center justify-between">
+                      <span className="font-bold text-xs text-[#191817] flex items-center gap-1.5">
+                        <Pill className="w-3.5 h-3.5 text-[#0F766E]" />
+                        <span>Active Prescription Regimen</span>
+                      </span>
+                      <span className="text-[10px] font-bold bg-emerald-50 text-emerald-800 px-2 py-0.5 border border-emerald-200 uppercase tracking-wide flex items-center gap-1">
+                        <span className="w-1.5 h-1.5 rounded-full bg-emerald-600 animate-pulse" />
+                        Ongoing
+                      </span>
                     </div>
-                    <div className="text-[11px] text-[#5C574F]">
-                      Schedule: <strong>Once daily morning after food</strong>
-                    </div>
-                    <div className="text-[10px] text-[#7A746B] pt-1 border-t border-[#D0E5E1]/60 flex items-center justify-between">
-                      <span>Prescribed by Dr. Vikram Seth for Essential Hypertension</span>
-                      <button
-                        type="button"
-                        onClick={() => onNavigateRoute("prescriptions")}
-                        className="text-[#0F766E] font-semibold hover:underline cursor-pointer"
-                      >
-                        Refill / Rx Details →
-                      </button>
-                    </div>
+                    {currentPrescriptions.slice(0, 2).map((rx, idx) => (
+                      <div key={idx} className="bg-white p-3 border border-[#D0E5E1] space-y-1">
+                        <div className="text-xs font-bold text-[#191817] flex items-center justify-between">
+                          <span>{rx.name} {rx.dosage}</span>
+                          <span className="text-[10px] font-mono font-bold text-[#0F766E]">{rx.route || "Oral"}</span>
+                        </div>
+                        <div className="text-[11px] text-[#5C574F]">
+                          Schedule: <strong>{rx.frequency}</strong>
+                        </div>
+                        <div className="text-[10px] text-[#7A746B] pt-1 border-t border-[#D0E5E1]/60 flex items-center justify-between">
+                          <span>Prescribed by {rx.prescriber}</span>
+                          <button
+                            type="button"
+                            onClick={() => onNavigateRoute("prescriptions")}
+                            className="text-[#0F766E] font-semibold hover:underline cursor-pointer"
+                          >
+                            Refill / Rx Details →
+                          </button>
+                        </div>
+                      </div>
+                    ))}
                   </div>
-                </div>
+                )}
 
                 {/* ABDM Consent Status Summary Card */}
                 <div className="p-3.5 bg-white border border-[#D0E5E1] flex items-center justify-between">
@@ -1142,87 +1306,87 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           <div className="space-y-4">
-            {labReports.map((report) => (
-              <div key={report.id} className="p-5 border border-[#D0E5E1] bg-white space-y-4 shadow-2xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D0E5E1]">
-                  <div className="space-y-1">
-                    <div className="flex items-center gap-2 flex-wrap">
-                      <h3 className="font-editorial-serif font-bold text-sm sm:text-base text-[#191817]">
-                        {report.title}
-                      </h3>
-                      <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 font-bold text-[10px] border border-emerald-200 uppercase tracking-wider flex items-center gap-1">
-                        <Check className="w-2.5 h-2.5 text-emerald-600" />
-                        ABDM VALIDATED
-                      </span>
-                    </div>
-                    <div className="text-[11px] text-[#5C574F]">
-                      Accredited Diagnostic Facility: <strong className="text-[#191817]">{report.provider}</strong> • Sample Date: <span className="font-mono font-bold text-[#0F766E]">{report.date}</span>
-                    </div>
-                  </div>
-
-                  <div className="flex items-center gap-2">
-                    <button
-                      type="button"
-                      onClick={() => alert(`Downloading verified report: ${report.title}`)}
-                      className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#0F766E] hover:bg-[#0D655E] text-white font-semibold border border-[#0F766E] rounded-none cursor-pointer text-xs shadow-2xs transition-colors"
-                    >
-                      <Download className="w-3.5 h-3.5" />
-                      <span>Download PDF</span>
-                    </button>
-                  </div>
-                </div>
-
-                {/* Structured Laboratory Results Table */}
-                <div className="overflow-x-auto border border-[#D0E5E1]">
-                  <table className="w-full text-left border-collapse text-xs bg-white">
-                    <thead>
-                      <tr className="bg-[#F0F7F6] border-b border-[#D0E5E1] text-[#7A746B] uppercase font-mono text-[10px]">
-                        <th className="py-2.5 px-3 font-bold">Analyte / Test Parameter</th>
-                        <th className="py-2.5 px-3 font-bold">Observed Value</th>
-                        <th className="py-2.5 px-3 font-bold">Unit</th>
-                        <th className="py-2.5 px-3 font-bold">Biological Reference Range</th>
-                        <th className="py-2.5 px-3 font-bold">Clinical Flag</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#D0E5E1] font-editorial-sans">
-                      <tr className="hover:bg-[#F8FBFA]">
-                        <td className="py-2.5 px-3 font-semibold text-[#191817]">Total Cholesterol</td>
-                        <td className="py-2.5 px-3 font-mono font-bold text-[#191817]">195</td>
-                        <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
-                        <td className="py-2.5 px-3 text-[#5C574F]">125 - 200 mg/dL</td>
-                        <td className="py-2.5 px-3">{getAbnormalFlagBadge("Normal")}</td>
-                      </tr>
-                      <tr className="hover:bg-[#F8FBFA]">
-                        <td className="py-2.5 px-3 font-semibold text-[#191817]">HDL High-Density Lipoprotein</td>
-                        <td className="py-2.5 px-3 font-mono font-bold text-[#191817]">52</td>
-                        <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
-                        <td className="py-2.5 px-3 text-[#5C574F]">&gt; 40 mg/dL</td>
-                        <td className="py-2.5 px-3">{getAbnormalFlagBadge("Normal")}</td>
-                      </tr>
-                      <tr className="hover:bg-[#F8FBFA] bg-amber-50/20">
-                        <td className="py-2.5 px-3 font-semibold text-[#191817]">LDL Low-Density Lipoprotein (Calculated)</td>
-                        <td className="py-2.5 px-3 font-mono font-bold text-amber-900">118</td>
-                        <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
-                        <td className="py-2.5 px-3 text-[#5C574F]">&lt; 100 mg/dL</td>
-                        <td className="py-2.5 px-3">{getAbnormalFlagBadge("Borderline High")}</td>
-                      </tr>
-                      <tr className="hover:bg-[#F8FBFA]">
-                        <td className="py-2.5 px-3 font-semibold text-[#191817]">Triglycerides</td>
-                        <td className="py-2.5 px-3 font-mono font-bold text-[#191817]">142</td>
-                        <td className="py-2.5 px-3 font-mono text-[#5C574F]">mg/dL</td>
-                        <td className="py-2.5 px-3 text-[#5C574F]">&lt; 150 mg/dL</td>
-                        <td className="py-2.5 px-3">{getAbnormalFlagBadge("Normal")}</td>
-                      </tr>
-                    </tbody>
-                  </table>
-                </div>
-
-                <div className="p-3.5 bg-[#F8FBFA] border border-[#D0E5E1] text-[11px] text-[#5C574F] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                  <span>Method: Enzymatic Colorimetric Assay on Fully Automated Clinical Chemistry Analyzer.</span>
-                  <span className="font-semibold text-[#191817]">Senior Clinical Biochemist: Rajesh Kumar (M.Sc, Ph.D)</span>
-                </div>
+            {labReports.length === 0 ? (
+              <div className="text-center py-12 text-[#7A746B] space-y-2 bg-[#F8FBFA] border border-[#D0E5E1]">
+                <FlaskConical className="w-9 h-9 mx-auto text-[#B6D6D0]" />
+                <p className="font-semibold text-xs text-[#191817]">No diagnostic laboratory reports on file.</p>
+                <p className="text-[11px] text-[#7A746B]">Diagnostic reports will be synced here when uploaded by accredited laboratories.</p>
               </div>
-            ))}
+            ) : (
+              labReports.map((report) => (
+                <div key={report.id} className="p-5 border border-[#D0E5E1] bg-white space-y-4 shadow-2xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[#D0E5E1]">
+                    <div className="space-y-1">
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <h3 className="font-editorial-serif font-bold text-sm sm:text-base text-[#191817]">
+                          {report.title}
+                        </h3>
+                        <span className="px-2 py-0.5 bg-emerald-50 text-emerald-800 font-bold text-[10px] border border-emerald-200 uppercase tracking-wider flex items-center gap-1">
+                          <Check className="w-2.5 h-2.5 text-emerald-600" />
+                          ABDM VALIDATED
+                        </span>
+                      </div>
+                      <div className="text-[11px] text-[#5C574F]">
+                        Accredited Diagnostic Facility: <strong className="text-[#191817]">{report.provider}</strong> • Sample Date: <span className="font-mono font-bold text-[#0F766E]">{report.date}</span>
+                      </div>
+                    </div>
+
+                    <div className="flex items-center gap-2">
+                      <button
+                        type="button"
+                        onClick={() => alert(`Downloading verified report: ${report.title}`)}
+                        className="flex items-center gap-1.5 px-3.5 py-1.5 bg-[#0F766E] hover:bg-[#0D655E] text-white font-semibold border border-[#0F766E] rounded-none cursor-pointer text-xs shadow-2xs transition-colors"
+                      >
+                        <Download className="w-3.5 h-3.5" />
+                        <span>Download PDF</span>
+                      </button>
+                    </div>
+                  </div>
+
+                  {/* Structured Laboratory Results Table or Summary */}
+                  {Array.isArray(report.clinicalData?.results) && report.clinicalData.results.length > 0 ? (
+                    <div className="overflow-x-auto border border-[#D0E5E1]">
+                      <table className="w-full text-left border-collapse text-xs bg-white">
+                        <thead>
+                          <tr className="bg-[#F0F7F6] border-b border-[#D0E5E1] text-[#7A746B] uppercase font-mono text-[10px]">
+                            <th className="py-2.5 px-3 font-bold">Analyte / Test Parameter</th>
+                            <th className="py-2.5 px-3 font-bold">Observed Value</th>
+                            <th className="py-2.5 px-3 font-bold">Unit</th>
+                            <th className="py-2.5 px-3 font-bold">Biological Reference Range</th>
+                            <th className="py-2.5 px-3 font-bold">Clinical Flag</th>
+                          </tr>
+                        </thead>
+                        <tbody className="divide-y divide-[#D0E5E1] font-editorial-sans">
+                          {report.clinicalData.results.map((row: any, rIdx: number) => (
+                            <tr key={rIdx} className="hover:bg-[#F8FBFA]">
+                              <td className="py-2.5 px-3 font-semibold text-[#191817]">{row.test || row.parameter || row.analyte}</td>
+                              <td className="py-2.5 px-3 font-mono font-bold text-[#191817]">{row.value}</td>
+                              <td className="py-2.5 px-3 font-mono text-[#5C574F]">{row.unit || "—"}</td>
+                              <td className="py-2.5 px-3 text-[#5C574F]">{row.referenceRange || row.refRange || "—"}</td>
+                              <td className="py-2.5 px-3">{getAbnormalFlagBadge(row.flag || row.status)}</td>
+                            </tr>
+                          ))}
+                        </tbody>
+                      </table>
+                    </div>
+                  ) : (
+                    <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-1.5 text-xs">
+                      <span className="text-[10px] text-[#7A746B] uppercase font-mono font-bold block">
+                        Diagnostic Findings &amp; Summary
+                      </span>
+                      <p className="text-[#191817] leading-relaxed">
+                        {report.summary || "Diagnostic report verified by laboratory."}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="p-3.5 bg-[#F8FBFA] border border-[#D0E5E1] text-[11px] text-[#5C574F] flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+                    <span>Reporting Facility: <strong className="text-[#191817]">{report.provider}</strong></span>
+                    <span className="font-semibold text-[#191817]">Submitted by: {report.submittedBy}</span>
+                  </div>
+                </div>
+              ))
+            )}
           </div>
         </div>
       )}
@@ -1247,59 +1411,73 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           <div className="space-y-4">
-            {doctorReports.map((report) => (
-              <div key={report.id} className="p-5 border border-[#D0E5E1] bg-white space-y-4 shadow-2xs">
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#D0E5E1]">
-                  <div>
-                    <h3 className="font-editorial-serif font-bold text-sm sm:text-base text-[#191817]">
-                      {report.title}
-                    </h3>
-                    <div className="text-[11px] text-[#5C574F] mt-0.5">
-                      Consultant: <strong className="text-[#191817]">{report.submittedBy}</strong> • Hospital: <strong className="text-[#191817]">{report.provider}</strong>
+            {doctorReports.length === 0 ? (
+              <div className="text-center py-12 text-[#7A746B] space-y-2 bg-[#F8FBFA] border border-[#D0E5E1]">
+                <Stethoscope className="w-9 h-9 mx-auto text-[#B6D6D0]" />
+                <p className="font-semibold text-xs text-[#191817]">No doctor consultation reports on file.</p>
+                <p className="text-[11px] text-[#7A746B]">Encounter summaries, diagnoses, and physician notes will appear here once recorded by your doctors.</p>
+              </div>
+            ) : (
+              doctorReports.map((report) => (
+                <div key={report.id} className="p-5 border border-[#D0E5E1] bg-white space-y-4 shadow-2xs">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pb-3 border-b border-[#D0E5E1]">
+                    <div>
+                      <h3 className="font-editorial-serif font-bold text-sm sm:text-base text-[#191817]">
+                        {report.title}
+                      </h3>
+                      <div className="text-[11px] text-[#5C574F] mt-0.5">
+                        Consultant: <strong className="text-[#191817]">{report.submittedBy}</strong> • Hospital: <strong className="text-[#191817]">{report.provider}</strong>
+                      </div>
+                    </div>
+                    <div className="text-xs font-mono font-bold text-[#0F766E] bg-[#F0F7F6] px-3 py-1 border border-[#0F766E]/25">
+                      Consultation Date: {report.date}
                     </div>
                   </div>
-                  <div className="text-xs font-mono font-bold text-[#0F766E] bg-[#F0F7F6] px-3 py-1 border border-[#0F766E]/25">
-                    Consultation Date: {report.date}
+
+                  <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
+                    <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-1.5">
+                      <span className="text-[10px] text-[#7A746B] uppercase font-mono font-bold block">
+                        Clinical Findings &amp; Summary
+                      </span>
+                      <p className="text-[#191817] leading-relaxed">
+                        {report.summary || "Clinical encounter recorded without preliminary findings note."}
+                      </p>
+                    </div>
+
+                    <div className="p-4 bg-[#F0F7F6] border border-[#0F766E]/30 space-y-1.5">
+                      <span className="text-[10px] text-[#0F766E] uppercase font-mono font-bold block">
+                        Formal Clinical Diagnoses
+                      </span>
+                      <p className="text-[#191817] font-semibold leading-relaxed">
+                        {report.clinicalData?.diagnosis ? String(report.clinicalData.diagnosis) : "Recorded in clinical encounter note"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {report.clinicalData?.treatmentPlan && (
+                    <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-1.5 text-xs">
+                      <span className="text-[10px] text-[#7A746B] uppercase font-mono font-bold block">
+                        Treatment Regimen &amp; Pharmacological Plan
+                      </span>
+                      <p className="text-[#5C574F] leading-relaxed">
+                        {String(report.clinicalData.treatmentPlan)}
+                      </p>
+                    </div>
+                  )}
+
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-[#5C574F] pt-2 border-t border-[#D0E5E1] gap-2">
+                    <span>Status: <strong className="text-[#191817] uppercase font-mono">{report.status}</strong></span>
+                    <button
+                      type="button"
+                      onClick={() => setActiveDetailRecord(report)}
+                      className="text-[#0F766E] font-semibold hover:underline inline-flex items-center gap-1 cursor-pointer"
+                    >
+                      Inspect Encounter Record →
+                    </button>
                   </div>
                 </div>
-
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-3.5 text-xs">
-                  <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-1.5">
-                    <span className="text-[10px] text-[#7A746B] uppercase font-mono font-bold block">
-                      Clinical Findings &amp; Observations
-                    </span>
-                    <p className="text-[#191817] leading-relaxed">
-                      BP recorded at 138/88 mmHg, resting pulse 74 bpm regular, S1 S2 normal, clear chest auscultation bilaterally, no peripheral ankle edema. Patient reported occasional exertional fatigue.
-                    </p>
-                  </div>
-
-                  <div className="p-4 bg-[#F0F7F6] border border-[#0F766E]/30 space-y-1.5">
-                    <span className="text-[10px] text-[#0F766E] uppercase font-mono font-bold block">
-                      Formal Clinical Diagnoses (ICD-10)
-                    </span>
-                    <p className="text-[#191817] font-semibold leading-relaxed">
-                      1. Stage 1 Essential Hypertension (Primary) [ICD-10: I10]
-                      <br />
-                      2. Mild Borderline Dyslipidemia [ICD-10: E78.5]
-                    </p>
-                  </div>
-                </div>
-
-                <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-1.5">
-                  <span className="text-[10px] text-[#7A746B] uppercase font-mono font-bold block">
-                    Treatment Regimen &amp; Pharmacological Plan
-                  </span>
-                  <p className="text-[#5C574F] leading-relaxed">
-                    Initiated low-sodium DASH diet. Prescribed Telmisartan 40mg PO once daily morning. Patient advised to maintain home BP diary twice a week. Scheduled repeat lipid panel in 12 weeks.
-                  </p>
-                </div>
-
-                <div className="flex flex-col sm:flex-row sm:items-center justify-between text-[11px] text-[#5C574F] pt-2 border-t border-[#D0E5E1] gap-2">
-                  <span>Diagnostic Tests Advised: <strong className="text-[#191817]">Lipid Profile, Serum Creatinine, ECG</strong></span>
-                  <span className="text-[#0F766E] font-semibold">Review Scheduled: 4 Weeks Follow-Up</span>
-                </div>
-              </div>
-            ))}
+              ))
+            )}
           </div>
         </div>
       )}
@@ -1318,49 +1496,59 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
             </p>
           </div>
 
-          <div className="relative pl-7 space-y-5 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-[#0F766E] before:via-[#14B8A6] before:to-[#D0E5E1]">
-            {allUnifiedRecords.map((item, idx) => {
-              const meta = getCategoryMeta(item.category);
-              const MetaIcon = meta.icon;
-              return (
-                <div key={idx} className="relative space-y-1 group">
-                  {/* Timeline Dot Marker */}
-                  <div className="absolute -left-7 top-2.5 w-4 h-4 bg-white border-2 border-[#0F766E] group-hover:scale-110 group-hover:bg-[#0F766E] transition-all shadow-xs" />
+          {allUnifiedRecords.length === 0 ? (
+            <div className="text-center py-12 text-[#7A746B] space-y-2 bg-[#F8FBFA] border border-[#D0E5E1]">
+              <Clock className="w-9 h-9 mx-auto text-[#B6D6D0]" />
+              <p className="font-semibold text-xs text-[#191817]">No events recorded on your timeline yet.</p>
+              <p className="text-[11px] text-[#7A746B]">
+                Hospital visits, lab evaluations, and prescriptions will form an interconnected chronological timeline here.
+              </p>
+            </div>
+          ) : (
+            <div className="relative pl-7 space-y-5 before:absolute before:left-3 before:top-2 before:bottom-2 before:w-[2px] before:bg-gradient-to-b before:from-[#0F766E] before:via-[#14B8A6] before:to-[#D0E5E1]">
+              {allUnifiedRecords.map((item, idx) => {
+                const meta = getCategoryMeta(item.category);
+                const MetaIcon = meta.icon;
+                return (
+                  <div key={idx} className="relative space-y-1 group">
+                    {/* Timeline Dot Marker */}
+                    <div className="absolute -left-7 top-2.5 w-4 h-4 bg-white border-2 border-[#0F766E] group-hover:scale-110 group-hover:bg-[#0F766E] transition-all shadow-xs" />
 
-                  <div className="p-4 bg-white border border-[#D0E5E1] hover:border-[#0F766E] hover:shadow-[0_4px_16px_rgba(15,118,110,0.06)] transition-all space-y-2">
-                    <div className="flex items-center justify-between flex-wrap gap-2">
-                      <div className="flex items-center gap-2">
-                        <span className={`text-[10px] font-mono font-bold px-2 py-0.5 border ${meta.color} inline-flex items-center gap-1`}>
-                          <MetaIcon className="w-3 h-3" />
-                          {meta.label}
-                        </span>
-                        <span className="font-bold text-xs text-[#191817] group-hover:text-[#0F766E] transition-colors">
-                          {item.title}
+                    <div className="p-4 bg-white border border-[#D0E5E1] hover:border-[#0F766E] hover:shadow-[0_4px_16px_rgba(15,118,110,0.06)] transition-all space-y-2">
+                      <div className="flex items-center justify-between flex-wrap gap-2">
+                        <div className="flex items-center gap-2">
+                          <span className={`text-[10px] font-mono font-bold px-2 py-0.5 border ${meta.color} inline-flex items-center gap-1`}>
+                            <MetaIcon className="w-3 h-3" />
+                            {meta.label}
+                          </span>
+                          <span className="font-bold text-xs text-[#191817] group-hover:text-[#0F766E] transition-colors">
+                            {item.title}
+                          </span>
+                        </div>
+                        <span className="text-[10px] font-mono text-[#5C574F] font-bold bg-[#F0F7F6] px-2 py-0.5 border border-[#D0E5E1]">
+                          {item.date} • {item.time}
                         </span>
                       </div>
-                      <span className="text-[10px] font-mono text-[#5C574F] font-bold bg-[#F0F7F6] px-2 py-0.5 border border-[#D0E5E1]">
-                        {item.date} • {item.time}
-                      </span>
-                    </div>
 
-                    <p className="text-xs text-[#5C574F] leading-relaxed">{item.summary}</p>
+                      <p className="text-xs text-[#5C574F] leading-relaxed">{item.summary}</p>
 
-                    <div className="text-[10px] text-[#7A746B] pt-2 border-t border-[#D0E5E1]/60 flex items-center justify-between">
-                      <span>Source Provider: <strong className="text-[#191817]">{item.provider}</strong> ({item.submittedBy})</span>
-                      <button
-                        type="button"
-                        onClick={() => setActiveDetailRecord(item)}
-                        className="text-[#0F766E] font-semibold hover:underline cursor-pointer flex items-center gap-0.5"
-                      >
-                        <span>Full Record Details</span>
-                        <ChevronRight className="w-3 h-3" />
-                      </button>
+                      <div className="text-[10px] text-[#7A746B] pt-2 border-t border-[#D0E5E1]/60 flex items-center justify-between">
+                        <span>Source Provider: <strong className="text-[#191817]">{item.provider}</strong> ({item.submittedBy})</span>
+                        <button
+                          type="button"
+                          onClick={() => setActiveDetailRecord(item)}
+                          className="text-[#0F766E] font-semibold hover:underline cursor-pointer flex items-center gap-0.5"
+                        >
+                          <span>Full Record Details</span>
+                          <ChevronRight className="w-3 h-3" />
+                        </button>
+                      </div>
                     </div>
                   </div>
-                </div>
-              );
-            })}
-          </div>
+                );
+              })}
+            </div>
+          )}
         </div>
       )}
 
@@ -1379,99 +1567,107 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
           </div>
 
           {/* Measurable Observations Comparison Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
-            {/* BP Card */}
-            <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
-              <div className="flex items-center justify-between text-[#5C574F]">
-                <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                  <Heart className="w-3.5 h-3.5 text-rose-600" />
-                  <span>Blood Pressure</span>
-                </span>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 uppercase">
-                  Improved
-                </span>
+          {!latestVitals ? (
+            <div className="p-8 bg-[#F8FBFA] border border-[#D0E5E1] text-center space-y-2">
+              <TrendingUp className="w-8 h-8 text-[#0F766E] mx-auto" />
+              <div className="font-editorial-serif font-bold text-sm text-[#191817]">
+                No Longitudinal Observations Recorded
               </div>
-              <div className="text-2xl font-bold font-mono text-[#191817]">
-                {latestVitals.bp.current} <span className="text-xs font-normal text-[#7A746B]">mmHg</span>
-              </div>
-              <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
-                <span>Baseline: {latestVitals.bp.previous} mmHg</span>
-                <span className="text-emerald-700 font-semibold">{latestVitals.bp.delta}</span>
-              </div>
-              <svg className="w-full h-8 stroke-[#0F766E] fill-none" viewBox="0 0 100 25">
-                <path d="M 0,22 Q 30,16 60,14 T 100,6" strokeWidth="2.5" />
-              </svg>
+              <p className="text-xs text-[#7A746B] max-w-md mx-auto">
+                Blood pressure, fasting glucose, lipid profiles, and heart rate observations with comparative baselines will display here once recorded during your clinical appointments.
+              </p>
             </div>
+          ) : (
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3.5">
+              {/* BP Card */}
+              {latestVitals.bp && (
+                <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
+                  <div className="flex items-center justify-between text-[#5C574F]">
+                    <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                      <Heart className="w-3.5 h-3.5 text-rose-600" />
+                      <span>Blood Pressure</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 uppercase">
+                      {latestVitals.bp.status}
+                    </span>
+                  </div>
+                  <div className="text-2xl font-bold font-mono text-[#191817]">
+                    {latestVitals.bp.current} <span className="text-xs font-normal text-[#7A746B]">mmHg</span>
+                  </div>
+                  <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
+                    <span>Baseline: {latestVitals.bp.previous || "Initial"}</span>
+                    <span className="text-emerald-700 font-semibold">{latestVitals.bp.delta}</span>
+                  </div>
+                </div>
+              )}
 
-            {/* Fasting Glucose Card */}
-            <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
-              <div className="flex items-center justify-between text-[#5C574F]">
-                <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                  <Droplet className="w-3.5 h-3.5 text-sky-600" />
-                  <span>Fasting Glucose</span>
-                </span>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 uppercase">
-                  Normal
-                </span>
-              </div>
-              <div className="text-2xl font-bold font-mono text-[#191817]">
-                {latestVitals.glucose.current} <span className="text-xs font-normal text-[#7A746B]">mg/dL</span>
-              </div>
-              <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
-                <span>Baseline: {latestVitals.glucose.previous} mg/dL</span>
-                <span className="text-emerald-700 font-semibold">{latestVitals.glucose.delta}</span>
-              </div>
-              <svg className="w-full h-8 stroke-[#14B8A6] fill-none" viewBox="0 0 100 25">
-                <path d="M 0,20 Q 35,18 70,10 T 100,5" strokeWidth="2.5" />
-              </svg>
-            </div>
+              {/* Fasting Glucose Card */}
+              {latestVitals.glucose && (
+                <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
+                  <div className="flex items-center justify-between text-[#5C574F]">
+                    <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                      <Droplet className="w-3.5 h-3.5 text-sky-600" />
+                      <span>Fasting Glucose</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 uppercase">
+                      {latestVitals.glucose.status}
+                    </span>
+                  </div>
+                  <div className="text-2xl font-bold font-mono text-[#191817]">
+                    {latestVitals.glucose.current} <span className="text-xs font-normal text-[#7A746B]">mg/dL</span>
+                  </div>
+                  <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
+                    <span>Baseline: {latestVitals.glucose.previous || "Initial"}</span>
+                    <span className="text-emerald-700 font-semibold">{latestVitals.glucose.delta}</span>
+                  </div>
+                </div>
+              )}
 
-            {/* Total Cholesterol Card */}
-            <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
-              <div className="flex items-center justify-between text-[#5C574F]">
-                <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                  <FlaskConical className="w-3.5 h-3.5 text-amber-600" />
-                  <span>Total Cholesterol</span>
-                </span>
-                <span className="text-[10px] font-bold text-amber-900 bg-amber-50 border border-amber-200 px-1.5 py-0.2 uppercase">
-                  Borderline
-                </span>
-              </div>
-              <div className="text-2xl font-bold font-mono text-[#191817]">
-                {latestVitals.cholesterol.current} <span className="text-xs font-normal text-[#7A746B]">mg/dL</span>
-              </div>
-              <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
-                <span>Baseline: {latestVitals.cholesterol.previous} mg/dL</span>
-                <span className="text-emerald-700 font-semibold">{latestVitals.cholesterol.delta}</span>
-              </div>
-              <svg className="w-full h-8 stroke-amber-600 fill-none" viewBox="0 0 100 25">
-                <path d="M 0,24 Q 40,18 70,12 T 100,8" strokeWidth="2.5" />
-              </svg>
-            </div>
+              {/* Total Cholesterol Card */}
+              {latestVitals.cholesterol && (
+                <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
+                  <div className="flex items-center justify-between text-[#5C574F]">
+                    <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                      <FlaskConical className="w-3.5 h-3.5 text-amber-600" />
+                      <span>Total Cholesterol</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-amber-900 bg-amber-50 border border-amber-200 px-1.5 py-0.2 uppercase">
+                      {latestVitals.cholesterol.status}
+                    </span>
+                  </div>
+                  <div className="text-2xl font-bold font-mono text-[#191817]">
+                    {latestVitals.cholesterol.current} <span className="text-xs font-normal text-[#7A746B]">mg/dL</span>
+                  </div>
+                  <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
+                    <span>Baseline: {latestVitals.cholesterol.previous || "Initial"}</span>
+                    <span className="text-emerald-700 font-semibold">{latestVitals.cholesterol.delta}</span>
+                  </div>
+                </div>
+              )}
 
-            {/* Resting Heart Rate */}
-            <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
-              <div className="flex items-center justify-between text-[#5C574F]">
-                <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
-                  <Activity className="w-3.5 h-3.5 text-emerald-600" />
-                  <span>Heart Rate</span>
-                </span>
-                <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 uppercase">
-                  Optimal
-                </span>
-              </div>
-              <div className="text-2xl font-bold font-mono text-[#191817]">
-                {latestVitals.heartRate.current} <span className="text-xs font-normal text-[#7A746B]">bpm</span>
-              </div>
-              <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
-                <span>Baseline: {latestVitals.heartRate.previous} bpm</span>
-                <span className="text-emerald-700 font-semibold">Stable</span>
-              </div>
-              <svg className="w-full h-8 stroke-emerald-600 fill-none" viewBox="0 0 100 25">
-                <path d="M 0,15 Q 25,6 50,15 T 100,12" strokeWidth="2.5" />
-              </svg>
+              {/* Resting Heart Rate */}
+              {latestVitals.heartRate && (
+                <div className="p-4 bg-[#F8FBFA] border border-[#D0E5E1] space-y-2 hover:border-[#0F766E]/50 transition-all">
+                  <div className="flex items-center justify-between text-[#5C574F]">
+                    <span className="font-semibold text-xs flex items-center gap-1.5 text-[#191817]">
+                      <Activity className="w-3.5 h-3.5 text-emerald-600" />
+                      <span>Heart Rate</span>
+                    </span>
+                    <span className="text-[10px] font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-1.5 py-0.2 uppercase">
+                      {latestVitals.heartRate.status}
+                    </span>
+                  </div>
+                  <div className="text-2xl font-bold font-mono text-[#191817]">
+                    {latestVitals.heartRate.current} <span className="text-xs font-normal text-[#7A746B]">bpm</span>
+                  </div>
+                  <div className="text-[11px] text-[#7A746B] flex items-center justify-between">
+                    <span>Baseline: {latestVitals.heartRate.previous || "Initial"}</span>
+                    <span className="text-emerald-700 font-semibold">{latestVitals.heartRate.delta}</span>
+                  </div>
+                </div>
+              )}
             </div>
-          </div>
+          )}
 
           {/* Active Diagnoses & Current Medication */}
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4 pt-2">
@@ -1484,26 +1680,35 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   {activeConditions.length} Diagnoses
                 </span>
               </div>
-              <div className="space-y-2">
-                {activeConditions.map((cond, i) => (
-                  <div key={i} className="p-3 bg-[#F8FBFA] border border-[#D0E5E1] flex items-center justify-between">
-                    <div>
-                      <div className="font-bold text-xs text-[#191817] flex items-center gap-1.5">
-                        <span>{cond.name}</span>
-                        <span className="text-[10px] font-mono text-[#7A746B] bg-white px-1.5 py-0.2 border border-[#D0E5E1]">
-                          ICD: {cond.icd}
-                        </span>
+              {activeConditions.length === 0 ? (
+                <div className="p-6 bg-[#F8FBFA] border border-dashed border-[#D0E5E1] text-center space-y-1">
+                  <p className="text-xs font-semibold text-[#191817]">No Active Conditions Documented</p>
+                  <p className="text-[11px] text-[#7A746B]">Clinical diagnoses confirmed by your physicians will appear here.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {activeConditions.map((cond, i) => (
+                    <div key={i} className="p-3 bg-[#F8FBFA] border border-[#D0E5E1] flex items-center justify-between">
+                      <div>
+                        <div className="font-bold text-xs text-[#191817] flex items-center gap-1.5">
+                          <span>{cond.name}</span>
+                          {cond.icd && (
+                            <span className="text-[10px] font-mono text-[#7A746B] bg-white px-1.5 py-0.2 border border-[#D0E5E1]">
+                              ICD: {cond.icd}
+                            </span>
+                          )}
+                        </div>
+                        <div className="text-[10px] text-[#7A746B] mt-0.5">
+                          Diagnosed by {cond.physician} on {cond.diagnosedDate}
+                        </div>
                       </div>
-                      <div className="text-[10px] text-[#7A746B] mt-0.5">
-                        Diagnosed by {cond.physician} on {cond.diagnosedDate}
-                      </div>
+                      <span className="text-[10px] bg-[#E4F1EE] text-[#0F766E] border border-[#0F766E]/25 font-mono font-bold px-2 py-0.5">
+                        ACTIVE
+                      </span>
                     </div>
-                    <span className="text-[10px] bg-[#E4F1EE] text-[#0F766E] border border-[#0F766E]/25 font-mono font-bold px-2 py-0.5">
-                      ACTIVE
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
 
             <div className="p-4 bg-white border border-[#D0E5E1] space-y-3">
@@ -1519,21 +1724,28 @@ export const DashboardView: React.FC<DashboardViewProps> = ({
                   Manage Prescriptions →
                 </button>
               </div>
-              <div className="space-y-2">
-                {currentPrescriptions.map((rx, i) => (
-                  <div key={i} className="p-3 bg-[#F8FBFA] border border-[#D0E5E1] flex items-center justify-between">
-                    <div>
-                      <div className="font-bold text-xs text-[#191817]">{rx.name} {rx.dosage}</div>
-                      <div className="text-[10px] text-[#7A746B] mt-0.5">
-                        {rx.frequency} • {rx.duration} (Prescriber: {rx.prescriber})
+              {currentPrescriptions.length === 0 ? (
+                <div className="p-6 bg-[#F8FBFA] border border-dashed border-[#D0E5E1] text-center space-y-1">
+                  <p className="text-xs font-semibold text-[#191817]">No Active Prescriptions</p>
+                  <p className="text-[11px] text-[#7A746B]">Active medication regimens will be tracked here upon issuance.</p>
+                </div>
+              ) : (
+                <div className="space-y-2">
+                  {currentPrescriptions.map((rx, i) => (
+                    <div key={i} className="p-3 bg-[#F8FBFA] border border-[#D0E5E1] flex items-center justify-between">
+                      <div>
+                        <div className="font-bold text-xs text-[#191817]">{rx.name} {rx.dosage}</div>
+                        <div className="text-[10px] text-[#7A746B] mt-0.5">
+                          {rx.frequency} • {rx.duration} (Prescriber: {rx.prescriber})
+                        </div>
                       </div>
+                      <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold px-2 py-0.5">
+                        ONGOING
+                      </span>
                     </div>
-                    <span className="text-[10px] bg-emerald-50 text-emerald-800 border border-emerald-200 font-bold px-2 py-0.5">
-                      ONGOING
-                    </span>
-                  </div>
-                ))}
-              </div>
+                  ))}
+                </div>
+              )}
             </div>
           </div>
         </div>

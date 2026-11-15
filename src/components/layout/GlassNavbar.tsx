@@ -20,44 +20,7 @@ import { useAuth } from "../../context/AuthContext";
 import type { HealthCheckData, NotificationItem } from "../../types/api";
 import { fetchNotifications, markNotificationRead } from "../../api/client";
 
-const DEFAULT_NAVBAR_NOTIFICATIONS: NotificationItem[] = [
-  {
-    _id: "notif-seed-1",
-    notificationId: "NOTIF-SEED-1",
-    recipientId: "patient-1",
-    recipientAbha: "patient@abdm",
-    category: "CONSENT",
-    title: "Consent Granted",
-    message: "Apollo Hospital accessed diagnostic records",
-    isRead: false,
-    deliveryStatus: "DELIVERED",
-    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-  },
-  {
-    _id: "notif-seed-2",
-    notificationId: "NOTIF-SEED-2",
-    recipientId: "patient-1",
-    recipientAbha: "patient@abdm",
-    category: "LAB_REPORT",
-    title: "New Lab Report",
-    message: "Metabolic & Lipid Panel verified",
-    isRead: false,
-    deliveryStatus: "DELIVERED",
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    _id: "notif-seed-3",
-    notificationId: "NOTIF-SEED-3",
-    recipientId: "patient-1",
-    recipientAbha: "patient@abdm",
-    category: "ONBOARDING",
-    title: "ABDM Care Context Linked",
-    message: "Max Healthcare linked 3 FHIR resources",
-    isRead: false,
-    deliveryStatus: "DELIVERED",
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-  },
-];
+const DEFAULT_NAVBAR_NOTIFICATIONS: NotificationItem[] = [];
 
 const formatTimeAgo = (isoDate?: string): string => {
   if (!isoDate) return "";

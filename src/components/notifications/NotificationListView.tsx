@@ -21,44 +21,6 @@ import { Button } from "../ui/Button";
 import { EmptyState } from "../ui/EmptyState";
 import type { NotificationItem, NotificationCategory } from "../../types/api";
 
-const DEFAULT_NOTIFICATIONS: NotificationItem[] = [
-  {
-    _id: "notif-seed-1",
-    notificationId: "NOTIF-SEED-1",
-    recipientId: "patient-1",
-    recipientAbha: "patient@abdm",
-    category: "CONSENT",
-    title: "Consent Granted",
-    message: "Apollo Hospital accessed diagnostic records",
-    isRead: false,
-    deliveryStatus: "DELIVERED",
-    createdAt: new Date(Date.now() - 10 * 60 * 1000).toISOString(),
-  },
-  {
-    _id: "notif-seed-2",
-    notificationId: "NOTIF-SEED-2",
-    recipientId: "patient-1",
-    recipientAbha: "patient@abdm",
-    category: "LAB_REPORT",
-    title: "New Lab Report",
-    message: "Metabolic & Lipid Panel verified",
-    isRead: false,
-    deliveryStatus: "DELIVERED",
-    createdAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
-  },
-  {
-    _id: "notif-seed-3",
-    notificationId: "NOTIF-SEED-3",
-    recipientId: "patient-1",
-    recipientAbha: "patient@abdm",
-    category: "ONBOARDING",
-    title: "ABDM Care Context Linked",
-    message: "Max Healthcare linked 3 FHIR resources",
-    isRead: false,
-    deliveryStatus: "DELIVERED",
-    createdAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
-  },
-];
 
 export function NotificationListView() {
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
@@ -79,21 +41,13 @@ export function NotificationListView() {
       if (data?.notifications && data.notifications.length > 0) {
         setNotifications(data.notifications);
         setUnreadCount(data.unreadCount ?? data.notifications.filter((n) => !n.isRead).length);
-      } else if (!unreadOnly) {
-        setNotifications(DEFAULT_NOTIFICATIONS);
-        setUnreadCount(DEFAULT_NOTIFICATIONS.filter((n) => !n.isRead).length);
       } else {
         setNotifications([]);
         setUnreadCount(0);
       }
     } catch (err) {
-      if (!unreadOnly) {
-        setNotifications(DEFAULT_NOTIFICATIONS);
-        setUnreadCount(DEFAULT_NOTIFICATIONS.filter((n) => !n.isRead).length);
-      } else {
-        setNotifications([]);
-        setUnreadCount(0);
-      }
+      setNotifications([]);
+      setUnreadCount(0);
       console.warn("Could not load notifications from API:", err);
     } finally {
       setLoading(false);

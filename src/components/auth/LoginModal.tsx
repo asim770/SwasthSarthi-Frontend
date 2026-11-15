@@ -358,7 +358,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     if (!googleClientId) {
       // In dev fallback mode when CLIENT_ID is unconfigured, simulate mock Google verification
       const mockSub = `goog_${Date.now()}`;
-      const mockEmail = mode === "register" ? signupEmail || "new.patient@gmail.com" : "rahul.verma@synthetic.demo";
+      const mockEmail = mode === "register" ? signupEmail || "new.patient@gmail.com" : passwordIdentifier || "patient@gmail.com";
       const mockToken = `mock-google-token:${mockSub}:${mockEmail}`;
       handleGoogleCredential(mockToken, mode);
       return;

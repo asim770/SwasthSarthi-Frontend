@@ -49,8 +49,8 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
             text: record.title,
           },
           subject: {
-            reference: "Patient/PAT-2026-0042",
-            display: "Rahul Verma (ABHA: 32-8492-1920-4491)",
+            reference: `Patient/${record.id || "subject"}`,
+            display: "Verified Patient Record",
           },
           performer: [
             {
@@ -166,7 +166,7 @@ export const RecordDetailsModal: React.FC<RecordDetailsModalProps> = ({ record, 
             <div className="p-3 bg-[#F0F7F6] border border-[#D0E5E1] rounded-none flex items-center justify-between text-xs">
               <div className="flex items-center gap-2">
                 <FileText className="w-4 h-4 text-[#0F766E]" />
-                <span className="text-[#191817] font-semibold">Linked to ABHA: rahul.verma@sbx</span>
+                <span className="text-[#191817] font-semibold">Linked to Verified ABHA Patient</span>
               </div>
               <span className="text-[#0F766E] font-mono text-[11px] font-bold">NRCES HL7 FHIR R4</span>
             </div>

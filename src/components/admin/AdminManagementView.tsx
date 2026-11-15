@@ -44,9 +44,9 @@ export function AdminManagementView() {
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
   const [newInstName, setNewInstName] = useState("");
   const [newInstType, setNewInstType] = useState<FacilityType>("HOSPITAL");
-  const [newInstPhone, setNewInstPhone] = useState("+91-11-23000000");
+  const [newInstPhone, setNewInstPhone] = useState("");
   const [newInstEmail, setNewInstEmail] = useState("");
-  const [newInstCity, setNewInstCity] = useState("New Delhi");
+  const [newInstCity, setNewInstCity] = useState("");
   const [newInstHfrId, setNewInstHfrId] = useState("");
   const [registerError, setRegisterError] = useState<string | null>(null);
   const [registering, setRegistering] = useState(false);
@@ -142,6 +142,9 @@ export function AdminManagementView() {
       });
       setIsRegisterModalOpen(false);
       setNewInstName("");
+      setNewInstPhone("");
+      setNewInstEmail("");
+      setNewInstCity("");
       setNewInstHfrId("");
       loadInstitutions();
     } catch (err) {

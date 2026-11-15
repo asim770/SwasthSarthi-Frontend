@@ -45,39 +45,38 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
   const [consultationDate, setConsultationDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
-  const [symptoms, setSymptoms] = useState<string>("Exertional dyspnea, occasional chest tightness, and lightheadedness.");
-  const [clinicalFindings, setClinicalFindings] = useState<string>("BP 138/88 mmHg, pulse 76 bpm regular rhythm, S1 S2 normal, no peripheral edema.");
-  const [diagnosis, setDiagnosis] = useState<string>("Stage 1 Essential Hypertension");
-  const [treatmentPlan, setTreatmentPlan] = useState<string>("Lifestyle intervention with low-sodium DASH diet, aerobic exercise, and initiate first-line ARB therapy.");
+  const [symptoms, setSymptoms] = useState<string>("");
+  const [clinicalFindings, setClinicalFindings] = useState<string>("");
+  const [diagnosis, setDiagnosis] = useState<string>("");
+  const [treatmentPlan, setTreatmentPlan] = useState<string>("");
   
-  // Prescribed Medicines list
-  const [medicines, setMedicines] = useState<MedicineItem[]>([
-    {
-      name: "Telmisartan",
-      dosage: "40mg",
-      frequency: "Once daily morning",
-      durationDays: 30,
-      instructions: "Take 1 tablet every morning with water after breakfast.",
-    },
-  ]);
+  // Prescribed Medicines list (empty by default)
+  const [medicines, setMedicines] = useState<MedicineItem[]>([]);
 
-  // Recommended Tests list
-  const [tests, setTests] = useState<string[]>([
-    "Lipid Profile (Fasting)",
-    "Serum Creatinine & Electrolytes",
-  ]);
+  // Recommended Tests list (empty by default)
+  const [tests, setTests] = useState<string[]>([]);
   const [newTestInput, setNewTestInput] = useState<string>("");
 
-  const [followUpDate, setFollowUpDate] = useState<string>(() => {
-    const d = new Date();
-    d.setDate(d.getDate() + 28);
-    return d.toISOString().split("T")[0];
-  });
-  const [clinicalNotes, setClinicalNotes] = useState<string>("Advised home blood pressure monitoring twice weekly. Return immediately if chest pain or severe headache occurs.");
+  const [followUpDate, setFollowUpDate] = useState<string>("");
+  const [clinicalNotes, setClinicalNotes] = useState<string>("");
 
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
+
+  const resetForm = () => {
+    setSymptoms("");
+    setClinicalFindings("");
+    setDiagnosis("");
+    setTreatmentPlan("");
+    setMedicines([]);
+    setTests([]);
+    setNewTestInput("");
+    setFollowUpDate("");
+    setClinicalNotes("");
+    setError(null);
+    setSuccess(false);
+  };
 
   React.useEffect(() => {
     if (defaultPatientId) {
@@ -171,7 +170,7 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
       setTimeout(() => {
         onSuccess();
         onClose();
-        setSuccess(false);
+        resetForm();
       }, 1500);
     } catch (err: any) {
       setError(
@@ -185,7 +184,10 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
   return (
     <Dialog
       isOpen={isOpen}
-      onClose={onClose}
+      onClose={() => {
+        resetForm();
+        onClose();
+      }}
       title="Add Doctor Consultation Report"
       description="Record clinical findings, diagnoses, e-prescriptions, and recommended tests linked to the patient's unique Patient ID."
       maxWidth="xl"
@@ -314,59 +316,65 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
             </button>
           </div>
 
-          {medicines.map((med, index) => (
-            <div
-              key={index}
-              className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-[#F0F7F6] border border-[#D0E5E1] items-center"
-            >
-              <div className="sm:col-span-3">
-                <input
-                  type="text"
-                  placeholder="Medicine Name"
-                  value={med.name}
-                  onChange={(e) => handleMedicineChange(index, "name", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white font-semibold text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
-                />
-              </div>
-              <div className="sm:col-span-2">
-                <input
-                  type="text"
-                  placeholder="Dosage (40mg)"
-                  value={med.dosage}
-                  onChange={(e) => handleMedicineChange(index, "dosage", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
-                />
-              </div>
-              <div className="sm:col-span-3">
-                <input
-                  type="text"
-                  placeholder="Frequency (OD / BD)"
-                  value={med.frequency}
-                  onChange={(e) => handleMedicineChange(index, "frequency", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
-                />
-              </div>
-              <div className="sm:col-span-3">
-                <input
-                  type="text"
-                  placeholder="Instructions"
-                  value={med.instructions}
-                  onChange={(e) => handleMedicineChange(index, "instructions", e.target.value)}
-                  className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
-                />
-              </div>
-              <div className="sm:col-span-1 text-center">
-                <button
-                  type="button"
-                  onClick={() => handleRemoveMedicine(index)}
-                  className="text-[#8C877D] hover:text-red-700 p-1 cursor-pointer"
-                  title="Remove Medicine"
-                >
-                  <Trash2 className="w-3.5 h-3.5" />
-                </button>
-              </div>
+          {medicines.length === 0 ? (
+            <div className="py-2 text-center text-[#7A746B] text-[11px] italic bg-[#F0F7F6]/50 border border-dashed border-[#D0E5E1]">
+              No medications prescribed yet. Click &ldquo;Add Medicine&rdquo; above to prescribe drugs.
             </div>
-          ))}
+          ) : (
+            medicines.map((med, index) => (
+              <div
+                key={index}
+                className="grid grid-cols-1 sm:grid-cols-12 gap-2 p-2 bg-[#F0F7F6] border border-[#D0E5E1] items-center"
+              >
+                <div className="sm:col-span-3">
+                  <input
+                    type="text"
+                    placeholder="Medicine Name"
+                    value={med.name}
+                    onChange={(e) => handleMedicineChange(index, "name", e.target.value)}
+                    className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white font-semibold text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  />
+                </div>
+                <div className="sm:col-span-2">
+                  <input
+                    type="text"
+                    placeholder="Dosage (40mg)"
+                    value={med.dosage}
+                    onChange={(e) => handleMedicineChange(index, "dosage", e.target.value)}
+                    className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  />
+                </div>
+                <div className="sm:col-span-3">
+                  <input
+                    type="text"
+                    placeholder="Frequency (OD / BD)"
+                    value={med.frequency}
+                    onChange={(e) => handleMedicineChange(index, "frequency", e.target.value)}
+                    className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  />
+                </div>
+                <div className="sm:col-span-3">
+                  <input
+                    type="text"
+                    placeholder="Instructions"
+                    value={med.instructions}
+                    onChange={(e) => handleMedicineChange(index, "instructions", e.target.value)}
+                    className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918] focus:ring-1 focus:ring-[#1A1918]"
+                  />
+                </div>
+                <div className="sm:col-span-1 text-center">
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveMedicine(index)}
+                    className="text-[#8C877D] hover:text-red-700 p-1 cursor-pointer"
+                    title="Remove Medicine"
+                  >
+                    <Trash2 className="w-3.5 h-3.5" />
+                  </button>
+                </div>
+              </div>
+            ))
+          )}
         </div>
 
         {/* Recommended Laboratory Tests */}
@@ -403,23 +411,29 @@ export const DoctorConsultationModal: React.FC<DoctorConsultationModalProps> = (
             </Button>
           </div>
 
-          <div className="flex flex-wrap gap-1.5 pt-1">
-            {tests.map((testName, i) => (
-              <span
-                key={i}
-                className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] font-mono text-xs font-semibold"
-              >
-                <span>{testName}</span>
-                <button
-                  type="button"
-                  onClick={() => handleRemoveTest(i)}
-                  className="text-[#0F766E] hover:text-red-700 cursor-pointer font-bold"
+          {tests.length === 0 ? (
+            <div className="py-1 text-[#7A746B] text-[11px] italic">
+              No diagnostic tests ordered yet. Type a test name above and click &ldquo;Add Test&rdquo;.
+            </div>
+          ) : (
+            <div className="flex flex-wrap gap-1.5 pt-1">
+              {tests.map((testName, i) => (
+                <span
+                  key={i}
+                  className="inline-flex items-center gap-1.5 px-2.5 py-1 bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] font-mono text-xs font-semibold"
                 >
-                  ×
-                </button>
-              </span>
-            ))}
-          </div>
+                  <span>{testName}</span>
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveTest(i)}
+                    className="text-[#0F766E] hover:text-red-700 cursor-pointer font-bold"
+                  >
+                    ×
+                  </button>
+                </span>
+              ))}
+            </div>
+          )}
         </div>
 
         {/* Follow-up Date and Clinical Notes */}
