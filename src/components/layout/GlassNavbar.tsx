@@ -202,12 +202,12 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
       );
     }
     if (role === "admin") {
-      const adminOrder: NavigationRoute[] = ["landing", "access", "consents", "notifications"];
+      const adminOrder: NavigationRoute[] = ["landing", "dashboard", "consents", "notifications"];
       return adminOrder
         .map((id) => {
           const item = baseItems.find((b) => b.id === id);
           if (!item) return null;
-          if (id === "access") {
+          if (id === "dashboard") {
             return {
               ...item,
               label: "Admin Portal",

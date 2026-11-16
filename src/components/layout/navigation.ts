@@ -32,11 +32,11 @@ export interface NavItem {
 export const NAV_ITEMS: NavItem[] = [
   { id: "landing", label: "Home", icon: House, tooltip: "SwaasthSaarthi Home" },
   { id: "dashboard", label: "Dashboard", icon: LayoutDashboard, tooltip: "Patient Portal Dashboard" },
-  { id: "records", label: "Records", icon: FileText, badge: "12", tooltip: "Health Records" },
-  { id: "consents", label: "Consent", icon: ShieldCheck, badge: "2", tooltip: "Consent Management" },
+  { id: "records", label: "Records", icon: FileText, tooltip: "Health Records" },
+  { id: "consents", label: "Consent", icon: ShieldCheck, tooltip: "Consent Management" },
   { id: "prescriptions", label: "Rx", icon: Pill, tooltip: "Prescriptions (Rx)" },
   { id: "labs", label: "Labs", icon: FlaskConical, tooltip: "Laboratory Reports" },
   { id: "access", label: "History", icon: Clock, tooltip: "Access History" },
-  { id: "notifications", label: "Alerts", icon: Bell, badge: "3", tooltip: "Notifications & Alerts" },
+  { id: "notifications", label: "Alerts", icon: Bell, tooltip: "Notifications & Alerts" },
   { id: "settings", label: "Settings", icon: Settings, tooltip: "Settings & Administration" },
 ];

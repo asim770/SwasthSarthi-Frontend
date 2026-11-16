@@ -93,10 +93,10 @@ export default function App() {
     prevAuthRef.current = isAuthenticated;
   }, [isAuthenticated]);
 
-  // Redirect administrator away from patient dashboard and clinical records
+  // Redirect administrator away from patient clinical records
   useEffect(() => {
-    if (user?.role === "admin" && (currentRoute === "dashboard" || currentRoute === "records")) {
-      setCurrentRoute("access");
+    if (user?.role === "admin" && currentRoute === "records") {
+      setCurrentRoute("dashboard");
     }
   }, [user?.role, currentRoute]);
 
@@ -230,6 +230,12 @@ export default function App() {
           {currentRoute === "dashboard" ? (
             user?.role === "doctor" ? (
               <DoctorDashboardView />
+            ) : user?.role === "laboratory" ? (
+              <LaboratoryDashboardView />
+            ) : user?.role === "pharmacy" ? (
+              <PharmacyDashboardView />
+            ) : user?.role === "admin" ? (
+              <AdminManagementView />
             ) : (
               <DashboardView
                 onOpenUpload={() => setIsUploadModalOpen(true)}
