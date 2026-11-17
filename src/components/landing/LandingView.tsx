@@ -176,7 +176,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
     <div className="min-h-screen bg-[#F0F7F6] text-[#1E1D1B] selection:bg-[#0F766E]/15 selection:text-[#0F766E]">
       {/* 1. TOP EDITORIAL NAVBAR */}
       <header
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
+        className={`landing-navbar fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
           isScrolled
             ? "bg-[#F0F7F6]/92 backdrop-blur-md border-b border-[#D0E5E1] shadow-[0_8px_30px_rgba(15,118,110,0.08)] py-0"
             : "bg-transparent border-b border-transparent py-2 sm:py-3"

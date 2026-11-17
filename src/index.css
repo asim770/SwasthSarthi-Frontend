@@ -89,6 +89,20 @@
   color: #0F766E !important;
 }
 
+/* Navbar Typography: Plus Jakarta Sans */
+.landing-navbar,
+.landing-navbar nav,
+.landing-navbar nav a,
+.landing-navbar button,
+.landing-navbar span:not(.font-editorial-serif) {
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif !important;
+}
+
+.landing-navbar .font-editorial-serif {
+  font-family: "Playfair Display", Georgia, Cambria, "Times New Roman", serif !important;
+  font-weight: 700 !important;
+}
+
 /* Application Typography: All dashboard views, portals, modals use Ubuntu font with softened weights */
 .font-ubuntu,
 .app-main-scope,
