@@ -66,17 +66,16 @@
   border-radius: 0px !important;
 }
 
-/* Landing Page Typography: Preserved exactly as original */
-.landing-page-scope,
-.landing-page-scope * {
+/* Hero Section Typography: Preserved exactly as requested */
+.hero-editorial-scope {
   font-family: var(--font-landing-sans);
 }
 
-.landing-page-scope .font-editorial-serif {
+.hero-editorial-scope .font-editorial-serif {
   font-family: var(--font-landing-serif) !important;
 }
 
-.landing-page-scope .font-editorial-sans {
+.hero-editorial-scope .font-editorial-sans {
   font-family: var(--font-landing-sans) !important;
 }
 

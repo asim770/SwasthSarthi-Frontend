@@ -173,7 +173,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
   ];
 
   return (
-    <div className="min-h-screen bg-[#F0F7F6] text-[#1E1D1B] font-editorial-sans selection:bg-[#0F766E]/15 selection:text-[#0F766E]">
+    <div className="min-h-screen bg-[#F0F7F6] text-[#1E1D1B] selection:bg-[#0F766E]/15 selection:text-[#0F766E]">
       {/* 1. TOP EDITORIAL NAVBAR */}
       <header
         className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ease-in-out ${
@@ -335,10 +335,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
         )}
       </header>
 
-      {/* 2. FULL-BLEED EDITORIAL HERO SECTION */}
+      {/* 2. FULL-BLEED EDITORIAL HERO SECTION (Preserved exact fonts as requested) */}
       <section
         id="hero"
-        className="relative w-full min-h-[640px] sm:min-h-[700px] lg:min-h-[780px] flex items-center bg-cover bg-no-repeat overflow-hidden border-b border-[#D0E5E1]/80 pt-20 sm:pt-24"
+        className="hero-editorial-scope relative w-full min-h-[640px] sm:min-h-[700px] lg:min-h-[780px] flex items-center bg-cover bg-no-repeat overflow-hidden border-b border-[#D0E5E1]/80 pt-20 sm:pt-24"
         style={{
           backgroundImage: `
             linear-gradient(
@@ -445,7 +445,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <span className="text-xs font-semibold tracking-[0.25em] text-[#0F766E] uppercase">
                 ROLE-BASED HEALTHCARE ECOSYSTEM
               </span>
-              <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl text-[#191817] font-medium tracking-tight mt-1.5">
                 One universal patient record. Four synchronized roles.
               </h2>
             </div>
@@ -473,7 +473,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                       </div>
                     </div>
 
-                    <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-[#191817] mb-2.5 group-hover:text-[#0F766E] transition-colors">
+                    <h3 className="text-lg sm:text-xl font-medium text-[#191817] mb-2.5 group-hover:text-[#0F766E] transition-colors">
                       {role.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#615C54] leading-relaxed mb-5 font-normal">
@@ -516,7 +516,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <span className="text-xs font-semibold tracking-[0.25em] text-[#0F766E] uppercase">
                 CENTRES OF CLINICAL EXCELLENCE
               </span>
-              <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
+              <h2 className="text-2xl sm:text-3xl lg:text-4xl text-[#191817] font-medium tracking-tight mt-1.5">
                 Curated clinical excellence, connected to you.
               </h2>
             </div>
@@ -544,7 +544,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                       </div>
                     </div>
 
-                    <h3 className="font-editorial-serif text-xl sm:text-2xl font-normal text-[#191817] mb-2.5 group-hover:text-[#0F766E] transition-colors">
+                    <h3 className="text-lg sm:text-xl font-medium text-[#191817] mb-2.5 group-hover:text-[#0F766E] transition-colors">
                       {item.title}
                     </h3>
                     <p className="text-xs sm:text-sm text-[#615C54] leading-relaxed mb-6 font-normal">
@@ -579,7 +579,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             <span className="text-xs font-semibold tracking-[0.22em] text-[#0F766E] uppercase">
               PLATFORM ARCHITECTURE & STANDARDS
             </span>
-            <h2 className="font-editorial-serif text-3xl sm:text-5xl text-[#191817] font-normal mt-2 mb-6 leading-tight">
+            <h2 className="text-2xl sm:text-4xl lg:text-5xl text-[#191817] font-medium mt-2 mb-6 leading-tight tracking-tight">
               Enterprise-grade digital health infrastructure.
             </h2>
             <p className="text-sm sm:text-base text-[#615C54] leading-relaxed mb-6 font-normal">
@@ -591,11 +591,11 @@ export const LandingView: React.FC<LandingViewProps> = ({
 
             <div className="grid grid-cols-2 gap-6 pt-4 border-t border-[#D0E5E1]">
               <div>
-                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#0F766E]">50+</div>
+                <div className="text-2xl sm:text-3xl font-medium text-[#0F766E]">50+</div>
                 <div className="text-xs text-[#7A746B] mt-1">Network Care Facilities</div>
               </div>
               <div>
-                <div className="font-editorial-serif text-2xl sm:text-3xl text-[#0F766E]">100%</div>
+                <div className="text-2xl sm:text-3xl font-medium text-[#0F766E]">100%</div>
                 <div className="text-xs text-[#7A746B] mt-1">FHIR R4 & ABDM Integrated</div>
               </div>
             </div>
@@ -606,7 +606,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <Layers className="w-5 h-5" />
               </div>
-              <h3 className="font-editorial-serif text-xl text-[#191817]">HL7 FHIR R4 Standards</h3>
+              <h3 className="text-base sm:text-lg font-medium text-[#191817]">HL7 FHIR R4 Standards</h3>
               <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
                 Standardized diagnostic reports, encounter notes, and medication plans interoperable with modern electronic health record systems.
               </p>
@@ -616,7 +616,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <ShieldCheck className="w-5 h-5" />
               </div>
-              <h3 className="font-editorial-serif text-xl text-[#191817]">ABDM Ayushman Bharat</h3>
+              <h3 className="text-base sm:text-lg font-medium text-[#191817]">ABDM Ayushman Bharat</h3>
               <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
                 Full compliance with National Digital Health Mission Milestone 1 (M1), M2, and M3 protocols for longitudinal data exchange.
               </p>
@@ -626,7 +626,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <Lock className="w-5 h-5" />
               </div>
-              <h3 className="font-editorial-serif text-xl text-[#191817]">Zero-Knowledge Consent</h3>
+              <h3 className="text-base sm:text-lg font-medium text-[#191817]">Zero-Knowledge Consent</h3>
               <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
                 Granular, time-bound authorization. Patients choose exactly which doctor or laboratory can view specific care contexts.
               </p>
@@ -636,7 +636,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
               <div className="w-10 h-10 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] flex items-center justify-center text-[#0F766E]">
                 <Clock className="w-5 h-5" />
               </div>
-              <h3 className="font-editorial-serif text-xl text-[#191817]">24/7 Rapid Emergency</h3>
+              <h3 className="text-base sm:text-lg font-medium text-[#191817]">24/7 Rapid Emergency</h3>
               <p className="text-xs sm:text-sm text-[#69655E] leading-relaxed">
                 Emergency trauma coordination, rapid patient identification, and instant retrieval of critical allergies and blood group records.
               </p>
@@ -652,7 +652,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
             <span className="text-xs font-semibold tracking-[0.25em] text-[#0F766E] uppercase">
               HELP & GUIDANCE
             </span>
-            <h2 className="font-editorial-serif text-3xl sm:text-4xl text-[#191817] font-normal mt-1.5">
+            <h2 className="text-2xl sm:text-3xl lg:text-4xl text-[#191817] font-medium tracking-tight mt-1.5">
               Frequently asked questions.
             </h2>
           </div>
@@ -669,7 +669,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                     onClick={() => setOpenFaq(isOpen ? null : idx)}
                     className="w-full px-6 py-5 text-left flex items-center justify-between gap-4 cursor-pointer hover:bg-[#F0F7F6]/50"
                   >
-                    <span className="font-editorial-serif text-base sm:text-lg text-[#191817] font-medium">
+                    <span className="text-base sm:text-lg text-[#191817] font-medium">
                       {faq.q}
                     </span>
                     <span className={`text-xl font-light text-[#0F766E] transition-transform duration-200 ${isOpen ? "rotate-45" : ""}`}>
@@ -700,7 +700,7 @@ export const LandingView: React.FC<LandingViewProps> = ({
                     <div className="w-3.5 h-3.5 rounded-none bg-[#5EEAD4]" />
                   </div>
                 </div>
-                <span className="font-editorial-serif text-xl font-bold text-white tracking-tight">
+                <span className="text-xl font-medium text-white tracking-tight">
                   SwaasthSaarthi
                 </span>
               </div>
