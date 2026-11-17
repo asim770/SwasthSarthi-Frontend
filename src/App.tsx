@@ -188,33 +188,37 @@ export default function App() {
 
   if (currentRoute === "landing") {
     return (
-      <div className="min-h-screen bg-[#F0F7F6] font-editorial-sans text-[#1E1D1B]">
-        <LandingView
-          onOpenLogin={handleOpenLogin}
-          onNavigateToDashboard={() => setCurrentRoute("dashboard")}
-        />
+      <div className="min-h-screen bg-[#F0F7F6] text-[#1E1D1B]">
+        <div className="landing-page-scope">
+          <LandingView
+            onOpenLogin={handleOpenLogin}
+            onNavigateToDashboard={() => setCurrentRoute("dashboard")}
+          />
+        </div>
 
         {/* Modals & Dialogs */}
-        <LoginModal
-          isOpen={isLoginModalOpen}
-          onClose={handleCloseLogin}
-          onSuccessfulLogin={handleSuccessfulLogin}
-        />
+        <div className="font-ubuntu">
+          <LoginModal
+            isOpen={isLoginModalOpen}
+            onClose={handleCloseLogin}
+            onSuccessfulLogin={handleSuccessfulLogin}
+          />
 
-        <HealthDiagnosticsModal
-          isOpen={isHealthModalOpen}
-          onClose={() => setIsHealthModalOpen(false)}
-          healthData={healthData}
-          isLoading={healthLoading}
-          onRefresh={probeHealth}
-          error={healthError}
-        />
+          <HealthDiagnosticsModal
+            isOpen={isHealthModalOpen}
+            onClose={() => setIsHealthModalOpen(false)}
+            healthData={healthData}
+            isLoading={healthLoading}
+            onRefresh={probeHealth}
+            error={healthError}
+          />
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-[#F0F7F6] font-editorial-sans flex flex-col text-[#191817] selection:bg-[#0F766E]/15 selection:text-[#0F766E]">
+    <div className="app-main-scope font-ubuntu min-h-screen bg-[#F0F7F6] flex flex-col text-[#191817] selection:bg-[#0F766E]/15 selection:text-[#0F766E]">
       {/* 1. Horizontal Glass Top Navbar (Replaces permanent vertical sidebar) */}
       <GlassNavbar
         currentRoute={currentRoute}

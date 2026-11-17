@@ -34,13 +34,18 @@
     --accent: #0F766E;
     --accent-soft: rgba(15, 118, 110, 0.08);
 
-    --font-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif;
-    --font-serif: "Playfair Display", Georgia, Cambria, "Times New Roman", serif;
+    /* Typography Variables */
+    --font-ubuntu: "Ubuntu", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    --font-landing-sans: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif;
+    --font-landing-serif: "Playfair Display", Georgia, Cambria, "Times New Roman", serif;
+
+    --font-sans: var(--font-ubuntu);
+    --font-serif: var(--font-ubuntu);
     --font-mono: "SF Mono", Menlo, Monaco, Consolas, "Liberation Mono", monospace;
   }
 
   body {
-    font-family: var(--font-sans);
+    font-family: var(--font-ubuntu), sans-serif;
     background-color: #F0F7F6;
     color: var(--text-primary, #191817);
     -webkit-font-smoothing: antialiased;
@@ -61,13 +66,38 @@
   border-radius: 0px !important;
 }
 
-/* Editorial Landing Page Typography & Masks matching reference screenshot */
-.font-editorial-serif {
-  font-family: var(--font-serif);
+/* Landing Page Typography: Preserved exactly as original */
+.landing-page-scope,
+.landing-page-scope * {
+  font-family: var(--font-landing-sans);
 }
 
-.font-editorial-sans {
-  font-family: var(--font-sans);
+.landing-page-scope .font-editorial-serif {
+  font-family: var(--font-landing-serif) !important;
+}
+
+.landing-page-scope .font-editorial-sans {
+  font-family: var(--font-landing-sans) !important;
+}
+
+/* Application Typography: All dashboard views, portals, modals use Ubuntu font */
+.font-ubuntu,
+.app-main-scope,
+.app-main-scope * {
+  font-family: var(--font-ubuntu);
+}
+
+.app-main-scope .font-mono,
+.app-main-scope code,
+.app-main-scope kbd,
+.app-main-scope pre {
+  font-family: var(--font-mono) !important;
+}
+
+/* Ensure any non-landing elements explicitly referencing font-editorial fallback to Ubuntu */
+.app-main-scope .font-editorial-serif,
+.app-main-scope .font-editorial-sans {
+  font-family: var(--font-ubuntu) !important;
 }
 
 .editorial-hero-mask {
