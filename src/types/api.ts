@@ -95,6 +95,8 @@ export interface AuthChallengeResponse {
 
 export interface AuthVerifyResponse {
   user: AuthenticatedUser;
+  patientId?: string;
+  isNewUser?: boolean;
   csrfToken: string;
   contactVerified?: boolean;
   channel?: OtpDeliveryChannel;

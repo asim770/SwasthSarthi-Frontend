@@ -261,7 +261,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
         const verifyData = await authenticateWithGoogle({ credential, mode });
         loginSuccess(verifyData.user, verifyData.csrfToken);
 
-        if (mode === "register" || !verifyData.user.patientId) {
+        if (mode === "register" || (verifyData as any).isNewUser || !verifyData.user.patientId) {
           // If newly created, show patient ID card
           setRegisteredPatient({
             patientId: verifyData.user.patientId || "SS-PAT-000001",
