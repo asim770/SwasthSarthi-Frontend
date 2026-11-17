@@ -80,11 +80,58 @@
   font-family: var(--font-landing-sans) !important;
 }
 
-/* Application Typography: All dashboard views, portals, modals use Ubuntu font */
+/* Application Typography: All dashboard views, portals, modals use Ubuntu font with softened weights */
 .font-ubuntu,
 .app-main-scope,
 .app-main-scope * {
   font-family: var(--font-ubuntu);
+}
+
+.app-main-scope,
+.font-ubuntu {
+  font-weight: 300;
+  letter-spacing: -0.005em;
+}
+
+.app-main-scope .font-normal,
+.font-ubuntu .font-normal {
+  font-weight: 300 !important;
+}
+
+.app-main-scope .font-medium,
+.font-ubuntu .font-medium {
+  font-weight: 400 !important;
+}
+
+.app-main-scope .font-semibold,
+.font-ubuntu .font-semibold {
+  font-weight: 500 !important;
+}
+
+.app-main-scope .font-bold,
+.app-main-scope .font-extrabold,
+.app-main-scope strong,
+.app-main-scope b,
+.font-ubuntu .font-bold,
+.font-ubuntu .font-extrabold,
+.font-ubuntu strong,
+.font-ubuntu b {
+  font-weight: 500 !important;
+}
+
+.app-main-scope h1,
+.app-main-scope h2,
+.app-main-scope h3,
+.app-main-scope h4,
+.app-main-scope h5,
+.app-main-scope h6,
+.font-ubuntu h1,
+.font-ubuntu h2,
+.font-ubuntu h3,
+.font-ubuntu h4,
+.font-ubuntu h5,
+.font-ubuntu h6 {
+  font-weight: 500 !important;
 }
 
 .app-main-scope .font-mono,
@@ -94,10 +141,11 @@
   font-family: var(--font-mono) !important;
 }
 
-/* Ensure any non-landing elements explicitly referencing font-editorial fallback to Ubuntu */
+/* Ensure any non-landing elements explicitly referencing font-editorial fallback to Ubuntu with softened weight */
 .app-main-scope .font-editorial-serif,
 .app-main-scope .font-editorial-sans {
   font-family: var(--font-ubuntu) !important;
+  font-weight: 500 !important;
 }
 
 .editorial-hero-mask {
