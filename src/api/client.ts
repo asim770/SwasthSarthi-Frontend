@@ -23,6 +23,8 @@ import type {
   DirectLabReportInput,
   DirectDispenseInput,
   TreatedPatientRecord,
+  AdminUserItem,
+  AdminUsersResponse,
 } from "../types/api";
 
 export class ApiError extends Error {
@@ -631,10 +633,36 @@ export async function fetchLabOrders(): Promise<unknown[]> {
 
 
 /**
- * Admin: list user accounts
+ * Admin: list user accounts with pagination, debounced search, role and status filtering
  */
-export async function fetchAdminUsers(): Promise<unknown[]> {
-  return apiRequest<unknown[]>("/admin/users");
+export async function fetchAdminUsers(params?: {
+  page?: number;
+  limit?: number;
+  role?: string;
+  status?: string;
+  search?: string;
+}): Promise<AdminUsersResponse> {
+  const query = new URLSearchParams();
+  if (params?.page) query.append("page", String(params.page));
+  if (params?.limit) query.append("limit", String(params.limit));
+  if (params?.role && params.role !== "ALL") query.append("role", params.role);
+  if (params?.status && params.status !== "ALL") query.append("status", params.status);
+  if (params?.search && params.search.trim()) query.append("search", params.search.trim());
+  const qStr = query.toString();
+  return apiRequest<AdminUsersResponse>(`/admin/users${qStr ? `?${qStr}` : ""}`);
+}
+
+/**
+ * Admin: update user account status (active/suspended)
+ */
+export async function updateAdminUserStatus(
+  userId: string,
+  isActive: boolean
+): Promise<AdminUserItem> {
+  return apiRequest<AdminUserItem>(`/admin/users/${encodeURIComponent(userId)}`, {
+    method: "PATCH",
+    body: JSON.stringify({ isActive }),
+  });
 }
 
 /**
@@ -964,6 +992,12 @@ export async function markNotificationRead(id: string): Promise<NotificationItem
 export async function markAllNotificationsRead(): Promise<{ modifiedCount: number }> {
   return apiRequest<{ modifiedCount: number }>("/notifications/mark-all-read", {
     method: "POST",
+  });
+}
+
+export async function deleteNotificationItem(id: string): Promise<{ success: boolean }> {
+  return apiRequest<{ success: boolean }>(`/notifications/${encodeURIComponent(id)}`, {
+    method: "DELETE",
   });
 }
 

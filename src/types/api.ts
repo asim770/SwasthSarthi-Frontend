@@ -389,7 +389,7 @@ export interface NotificationItem {
   _id: string;
   notificationId: string;
   recipientId: string;
-  recipientAbha: string;
+  recipientAbha?: string;
   recipientRole?: string;
   category: NotificationCategory;
   title: string;
@@ -400,6 +400,31 @@ export interface NotificationItem {
   readAt?: string;
   deliveryStatus: "PENDING" | "SENT" | "DELIVERED" | "FAILED";
   createdAt: string;
+}
+
+export interface AdminUserItem {
+  _id: string;
+  patientId?: string;
+  abhaId: string;
+  abhaAddress: string;
+  name: string;
+  email?: string;
+  phone: string;
+  role: UserRole;
+  isActive: boolean;
+  verificationStatus: "PENDING" | "APPROVED" | "REJECTED" | "SUSPENDED";
+  facility?: string;
+  specialization?: string;
+  createdAt: string;
+  updatedAt: string;
+}
+
+export interface AdminUsersResponse {
+  users: AdminUserItem[];
+  total: number;
+  page: number;
+  limit: number;
+  totalPages: number;
 }
 
 export interface AuditChainVerificationReport {

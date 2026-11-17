@@ -20,8 +20,6 @@ import { useAuth } from "../../context/AuthContext";
 import type { HealthCheckData, NotificationItem } from "../../types/api";
 import { fetchNotifications, markNotificationRead } from "../../api/client";
 
-const DEFAULT_NAVBAR_NOTIFICATIONS: NotificationItem[] = [];
-
 const formatTimeAgo = (isoDate?: string): string => {
   if (!isoDate) return "";
   const diffMs = Date.now() - new Date(isoDate).getTime();
@@ -61,38 +59,52 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
   const notifRef = useRef<HTMLDivElement>(null);
   const profileRef = useRef<HTMLDivElement>(null);
   const overflowRef = useRef<HTMLDivElement>(null);
+  const currentUserIdRef = useRef<string | null>(null);
 
-  // Sync notifications with backend and cross-component updates
+  // Sync notifications with backend and cross-component updates with user-switch protection
   useEffect(() => {
     let isMounted = true;
+    const currentUserId = user?.id || null;
+    currentUserIdRef.current = currentUserId;
+
+    if (!isAuthenticated || !currentUserId) {
+      setNotifications([]);
+      setUnreadCount(0);
+      setIsLoadingNotifs(false);
+      return;
+    }
 
     const loadNavbarNotifications = async () => {
       setIsLoadingNotifs(true);
       try {
         const data = await fetchNotifications({ limit: 10 });
-        if (isMounted) {
+        if (isMounted && currentUserIdRef.current === currentUserId) {
           if (data?.notifications && data.notifications.length > 0) {
             setNotifications(data.notifications);
             setUnreadCount(data.unreadCount ?? data.notifications.filter((n) => !n.isRead).length);
           } else {
-            setNotifications(DEFAULT_NAVBAR_NOTIFICATIONS);
-            setUnreadCount(DEFAULT_NAVBAR_NOTIFICATIONS.filter((n) => !n.isRead).length);
+            setNotifications([]);
+            setUnreadCount(0);
           }
         }
       } catch (_err) {
-        if (isMounted) {
-          setNotifications(DEFAULT_NAVBAR_NOTIFICATIONS);
-          setUnreadCount(DEFAULT_NAVBAR_NOTIFICATIONS.filter((n) => !n.isRead).length);
+        if (isMounted && currentUserIdRef.current === currentUserId) {
+          setNotifications([]);
+          setUnreadCount(0);
         }
       } finally {
-        if (isMounted) setIsLoadingNotifs(false);
+        if (isMounted && currentUserIdRef.current === currentUserId) {
+          setIsLoadingNotifs(false);
+        }
       }
     };
 
     loadNavbarNotifications();
 
     const handleUpdate = () => {
-      loadNavbarNotifications();
+      if (currentUserIdRef.current === currentUserId) {
+        loadNavbarNotifications();
+      }
     };
 
     window.addEventListener("swaasthsaarthi-notification-update", handleUpdate);
@@ -100,7 +112,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
       isMounted = false;
       window.removeEventListener("swaasthsaarthi-notification-update", handleUpdate);
     };
-  }, [isAuthenticated]);
+  }, [isAuthenticated, user?.id]);
 
   // Close dropdowns on outside click or Escape key
   useEffect(() => {

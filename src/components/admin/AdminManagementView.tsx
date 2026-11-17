@@ -8,6 +8,8 @@ import {
   History,
   X,
   MapPin,
+  Users,
+  ShieldAlert,
 } from "lucide-react";
 import {
   fetchInstitutions,
@@ -15,6 +17,8 @@ import {
   reviewInstitution,
   fetchPractitionerVerifications,
   reviewPractitioner,
+  fetchAdminUsers,
+  updateAdminUserStatus,
 } from "../../api/client";
 import { useAuth } from "../../context/AuthContext";
 import type {
@@ -22,6 +26,7 @@ import type {
   FacilityType,
   FacilityStatus,
   PractitionerVerificationItem,
+  AdminUserItem,
 } from "../../types/api";
 import { PageHeader } from "../ui/PageHeader";
 import { StatCard } from "../ui/StatCard";
@@ -30,7 +35,7 @@ import { Button } from "../ui/Button";
 
 export function AdminManagementView() {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"institutions" | "practitioners">("institutions");
+  const [activeTab, setActiveTab] = useState<"institutions" | "practitioners" | "users">("institutions");
 
   // Institutions State
   const [institutions, setInstitutions] = useState<FacilityItem[]>([]);
@@ -58,6 +63,22 @@ export function AdminManagementView() {
   const [practRoleFilter, setPractRoleFilter] = useState<string>("ALL");
   const [practSearch, setPractSearch] = useState("");
 
+  // Users Management State
+  const [adminUsers, setAdminUsers] = useState<AdminUserItem[]>([]);
+  const [usersLoading, setUsersLoading] = useState(false);
+  const [userRoleFilter, setUserRoleFilter] = useState<string>("ALL");
+  const [userStatusFilter, setUserStatusFilter] = useState<string>("ALL");
+  const [userSearch, setUserSearch] = useState("");
+  const [userPage, setUserPage] = useState(1);
+  const [userTotalPages, setUserTotalPages] = useState(1);
+  const [userTotalCount, setUserTotalCount] = useState(0);
+
+  // User Status Confirmation Modal
+  const [userStatusTarget, setUserStatusTarget] = useState<AdminUserItem | null>(null);
+  const [userStatusAction, setUserStatusAction] = useState<"suspend" | "reactivate">("suspend");
+  const [submittingUserStatus, setSubmittingUserStatus] = useState(false);
+  const [userStatusError, setUserStatusError] = useState<string | null>(null);
+
   // Decision Modal State
   const [reviewTarget, setReviewTarget] = useState<{
     type: "institution" | "practitioner";
@@ -70,13 +91,20 @@ export function AdminManagementView() {
   const [submittingReview, setSubmittingReview] = useState(false);
   const [reviewError, setReviewError] = useState<string | null>(null);
 
-  // Initial load of counts for both tabs
+  // Initial load of counts for all tabs
   useEffect(() => {
     fetchInstitutions({ type: "ALL", status: "ALL" })
       .then((data) => setInstitutions(data))
       .catch(() => {});
     fetchPractitionerVerifications({ role: "ALL", status: "ALL" })
       .then((data) => setPractitioners(data))
+      .catch(() => {});
+    fetchAdminUsers({ page: 1, limit: 10 })
+      .then((data) => {
+        setAdminUsers(data.users || []);
+        setUserTotalCount(data.total || 0);
+        setUserTotalPages(data.totalPages || 1);
+      })
       .catch(() => {});
   }, []);
 
@@ -114,13 +142,52 @@ export function AdminManagementView() {
     }
   }, [practRoleFilter, practStatusFilter, practSearch]);
 
+  // Load Users
+  const loadUsers = useCallback(async () => {
+    setUsersLoading(true);
+    try {
+      const data = await fetchAdminUsers({
+        page: userPage,
+        limit: 10,
+        role: userRoleFilter,
+        status: userStatusFilter,
+        search: userSearch || undefined,
+      });
+      setAdminUsers(data.users || []);
+      setUserTotalPages(data.totalPages || 1);
+      setUserTotalCount(data.total || 0);
+    } catch (err) {
+      console.error("Failed to load admin users", err);
+    } finally {
+      setUsersLoading(false);
+    }
+  }, [userPage, userRoleFilter, userStatusFilter, userSearch]);
+
   useEffect(() => {
     if (activeTab === "institutions") {
       loadInstitutions();
     } else if (activeTab === "practitioners") {
       loadPractitioners();
+    } else if (activeTab === "users") {
+      loadUsers();
     }
-  }, [activeTab, loadInstitutions, loadPractitioners]);
+  }, [activeTab, loadInstitutions, loadPractitioners, loadUsers]);
+
+  const handleConfirmUserStatus = async () => {
+    if (!userStatusTarget) return;
+    setSubmittingUserStatus(true);
+    setUserStatusError(null);
+    try {
+      const newActive = userStatusAction === "reactivate";
+      await updateAdminUserStatus(userStatusTarget._id, newActive);
+      setUserStatusTarget(null);
+      loadUsers();
+    } catch (err) {
+      setUserStatusError(err instanceof Error ? err.message : "Failed to update user status");
+    } finally {
+      setSubmittingUserStatus(false);
+    }
+  };
 
   // Handle Institution Registration
   const handleRegisterInstitution = async (e: React.FormEvent) => {
@@ -245,12 +312,13 @@ export function AdminManagementView() {
               size="sm"
               onClick={() => {
                 if (activeTab === "institutions") loadInstitutions();
-                else loadPractitioners();
+                else if (activeTab === "practitioners") loadPractitioners();
+                else loadUsers();
               }}
               leftIcon={
                 <RefreshCw
                   className={`w-3.5 h-3.5 ${
-                    instLoading || practLoading ? "animate-spin" : ""
+                    instLoading || practLoading || usersLoading ? "animate-spin" : ""
                   }`}
                 />
               }
@@ -270,7 +338,7 @@ export function AdminManagementView() {
       />
 
       {/* 2. Executive Stat Cards */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
         <StatCard
           title="Total Facilities"
           value={institutions.length}
@@ -293,6 +361,12 @@ export function AdminManagementView() {
               </Badge>
             ) : undefined
           }
+        />
+        <StatCard
+          title="Registered Accounts"
+          value={userTotalCount || adminUsers.length}
+          subtitle="Governed multi-role user directory"
+          icon={<Users className="w-4 h-4 text-[#0F766E]" />}
         />
       </div>
 
@@ -337,6 +411,27 @@ export function AdminManagementView() {
             }`}
           >
             {practitioners.length}
+          </span>
+        </button>
+
+        <button
+          onClick={() => setActiveTab("users")}
+          className={`flex items-center gap-2 px-3.5 py-1.5 text-xs rounded-none transition-all cursor-pointer whitespace-nowrap ${
+            activeTab === "users"
+              ? "bg-white text-[#0F766E] shadow-2xs font-bold"
+              : "text-[#5C574F] hover:text-[#191817] hover:bg-white/60 font-medium"
+          }`}
+        >
+          <Users className="w-3.5 h-3.5" />
+          <span>User Management</span>
+          <span
+            className={`text-[10px] px-1.5 py-0.2 rounded-none font-mono ${
+              activeTab === "users"
+                ? "bg-[#0F766E]/10 text-[#0F766E] font-bold"
+                : "bg-[#D0E5E1] text-[#5C574F]"
+            }`}
+          >
+            {userTotalCount || adminUsers.length}
           </span>
         </button>
       </div>
@@ -637,7 +732,247 @@ export function AdminManagementView() {
         </div>
       )}
 
+      {/* TAB 3: USER MANAGEMENT */}
+      {activeTab === "users" && (
+        <div className="space-y-4 font-editorial-sans">
+          {/* Controls Bar */}
+          <div className="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 bg-white p-3.5 rounded-none border border-[#D0E5E1] shadow-2xs">
+            <div className="flex flex-wrap items-center gap-2.5 flex-1">
+              <div className="relative flex-1 min-w-[220px] max-w-sm">
+                <Search className="w-3.5 h-3.5 absolute left-3 top-2.5 text-[#7A746B]" />
+                <input
+                  type="text"
+                  placeholder="Search by name, email, Patient ID, ABHA..."
+                  value={userSearch}
+                  onChange={(e) => {
+                    setUserSearch(e.target.value);
+                    setUserPage(1);
+                  }}
+                  className="w-full pl-8 pr-3 py-1.5 text-xs border border-[#D0E5E1] bg-[#F8FBFA] focus:bg-white rounded-none focus:outline-none focus:border-[#0F766E] transition-colors"
+                />
+              </div>
 
+              <select
+                value={userRoleFilter}
+                onChange={(e) => {
+                  setUserRoleFilter(e.target.value);
+                  setUserPage(1);
+                }}
+                className="text-xs border border-[#D0E5E1] rounded-none px-3 py-1.5 bg-[#F8FBFA] text-[#1A1918] cursor-pointer focus:outline-none focus:border-[#0F766E]"
+              >
+                <option value="ALL">All Roles</option>
+                <option value="patient">Patient</option>
+                <option value="doctor">Doctor</option>
+                <option value="laboratory">Laboratory</option>
+                <option value="pharmacy">Pharmacy</option>
+                <option value="admin">Administrator</option>
+              </select>
+
+              <select
+                value={userStatusFilter}
+                onChange={(e) => {
+                  setUserStatusFilter(e.target.value);
+                  setUserPage(1);
+                }}
+                className="text-xs border border-[#D0E5E1] rounded-none px-3 py-1.5 bg-[#F8FBFA] text-[#1A1918] cursor-pointer focus:outline-none focus:border-[#0F766E]"
+              >
+                <option value="ALL">All Statuses</option>
+                <option value="ACTIVE">Active Accounts</option>
+                <option value="SUSPENDED">Suspended Accounts</option>
+              </select>
+            </div>
+
+            <div className="flex items-center gap-3 text-xs text-[#7A746B] justify-end">
+              <span>
+                Showing <strong className="text-[#191817]">{adminUsers.length}</strong> of <strong className="text-[#191817]">{userTotalCount}</strong> users
+              </span>
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={loadUsers}
+                disabled={usersLoading}
+                leftIcon={<RefreshCw className={`w-3.5 h-3.5 ${usersLoading ? "animate-spin" : ""}`} />}
+              >
+                Refresh
+              </Button>
+            </div>
+          </div>
+
+          {/* Users Table */}
+          <div className="bg-white rounded-none border border-[#D0E5E1] shadow-[0_4px_20px_rgba(26,25,24,0.04)] overflow-hidden">
+            {usersLoading ? (
+              <div className="p-12 text-center text-[#7A746B] text-xs space-y-2">
+                <RefreshCw className="w-5 h-5 animate-spin mx-auto text-[#0F766E]" />
+                <p>Loading user accounts...</p>
+              </div>
+            ) : adminUsers.length === 0 ? (
+              <div className="p-12 text-center text-[#7A746B] text-xs">
+                <p className="font-semibold text-sm text-[#191817] mb-1">No users found</p>
+                <p>Try modifying your search query or role/status filters.</p>
+              </div>
+            ) : (
+              <div className="overflow-x-auto">
+                <table className="w-full text-left border-collapse text-xs">
+                  <thead>
+                    <tr className="border-b border-[#D0E5E1] bg-[#F8FBFA] text-[#5C574F] font-semibold text-[11px] uppercase tracking-wider font-mono">
+                      <th className="py-3 px-4">User Details</th>
+                      <th className="py-3 px-4">Role</th>
+                      <th className="py-3 px-4">Identifiers</th>
+                      <th className="py-3 px-4">Facility / Specialty</th>
+                      <th className="py-3 px-4">Status</th>
+                      <th className="py-3 px-4">Registration</th>
+                      <th className="py-3 px-4 text-right">Actions</th>
+                    </tr>
+                  </thead>
+                  <tbody className="divide-y divide-[#E4F1EE]">
+                    {adminUsers.map((u) => {
+                      const isSelf = u._id === user?.id;
+                      return (
+                        <tr key={u._id} className="hover:bg-[#F8FBFA] transition-colors">
+                          <td className="py-3.5 px-4">
+                            <div className="font-bold text-[#191817]">{u.name}</div>
+                            <div className="text-[11px] text-[#7A746B] font-mono">{u.email || "No email"}</div>
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <span className="px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wider bg-[#F0F7F6] text-[#0F766E] border border-[#D0E5E1]">
+                              {u.role}
+                            </span>
+                          </td>
+                          <td className="py-3.5 px-4 font-mono text-[11px] text-[#5C574F]">
+                            {u.patientId && <div>PID: {u.patientId}</div>}
+                            <div className="text-[10px] text-[#7A746B]">{u.abhaAddress || u.abhaId}</div>
+                          </td>
+                          <td className="py-3.5 px-4 text-[#5C574F]">
+                            <div>{u.facility || "Independent"}</div>
+                            {u.specialization && (
+                              <div className="text-[11px] text-[#7A746B]">{u.specialization}</div>
+                            )}
+                          </td>
+                          <td className="py-3.5 px-4">
+                            <div className="flex flex-col gap-1 items-start">
+                              {u.isActive ? (
+                                <Badge variant="success" size="sm" dot>Active</Badge>
+                              ) : (
+                                <Badge variant="danger" size="sm" dot>Suspended</Badge>
+                              )}
+                              {u.verificationStatus && (
+                                <span className="text-[10px] text-[#7A746B] font-mono">
+                                  {u.verificationStatus}
+                                </span>
+                              )}
+                            </div>
+                          </td>
+                          <td className="py-3.5 px-4 text-[#7A746B] font-mono text-[11px]">
+                            {new Date(u.createdAt).toLocaleDateString(undefined, {
+                              year: "numeric",
+                              month: "short",
+                              day: "numeric",
+                            })}
+                          </td>
+                          <td className="py-3.5 px-4 text-right">
+                            {isSelf ? (
+                              <span className="text-[11px] text-[#7A746B] italic">Current Session</span>
+                            ) : u.isActive ? (
+                              <button
+                                onClick={() => {
+                                  setUserStatusTarget(u);
+                                  setUserStatusAction("suspend");
+                                }}
+                                className="px-2.5 py-1 text-[11px] text-rose-700 hover:text-rose-900 bg-rose-50 hover:bg-rose-100 border border-rose-200 transition-colors cursor-pointer"
+                              >
+                                Suspend
+                              </button>
+                            ) : (
+                              <button
+                                onClick={() => {
+                                  setUserStatusTarget(u);
+                                  setUserStatusAction("reactivate");
+                                }}
+                                className="px-2.5 py-1 text-[11px] text-teal-700 hover:text-teal-900 bg-teal-50 hover:bg-teal-100 border border-teal-200 transition-colors cursor-pointer"
+                              >
+                                Reactivate
+                              </button>
+                            )}
+                          </td>
+                        </tr>
+                      );
+                    })}
+                  </tbody>
+                </table>
+              </div>
+            )}
+
+            {/* Pagination Controls */}
+            {userTotalPages > 1 && (
+              <div className="flex items-center justify-between px-4 py-3 border-t border-[#D0E5E1] bg-[#F8FBFA]">
+                <div className="text-xs text-[#5C574F]">
+                  Page <strong className="text-[#191817]">{userPage}</strong> of <strong className="text-[#191817]">{userTotalPages}</strong>
+                </div>
+                <div className="flex items-center gap-2">
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={userPage <= 1 || usersLoading}
+                    onClick={() => setUserPage((p) => Math.max(1, p - 1))}
+                  >
+                    Previous
+                  </Button>
+                  <Button
+                    variant="secondary"
+                    size="sm"
+                    disabled={userPage >= userTotalPages || usersLoading}
+                    onClick={() => setUserPage((p) => Math.min(userTotalPages, p + 1))}
+                  >
+                    Next
+                  </Button>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      )}
+
+      {/* USER STATUS CONFIRMATION MODAL */}
+      {userStatusTarget && (
+        <div className="fixed inset-0 z-50 bg-[#1A1918]/50 backdrop-blur-xs flex items-center justify-center p-4 font-editorial-sans">
+          <div className="bg-white rounded-none max-w-md w-full p-6 shadow-2xl border border-[#D0E5E1] animate-in fade-in zoom-in-95 duration-150">
+            <h3 className="text-base font-editorial-serif font-bold text-[#1A1918] mb-2 flex items-center gap-2">
+              <ShieldAlert className="w-4 h-4 text-amber-600" />
+              Confirm Account {userStatusAction === "suspend" ? "Suspension" : "Reactivation"}
+            </h3>
+            <p className="text-xs text-[#5C574F] mb-4 leading-relaxed">
+              Are you sure you want to {userStatusAction === "suspend" ? "suspend" : "reactivate"} the account for{" "}
+              <strong className="text-[#191817]">{userStatusTarget.name}</strong> ({userStatusTarget.role.toUpperCase()})?
+              {userStatusAction === "suspend" && " This will immediately terminate all active sessions for this user."}
+            </p>
+
+            {userStatusError && (
+              <div className="mb-4 p-2.5 bg-rose-50 border border-rose-200 text-rose-700 text-xs">
+                {userStatusError}
+              </div>
+            )}
+
+            <div className="flex items-center justify-end gap-2 pt-3 border-t border-[#D0E5E1]">
+              <Button
+                variant="secondary"
+                size="sm"
+                onClick={() => setUserStatusTarget(null)}
+                disabled={submittingUserStatus}
+              >
+                Cancel
+              </Button>
+              <Button
+                variant={userStatusAction === "suspend" ? "danger" : "primary"}
+                size="sm"
+                onClick={handleConfirmUserStatus}
+                isLoading={submittingUserStatus}
+              >
+                Confirm {userStatusAction === "suspend" ? "Suspension" : "Reactivation"}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* REGISTER INSTITUTION MODAL */}
       {isRegisterModalOpen && (

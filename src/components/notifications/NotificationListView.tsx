@@ -1,4 +1,4 @@
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import {
   Bell,
   CheckCheck,
@@ -10,19 +10,22 @@ import {
   KeyRound,
   RefreshCw,
   Building,
+  Trash2,
 } from "lucide-react";
 import {
   fetchNotifications,
   markNotificationRead,
   markAllNotificationsRead,
+  deleteNotificationItem,
 } from "../../api/client";
+import { useAuth } from "../../context/AuthContext";
 import { PageHeader } from "../ui/PageHeader";
 import { Button } from "../ui/Button";
 import { EmptyState } from "../ui/EmptyState";
 import type { NotificationItem, NotificationCategory } from "../../types/api";
 
-
 export function NotificationListView() {
+  const { user, isAuthenticated } = useAuth();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [loading, setLoading] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);
@@ -30,7 +33,19 @@ export function NotificationListView() {
   const [unreadOnly, setUnreadOnly] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
+  const activeUserIdRef = useRef<string | null>(null);
+
   const loadNotifications = useCallback(async () => {
+    const currentUserId = user?.id || null;
+    activeUserIdRef.current = currentUserId;
+
+    if (!isAuthenticated || !currentUserId) {
+      setNotifications([]);
+      setUnreadCount(0);
+      setLoading(false);
+      return;
+    }
+
     setLoading(true);
     setError(null);
     try {
@@ -38,21 +53,27 @@ export function NotificationListView() {
         limit: 50,
         unreadOnly: unreadOnly || undefined,
       });
-      if (data?.notifications && data.notifications.length > 0) {
-        setNotifications(data.notifications);
-        setUnreadCount(data.unreadCount ?? data.notifications.filter((n) => !n.isRead).length);
-      } else {
-        setNotifications([]);
-        setUnreadCount(0);
+      if (activeUserIdRef.current === currentUserId) {
+        if (data?.notifications && data.notifications.length > 0) {
+          setNotifications(data.notifications);
+          setUnreadCount(data.unreadCount ?? data.notifications.filter((n) => !n.isRead).length);
+        } else {
+          setNotifications([]);
+          setUnreadCount(0);
+        }
       }
     } catch (err) {
-      setNotifications([]);
-      setUnreadCount(0);
-      console.warn("Could not load notifications from API:", err);
+      if (activeUserIdRef.current === currentUserId) {
+        setNotifications([]);
+        setUnreadCount(0);
+        console.warn("Could not load notifications from API:", err);
+      }
     } finally {
-      setLoading(false);
+      if (activeUserIdRef.current === currentUserId) {
+        setLoading(false);
+      }
     }
-  }, [unreadOnly]);
+  }, [isAuthenticated, user?.id, unreadOnly]);
 
   useEffect(() => {
     loadNotifications();
@@ -78,6 +99,17 @@ export function NotificationListView() {
     setNotifications((prev) =>
       prev.map((n) => (n.notificationId === id ? { ...n, isRead: true } : n))
     );
+    setUnreadCount((prev) => Math.max(0, prev - 1));
+    window.dispatchEvent(new CustomEvent("swaasthsaarthi-notification-update"));
+  };
+
+  const handleDismiss = async (id: string) => {
+    try {
+      await deleteNotificationItem(id);
+    } catch (err) {
+      console.error("Failed to dismiss notification", err);
+    }
+    setNotifications((prev) => prev.filter((n) => n.notificationId !== id && n._id !== id));
     setUnreadCount((prev) => Math.max(0, prev - 1));
     window.dispatchEvent(new CustomEvent("swaasthsaarthi-notification-update"));
   };
@@ -248,15 +280,24 @@ export function NotificationListView() {
                   </div>
                 </div>
 
-                {!n.isRead && (
+                <div className="flex items-center gap-1 shrink-0">
+                  {!n.isRead && (
+                    <button
+                      onClick={() => handleMarkOne(n.notificationId)}
+                      className="p-1.5 text-[#7A746B] hover:text-[#0F766E] hover:bg-[#F0F7F6] rounded-none transition-colors cursor-pointer border border-transparent hover:border-[#B6D6D0]"
+                      title="Mark as read"
+                    >
+                      <Check className="w-4 h-4" />
+                    </button>
+                  )}
                   <button
-                    onClick={() => handleMarkOne(n.notificationId)}
-                    className="p-1.5 text-[#7A746B] hover:text-[#191817] hover:bg-[#F0F7F6] rounded-none transition-colors cursor-pointer shrink-0 border border-transparent hover:border-[#B6D6D0]"
-                    title="Mark as read"
+                    onClick={() => handleDismiss(n.notificationId)}
+                    className="p-1.5 text-[#7A746B] hover:text-rose-600 hover:bg-rose-50 rounded-none transition-colors cursor-pointer border border-transparent hover:border-rose-200"
+                    title="Dismiss notification"
                   >
-                    <Check className="w-4 h-4" />
+                    <Trash2 className="w-3.5 h-3.5" />
                   </button>
-                )}
+                </div>
               </div>
             ))}
           </div>
