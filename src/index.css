@@ -66,17 +66,27 @@
   border-radius: 0px !important;
 }
 
-/* Hero Section Typography: Preserved exactly as requested */
-.hero-editorial-scope {
-  font-family: var(--font-landing-sans);
-}
-
-.hero-editorial-scope .font-editorial-serif {
-  font-family: var(--font-landing-serif) !important;
+/* Hero Section Typography: Preserved exactly as shown in screenshot */
+.hero-editorial-scope,
+.hero-headline-sans {
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em !important;
+  color: #191817 !important;
 }
 
 .hero-editorial-scope .font-editorial-sans {
-  font-family: var(--font-landing-sans) !important;
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "SF Pro Display", "SF Pro Text", "Helvetica Neue", Inter, Roboto, sans-serif !important;
+  font-weight: 800 !important;
+  letter-spacing: -0.025em !important;
+}
+
+.hero-editorial-scope .font-editorial-serif,
+.hero-headline-serif {
+  font-family: "Playfair Display", Georgia, Cambria, "Times New Roman", serif !important;
+  font-style: italic !important;
+  font-weight: 400 !important;
+  color: #0F766E !important;
 }
 
 /* Application Typography: All dashboard views, portals, modals use Ubuntu font with softened weights */

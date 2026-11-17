@@ -372,10 +372,10 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </span>
             </div>
 
-            {/* Main Headline: Bold Modern Sans + Elegant Purple Italic Serif */}
-            <h1 className="font-editorial-sans text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-[#191817] leading-[1.08] tracking-tight">
+            {/* Main Headline: Bold Modern Sans + Elegant Italic Serif */}
+            <h1 className="hero-headline-sans font-editorial-sans text-4xl sm:text-5xl lg:text-[56px] font-extrabold text-[#191817] leading-[1.08] tracking-tight">
               Small moments.
-              <span className="block font-editorial-serif italic font-normal text-[#0F766E] mt-1 sm:mt-1.5 text-4xl sm:text-5xl lg:text-[60px]">
+              <span className="block hero-headline-serif font-editorial-serif italic font-normal text-[#0F766E] mt-1 sm:mt-1.5 text-4xl sm:text-5xl lg:text-[60px]">
                 A little more you.
               </span>
             </h1>
@@ -426,13 +426,6 @@ export const LandingView: React.FC<LandingViewProps> = ({
               </span>
             </div>
           </div>
-        </div>
-
-        {/* Subtle Architectural Corner Badge over hospital building */}
-        <div className="hidden xl:flex absolute bottom-8 right-12 z-10 bg-[#F0F7F6]/90 backdrop-blur-md px-4 py-2.5 rounded-none border border-[#1A1918]/15 shadow-xs items-center gap-2.5 text-xs text-[#1A1918]">
-          <div className="w-2 h-2 rounded-none bg-emerald-500 animate-pulse" />
-          <span className="font-semibold">SwaasthSaarthi</span>
-          <span className="text-[#7A746B]">· Integrated Healthcare Network</span>
         </div>
       </section>
 
