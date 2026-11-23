@@ -265,8 +265,8 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
 
   return (
     <>
-      {/* Edge-to-Edge Frosted Glass Header matching Landing Page */}
-      <header className="sticky top-0 z-40 w-full bg-[#F0F7F6]/92 backdrop-blur-md border-b border-[#D0E5E1] shadow-[0_8px_30px_rgba(15,118,110,0.08)] transition-all duration-300">
+      {/* Edge-to-Edge Transparent Header */}
+      <header className="sticky top-0 z-40 w-full bg-transparent backdrop-blur-md border-b border-[#D0E5E1]/40 transition-all duration-300">
         <div className="max-w-[1400px] mx-auto px-4 sm:px-8 lg:px-12 h-16 sm:h-18 flex items-center justify-between gap-4">
           {/* Left Section: Brand Logo & Stylized Emblem (identical to landing page) */}
           <div className="flex items-center gap-3">

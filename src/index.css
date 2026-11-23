@@ -219,10 +219,10 @@
 }
 
 .glass-header {
-  background: rgba(240, 247, 246, 0.95);
+  background: transparent;
   backdrop-filter: blur(20px);
   -webkit-backdrop-filter: blur(20px);
-  border-bottom: 1px solid #D0E5E1;
+  border-bottom: 1px solid rgba(208, 229, 225, 0.4);
 }
 
 .glass-input {
