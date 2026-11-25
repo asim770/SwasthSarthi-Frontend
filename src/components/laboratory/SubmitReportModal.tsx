@@ -42,7 +42,7 @@ export const SubmitReportModal: React.FC<SubmitReportModalProps> = ({
         {
           code: order.testCode || "LOINC-OBS-01",
           name: order.testName,
-          value: "6.2",
+          value: "",
           unit: order.testCode.includes("4548") ? "%" : "mg/dL",
           referenceRange: order.testCode.includes("4548") ? "< 5.7 %" : "70 - 99 mg/dL",
           interpretation: "NORMAL",

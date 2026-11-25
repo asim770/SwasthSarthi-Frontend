@@ -121,11 +121,18 @@ export default function App() {
       window.history.pushState({}, "", "/");
     }
     if (role === "doctor") setCurrentRoute("dashboard");
-    else if (role === "laboratory") setCurrentRoute("labs");
+    else if (role === "laboratory") setCurrentRoute("dashboard");
     else if (role === "pharmacy") setCurrentRoute("prescriptions");
     else if (role === "admin") setCurrentRoute("access");
     else setCurrentRoute("dashboard");
   }, []);
+
+  // Safeguard role-restricted routes: redirect laboratory away from records/labs to dashboard
+  useEffect(() => {
+    if (user?.role === "laboratory" && (currentRoute === "records" || currentRoute === "labs")) {
+      setCurrentRoute("dashboard");
+    }
+  }, [user?.role, currentRoute]);
 
   // Fetch Gateway health status
   const probeHealth = useCallback(async () => {
@@ -251,13 +258,23 @@ export default function App() {
           ) : currentRoute === "consents" ? (
             <ConsentManagementView />
           ) : currentRoute === "records" ? (
-            <PatientTimelineView />
+            user?.role === "laboratory" ? (
+              <LaboratoryDashboardView />
+            ) : (
+              <PatientTimelineView />
+            )
           ) : currentRoute === "labs" ? (
             <LaboratoryDashboardView />
           ) : currentRoute === "prescriptions" ? (
             <PharmacyDashboardView />
           ) : currentRoute === "access" ? (
-            user?.role === "admin" ? <AdminManagementView /> : <PatientAccessHistoryView />
+            user?.role === "admin" ? (
+              <AdminManagementView />
+            ) : user?.role === "laboratory" ? (
+              <LaboratoryDashboardView initialTab="reports" />
+            ) : (
+              <PatientAccessHistoryView />
+            )
           ) : currentRoute === "notifications" ? (
             <NotificationListView />
           ) : currentRoute === "settings" && user?.role === "admin" ? (

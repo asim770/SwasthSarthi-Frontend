@@ -8,8 +8,10 @@ import {
   AlertCircle,
   CheckCircle2,
   FileCheck2,
+  Upload,
 } from "lucide-react";
 import { uploadDirectLabReport } from "../../api/client";
+import { useAuth } from "../../context/AuthContext";
 import type { DirectLabReportInput } from "../../types/api";
 
 interface DirectLabUploadModalProps {
@@ -34,59 +36,29 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
   onClose,
   onSuccess,
   defaultPatientId = "",
-  defaultLabName = "Metropolis Diagnostics Hub",
+  defaultLabName = "",
 }) => {
+  const { user } = useAuth();
+
   const [patientId, setPatientId] = useState<string>(defaultPatientId);
-
-  useEffect(() => {
-    if (defaultPatientId) {
-      setPatientId(defaultPatientId);
-    }
-  }, [defaultPatientId, isOpen]);
-
-  const [testName, setTestName] = useState<string>("Lipid Profile (Fasting)");
-  const [testCategory, setTestCategory] = useState<string>("Biochemistry");
+  const [testName, setTestName] = useState<string>("");
+  const [testCategory, setTestCategory] = useState<string>("");
   const [testDate, setTestDate] = useState<string>(
     new Date().toISOString().split("T")[0]
   );
-  const [technicianName, setTechnicianName] = useState<string>("Rajesh Kumar, Senior Biochemist");
-  const [laboratoryName, setLaboratoryName] = useState<string>(defaultLabName);
-  const [notes, setNotes] = useState<string>(
-    "Specimen lipemic index normal. Tested on calibrated Abbott auto-analyzer with verified controls."
+  const [technicianName, setTechnicianName] = useState<string>(user?.name || "");
+  const [laboratoryName, setLaboratoryName] = useState<string>(
+    defaultLabName || user?.facility || user?.organizationName || user?.name || ""
   );
-  const [attachmentTitle, setAttachmentTitle] = useState<string>("Lipid_Profile_Official_Signed.pdf");
+  const [notes, setNotes] = useState<string>("");
+  const [attachmentTitle, setAttachmentTitle] = useState<string>("");
 
   const [results, setResults] = useState<TestResultRow[]>([
     {
-      code: "2093-3",
-      name: "Total Cholesterol",
-      value: "195",
+      name: "",
+      value: "",
       unit: "mg/dL",
-      referenceRange: "125 - 200 mg/dL",
-      interpretation: "Normal",
-    },
-    {
-      code: "2085-9",
-      name: "HDL Cholesterol",
-      value: "52",
-      unit: "mg/dL",
-      referenceRange: "> 40 mg/dL",
-      interpretation: "Normal",
-    },
-    {
-      code: "13457-7",
-      name: "LDL Cholesterol",
-      value: "118",
-      unit: "mg/dL",
-      referenceRange: "< 100 mg/dL",
-      interpretation: "Borderline High",
-    },
-    {
-      code: "2571-8",
-      name: "Triglycerides",
-      value: "142",
-      unit: "mg/dL",
-      referenceRange: "< 150 mg/dL",
+      referenceRange: "",
       interpretation: "Normal",
     },
   ]);
@@ -95,13 +67,32 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
   const [error, setError] = useState<string | null>(null);
   const [success, setSuccess] = useState(false);
 
-  React.useEffect(() => {
-    if (defaultPatientId) setPatientId(defaultPatientId);
-  }, [defaultPatientId]);
-
-  React.useEffect(() => {
-    if (defaultLabName) setLaboratoryName(defaultLabName);
-  }, [defaultLabName]);
+  // Reset form to blank when opened so lab technician can manually enter fresh records
+  useEffect(() => {
+    if (isOpen) {
+      setPatientId(defaultPatientId || "");
+      setTestName("");
+      setTestCategory("");
+      setTestDate(new Date().toISOString().split("T")[0]);
+      setTechnicianName(user?.name || "");
+      setLaboratoryName(
+        defaultLabName || user?.facility || user?.organizationName || user?.name || ""
+      );
+      setNotes("");
+      setAttachmentTitle("");
+      setResults([
+        {
+          name: "",
+          value: "",
+          unit: "mg/dL",
+          referenceRange: "",
+          interpretation: "Normal",
+        },
+      ]);
+      setError(null);
+      setSuccess(false);
+    }
+  }, [isOpen, defaultPatientId, defaultLabName, user]);
 
   const handleAddResult = () => {
     setResults((prev) => [
@@ -110,14 +101,27 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
         name: "",
         value: "",
         unit: "mg/dL",
-        referenceRange: "Normal",
+        referenceRange: "",
         interpretation: "Normal",
       },
     ]);
   };
 
   const handleRemoveResult = (index: number) => {
-    setResults((prev) => prev.filter((_, i) => i !== index));
+    setResults((prev) => {
+      const updated = prev.filter((_, i) => i !== index);
+      return updated.length > 0
+        ? updated
+        : [
+          {
+            name: "",
+            value: "",
+            unit: "mg/dL",
+            referenceRange: "",
+            interpretation: "Normal",
+          },
+        ];
+    });
   };
 
   const handleResultChange = (
@@ -142,24 +146,24 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
       setError("Test name is required.");
       return;
     }
-    if (results.length === 0) {
-      setError("At least one test result parameter is required.");
+
+    const validResults = results.filter((r) => r.name.trim() && r.value.trim());
+    if (validResults.length === 0) {
+      setError("Please add at least one test measurement with a parameter name and result value.");
       return;
     }
 
     setLoading(true);
 
     try {
-      const formattedResults = results
-        .filter((r) => r.name.trim())
-        .map((r) => ({
-          code: r.code || undefined,
-          name: r.name.trim(),
-          value: isNaN(Number(r.value)) ? r.value.trim() : Number(r.value),
-          unit: r.unit.trim() || undefined,
-          referenceRange: r.referenceRange.trim() || undefined,
-          interpretation: r.interpretation || "Normal",
-        }));
+      const formattedResults = validResults.map((r) => ({
+        code: r.code || undefined,
+        name: r.name.trim(),
+        value: isNaN(Number(r.value)) ? r.value.trim() : Number(r.value),
+        unit: r.unit.trim() || undefined,
+        referenceRange: r.referenceRange.trim() || undefined,
+        interpretation: r.interpretation || "Normal",
+      }));
 
       const payload: DirectLabReportInput = {
         patientId: patientId.trim(),
@@ -170,12 +174,12 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
         technicianName: technicianName.trim() || undefined,
         laboratoryName: laboratoryName.trim() || undefined,
         notes: notes.trim() || undefined,
-        documentAttachment: attachmentTitle
+        documentAttachment: attachmentTitle.trim()
           ? {
-              title: attachmentTitle.trim(),
-              url: `/reports/${attachmentTitle.trim()}`,
-              mimeType: "application/pdf",
-            }
+            title: attachmentTitle.trim(),
+            url: `/reports/${attachmentTitle.trim()}`,
+            mimeType: "application/pdf",
+          }
           : undefined,
       };
 
@@ -187,9 +191,9 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
         onClose();
         setSuccess(false);
       }, 1500);
-    } catch (err: any) {
+    } catch (err: unknown) {
       setError(
-        err.message || "Failed to upload laboratory report. Please check authorization."
+        err instanceof Error ? err.message : "Failed to upload laboratory report. Please check authorization."
       );
     } finally {
       setLoading(false);
@@ -230,7 +234,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               required
               value={patientId}
               onChange={(e) => setPatientId(e.target.value)}
-              placeholder="e.g. SS-PAT-000001"
+              placeholder="Enter Patient ID"
               className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-mono font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
@@ -244,7 +248,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               required
               value={testName}
               onChange={(e) => setTestName(e.target.value)}
-              placeholder="e.g. Lipid Profile, Complete Blood Count"
+              placeholder="Enter Test Name"
               className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white font-bold text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
@@ -257,7 +261,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
               type="text"
               value={testCategory}
               onChange={(e) => setTestCategory(e.target.value)}
-              placeholder="e.g. Biochemistry, Pathology"
+              placeholder="Enter Test Category"
               className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
             />
           </div>
@@ -331,7 +335,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                 <div className="sm:col-span-3">
                   <input
                     type="text"
-                    placeholder="Parameter (e.g. Total Cholesterol)"
+                    placeholder="Parameter"
                     value={row.name}
                     onChange={(e) => handleResultChange(index, "name", e.target.value)}
                     className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white font-semibold text-[#1A1918]"
@@ -340,7 +344,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                 <div className="sm:col-span-2">
                   <input
                     type="text"
-                    placeholder="Result (195)"
+                    placeholder="Result"
                     value={row.value}
                     onChange={(e) => handleResultChange(index, "value", e.target.value)}
                     className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white font-mono font-bold text-[#1A1918]"
@@ -358,7 +362,7 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                 <div className="sm:col-span-3">
                   <input
                     type="text"
-                    placeholder="Ref Range (125-200 mg/dL)"
+                    placeholder="Range(125-200 mg/dL)"
                     value={row.referenceRange}
                     onChange={(e) => handleResultChange(index, "referenceRange", e.target.value)}
                     className="w-full px-2 py-1 text-xs border border-[#B6D6D0] bg-white text-[#1A1918]"
@@ -416,12 +420,23 @@ export const DirectLabUploadModal: React.FC<DirectLabUploadModalProps> = ({
                 type="text"
                 value={attachmentTitle}
                 onChange={(e) => setAttachmentTitle(e.target.value)}
-                placeholder="Signed_Report.pdf"
+                placeholder="Attach file or enter filename (e.g. CBC_Report.pdf)"
                 className="w-full px-3 py-2 border border-[#B6D6D0] rounded-none bg-white text-[#1A1918] font-mono text-xs focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"
               />
-              <span className="shrink-0 text-[10px] bg-[#F0F7F6] text-[#0F766E] px-2 py-1.5 border border-[#D0E5E1] font-mono font-bold uppercase">
-                PDF
-              </span>
+              <label className="shrink-0 flex items-center gap-1 text-[11px] bg-[#1A1918] text-white px-2.5 py-2 border border-[#1A1918] font-mono cursor-pointer hover:bg-[#2A2928] transition-colors">
+                <Upload className="w-3.5 h-3.5" />
+                <span>Browse</span>
+                <input
+                  type="file"
+                  accept=".pdf,.png,.jpg,.jpeg"
+                  className="hidden"
+                  onChange={(e) => {
+                    if (e.target.files && e.target.files[0]) {
+                      setAttachmentTitle(e.target.files[0].name);
+                    }
+                  }}
+                />
+              </label>
             </div>
           </div>
         </div>

@@ -26,9 +26,21 @@ import { CreateLabOrderModal } from "./CreateLabOrderModal";
 import { SubmitReportModal } from "./SubmitReportModal";
 import { DirectLabUploadModal } from "./DirectLabUploadModal";
 
-export const LaboratoryDashboardView: React.FC = () => {
+export interface LaboratoryDashboardViewProps {
+  initialTab?: "orders" | "reports";
+}
+
+export const LaboratoryDashboardView: React.FC<LaboratoryDashboardViewProps> = ({
+  initialTab = "orders",
+}) => {
   const { user } = useAuth();
-  const [activeTab, setActiveTab] = useState<"orders" | "reports">("orders");
+  const [activeTab, setActiveTab] = useState<"orders" | "reports">(initialTab);
+
+  useEffect(() => {
+    if (initialTab) {
+      setActiveTab(initialTab);
+    }
+  }, [initialTab]);
   const [statusFilter, setStatusFilter] = useState<string>("ALL");
   const [searchQuery, setSearchQuery] = useState<string>("");
 
@@ -164,7 +176,11 @@ export const LaboratoryDashboardView: React.FC = () => {
               <Button
                 variant="primary"
                 size="sm"
-                onClick={() => setIsDirectUploadOpen(true)}
+                onClick={() => {
+                  setLabSearchedPatient(null);
+                  setPatientLookupId("");
+                  setIsDirectUploadOpen(true);
+                }}
                 disabled={user?.verificationStatus === "PENDING"}
                 className="inline-flex items-center gap-1.5"
                 title={user?.verificationStatus === "PENDING" ? "Account pending approval" : "Direct Structured Lab Report Upload"}
@@ -436,37 +452,79 @@ export const LaboratoryDashboardView: React.FC = () => {
             </div>
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-              {reports.map((rep, idx) => (
-                <Card key={idx} className="border-[#D0E5E1] rounded-none bg-white">
-                  <CardContent className="p-4 space-y-3">
-                    <div className="flex items-start justify-between">
-                      <div className="flex items-center gap-2">
-                        <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] flex items-center justify-center font-mono font-bold text-xs">
-                          FHIR
+              {reports.map((rep, idx) => {
+                const observations = Array.isArray(rep.observations) ? rep.observations : [];
+                return (
+                  <Card key={idx} className="border-[#D0E5E1] rounded-none bg-white shadow-2xs">
+                    <CardContent className="p-4 space-y-3">
+                      <div className="flex items-start justify-between">
+                        <div className="flex items-center gap-2">
+                          <div className="w-8 h-8 rounded-none bg-[#F0F7F6] border border-[#D0E5E1] text-[#0F766E] flex items-center justify-center font-mono font-bold text-xs">
+                            FHIR
+                          </div>
+                          <div>
+                            <h4 className="text-sm font-editorial-serif font-bold text-[#1A1918]">
+                              {String(rep.title || rep.testName || "Diagnostic Report")}
+                            </h4>
+                            <span className="text-[10px] font-mono text-[#7A746B]">
+                              {String(rep.recordId || "REC-LAB")}
+                            </span>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="text-sm font-editorial-serif font-bold text-[#1A1918]">
-                            {String(rep.title || "Diagnostic Report")}
-                          </h4>
-                          <span className="text-[10px] font-mono text-[#7A746B]">
-                            {String(rep.recordId || "REC-LAB")}
+                        <Badge variant="success">FINAL REPORT</Badge>
+                      </div>
+
+                      {/* Patient Context */}
+                      <div className="p-2 bg-[#F0F7F6]/80 border border-[#D0E5E1] text-xs flex items-center justify-between">
+                        <div className="flex items-center gap-1.5">
+                          <span className="text-[#69655E] text-[11px]">Patient:</span>
+                          <span className="font-semibold text-[#1A1918]">
+                            {String(rep.patientName || "Verified Patient")}
                           </span>
                         </div>
+                        {Boolean(rep.patientId || rep.patientAbhaAddress) && (
+                          <span className="font-mono text-[10px] bg-white px-1.5 py-0.5 border border-[#D0E5E1] text-[#0F766E]">
+                            {String(rep.patientId || rep.patientAbhaAddress)}
+                          </span>
+                        )}
                       </div>
-                      <Badge variant="success">FINAL REPORT</Badge>
-                    </div>
 
-                    <p className="text-xs text-[#5C574F] line-clamp-2">
-                      {String(rep.summary || "Complete laboratory analysis.")}
-                    </p>
+                      <p className="text-xs text-[#5C574F] line-clamp-2">
+                        {String(rep.summary || "Complete laboratory analysis.")}
+                      </p>
 
-                    <div className="pt-2 border-t border-[#D0E5E1] flex items-center justify-between text-[10px] text-[#69655E]">
-                      <span>Source: {String(rep.sourceInstitution || "Diagnostic Center")}</span>
-                      <span className="font-mono">{String(rep.date || "")}</span>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+                      {/* Observations parameter preview */}
+                      {observations.length > 0 && (
+                        <div className="space-y-1 pt-1 border-t border-[#D0E5E1]/60">
+                          <span className="text-[10px] font-medium text-[#7A746B] uppercase tracking-wider block">
+                            Key Analyte Values ({observations.length}):
+                          </span>
+                          <div className="grid grid-cols-2 gap-1.5">
+                            {observations.slice(0, 4).map((obs: Record<string, unknown>, oIdx: number) => (
+                              <div
+                                key={oIdx}
+                                className="bg-[#FAFDFD] p-1.5 border border-[#D0E5E1] rounded-none flex items-center justify-between text-[10px]"
+                              >
+                                <span className="text-[#5C574F] truncate max-w-[90px]">
+                                  {String(obs.name || obs.code || "Analyte")}
+                                </span>
+                                <span className="font-mono font-semibold text-[#1A1918]">
+                                  {String(obs.value ?? "")} {String(obs.unit || "")}
+                                </span>
+                              </div>
+                            ))}
+                          </div>
+                        </div>
+                      )}
+
+                      <div className="pt-2 border-t border-[#D0E5E1] flex items-center justify-between text-[10px] text-[#69655E]">
+                        <span>Facility: {String(rep.sourceInstitution || rep.providerFacility || "Diagnostic Center")}</span>
+                        <span className="font-mono">{String(rep.date || rep.recordDate || "")}</span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                );
+              })}
             </div>
           )}
         </div>
@@ -494,8 +552,8 @@ export const LaboratoryDashboardView: React.FC = () => {
       <DirectLabUploadModal
         isOpen={isDirectUploadOpen}
         onClose={() => setIsDirectUploadOpen(false)}
-        defaultPatientId={labSearchedPatient?.patientId || patientLookupId || "SS-PAT-000001"}
-        defaultLabName={user?.organizationName || user?.facility || "Metropolis Diagnostics Hub"}
+        defaultPatientId={labSearchedPatient?.patientId || patientLookupId || ""}
+        defaultLabName={user?.organizationName || user?.facility || user?.name || ""}
         onSuccess={() => {
           setIsDirectUploadOpen(false);
           loadData();
