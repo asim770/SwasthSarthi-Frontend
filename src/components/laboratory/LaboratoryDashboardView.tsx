@@ -223,7 +223,7 @@ export const LaboratoryDashboardView: React.FC<LaboratoryDashboardViewProps> = (
                 <Search className="w-4 h-4 text-[#7A746B] absolute left-3 top-1/2 -translate-y-1/2" />
                 <input
                   type="text"
-                  placeholder="Enter Patient ID (e.g. SS-PAT-000001)..."
+                  placeholder="Enter Patient ID"
                   value={patientLookupId}
                   onChange={(e) => setPatientLookupId(e.target.value)}
                   className="w-full pl-9 pr-3 py-1.5 bg-[#F0F7F6] border border-[#B6D6D0] rounded-none text-xs font-mono font-bold text-[#1A1918] placeholder-[#7A746B] focus:outline-none focus:ring-1 focus:ring-[#1A1918] focus:border-[#1A1918]"

@@ -14,7 +14,6 @@ import {
   LogIn,
   Building2,
   Stethoscope,
-  FileCheck2,
 } from "lucide-react";
 import { type NavigationRoute, NAV_ITEMS, type NavItem } from "./navigation";
 import { useAuth } from "../../context/AuthContext";
@@ -205,7 +204,7 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
         .filter(Boolean) as NavItem[];
     }
     if (role === "laboratory") {
-      const labOrder: NavigationRoute[] = ["landing", "dashboard", "access", "notifications"];
+      const labOrder: NavigationRoute[] = ["landing", "dashboard", "notifications"];
       return labOrder
         .map((id) => {
           const item = baseItems.find((b) => b.id === id);
@@ -215,14 +214,6 @@ export const GlassNavbar: React.FC<GlassNavbarProps> = ({
               ...item,
               label: "Dashboard",
               tooltip: "Laboratory Diagnostic Orders & Specimen Intake",
-            };
-          }
-          if (id === "access") {
-            return {
-              ...item,
-              label: "Report History",
-              icon: FileCheck2,
-              tooltip: "Previously Uploaded Patient Reports & Diagnostics Repository",
             };
           }
           return item;

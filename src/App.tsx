@@ -127,9 +127,9 @@ export default function App() {
     else setCurrentRoute("dashboard");
   }, []);
 
-  // Safeguard role-restricted routes: redirect laboratory away from records/labs to dashboard
+  // Safeguard role-restricted routes: redirect laboratory away from records/labs/access to dashboard
   useEffect(() => {
-    if (user?.role === "laboratory" && (currentRoute === "records" || currentRoute === "labs")) {
+    if (user?.role === "laboratory" && (currentRoute === "records" || currentRoute === "labs" || currentRoute === "access")) {
       setCurrentRoute("dashboard");
     }
   }, [user?.role, currentRoute]);
