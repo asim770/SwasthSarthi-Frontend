@@ -45,6 +45,7 @@ export default function App() {
   const [isLoginModalOpen, setIsLoginModalOpen] = useState<boolean>(() => {
     return typeof window !== "undefined" && window.location.pathname === "/login";
   });
+  const [authRedirectError, setAuthRedirectError] = useState<string | null>(null);
 
   // Telemetry & Health State
   const [healthData, setHealthData] = useState<HealthCheckData | null>(null);
@@ -64,7 +65,24 @@ export default function App() {
   // Handle URL changes for /login, /dashboard, and Google OAuth callback redirect
   useEffect(() => {
     const urlParams = new URLSearchParams(window.location.search);
-    if (urlParams.get("login") === "success") {
+    const authErrorParam = urlParams.get("auth_error");
+    if (authErrorParam) {
+      const errorMessages: Record<string, string> = {
+        code_exchange_failed: "Google OAuth code exchange failed. Please verify Google OAuth client secret and redirect URI configuration.",
+        missing_client_secret: "Google OAuth client secret is not configured on the backend server.",
+        token_verification_failed: "Unable to verify your Google identity token. Please try again.",
+        missing_email: "Your Google account did not return a verified email address.",
+        missing_code: "Google did not return an authorization code. Please try signing in again.",
+        access_denied: "Google sign-in was cancelled or denied.",
+        internal_error: "An internal server error occurred during Google authentication.",
+      };
+      setAuthRedirectError(
+        errorMessages[authErrorParam] || `Google authentication failed (${authErrorParam}).`
+      );
+      setIsLoginModalOpen(true);
+      window.history.replaceState({}, "", "/login");
+    } else if (urlParams.get("login") === "success") {
+      setAuthRedirectError(null);
       setCurrentRoute("dashboard");
       checkSession();
       window.history.replaceState({}, "", "/dashboard");
@@ -109,6 +127,7 @@ export default function App() {
 
   const handleCloseLogin = useCallback(() => {
     setIsLoginModalOpen(false);
+    setAuthRedirectError(null);
     if (window.location.pathname === "/login") {
       window.history.pushState({}, "", "/");
     }
@@ -117,6 +136,7 @@ export default function App() {
   // Redirect to role landing page on successful authentication
   const handleSuccessfulLogin = useCallback((role?: string) => {
     setIsLoginModalOpen(false);
+    setAuthRedirectError(null);
     if (window.location.pathname === "/login") {
       window.history.pushState({}, "", "/");
     }
@@ -293,6 +313,7 @@ export default function App() {
         isOpen={isLoginModalOpen}
         onClose={handleCloseLogin}
         onSuccessfulLogin={handleSuccessfulLogin}
+        initialError={authRedirectError}
       />
 
       <RecordDetailsModal

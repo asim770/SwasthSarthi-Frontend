@@ -76,12 +76,14 @@ interface LoginModalProps {
   isOpen: boolean;
   onClose: () => void;
   onSuccessfulLogin?: (role?: string) => void;
+  initialError?: string | null;
 }
 
 export const LoginModal: React.FC<LoginModalProps> = ({
   isOpen,
   onClose,
   onSuccessfulLogin,
+  initialError,
 }) => {
   const { loginSuccess } = useAuth();
 
@@ -178,8 +180,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   // Global / Notification State
   const [isGoogleLoading, setIsGoogleLoading] = useState<boolean>(false);
-  const [errorMessage, setErrorMessage] = useState<string | null>(null);
+  const [gsiReady, setGsiReady] = useState<boolean>(false);
+  const [errorMessage, setErrorMessage] = useState<string | null>(initialError || null);
   const [unregisteredGooglePrompt, setUnregisteredGooglePrompt] = useState<boolean>(false);
+
+  useEffect(() => {
+    if (isOpen && initialError) {
+      setErrorMessage(initialError);
+    }
+  }, [isOpen, initialError]);
 
   // Active fallback Google Client ID verified in Google Cloud Console
   const DEFAULT_GOOGLE_CLIENT_ID = "666611753013-91i8o6iasa6b80041k2kl07ocjoa9lk3.apps.googleusercontent.com";
@@ -310,55 +319,82 @@ export const LoginModal: React.FC<LoginModalProps> = ({
 
   // Initialize Google Identity Services (GSI)
   useEffect(() => {
-    if (!isOpen || !googleClientId || typeof window === "undefined") return;
+    if (!isOpen || !googleClientId || typeof window === "undefined") {
+      setGsiReady(false);
+      return;
+    }
 
-    const setupGoogleGsi = () => {
-      if (window.google?.accounts?.id) {
-        try {
-          window.google.accounts.id.initialize({
-            client_id: googleClientId,
-            callback: async (response) => {
-              if (response.credential) {
-                const targetMode = modalMode === "SIGN_UP" ? "register" : "login";
-                await handleGoogleCredential(response.credential, targetMode);
-              }
-            },
-            auto_select: false,
-          });
+    const isLoginView = modalMode === "SIGN_IN";
+    const isPatientSignupView = modalMode === "SIGN_UP" && !roleSelectionStep && signupRole === "patient";
+    if (!isLoginView && !isPatientSignupView) {
+      setGsiReady(false);
+      return;
+    }
 
-          // Render button into Login container if visible
-          if (googleBtnContainerRef.current) {
-            googleBtnContainerRef.current.innerHTML = "";
-            window.google.accounts.id.renderButton(googleBtnContainerRef.current, {
-              theme: "outline",
-              size: "large",
-              width: "100%",
-              text: "continue_with",
-              shape: "rectangular",
-            });
-          }
+    setGsiReady(false);
+    let cancelled = false;
+    let attempts = 0;
+    let pollTimer: ReturnType<typeof setInterval> | null = null;
 
-          // Render button into Sign Up container if visible
-          if (googleSignupBtnContainerRef.current) {
-            googleSignupBtnContainerRef.current.innerHTML = "";
-            window.google.accounts.id.renderButton(googleSignupBtnContainerRef.current, {
-              theme: "outline",
-              size: "large",
-              width: "100%",
-              text: "signup_with",
-              shape: "rectangular",
-            });
-          }
-        } catch (err) {
-          console.warn("Google GSI initialization notice:", err);
+    const trySetupGoogleGsi = (): boolean => {
+      if (cancelled || !window.google?.accounts?.id) return false;
+      const container = isLoginView
+        ? googleBtnContainerRef.current
+        : googleSignupBtnContainerRef.current;
+      if (!container) return false;
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: googleClientId,
+          callback: async (response) => {
+            if (response.credential) {
+              const targetMode = modalMode === "SIGN_UP" ? "register" : "login";
+              await handleGoogleCredential(response.credential, targetMode);
+            }
+          },
+          auto_select: false,
+        });
+
+        const parentWidth = container.parentElement?.clientWidth || container.clientWidth || 360;
+        const pixelWidth = Math.min(400, Math.max(240, Math.floor(parentWidth)));
+
+        window.google.accounts.id.renderButton(container, {
+          theme: "outline",
+          size: "large",
+          width: pixelWidth,
+          text: isLoginView ? "continue_with" : "signup_with",
+          shape: "rectangular",
+        });
+
+        if (!cancelled) {
+          setGsiReady(true);
         }
+        return true;
+      } catch (err) {
+        console.warn("Google GSI initialization notice:", err);
+        return false;
       }
     };
 
-    // Delay slightly to ensure modal DOM nodes are mounted
-    const timer = setTimeout(setupGoogleGsi, 100);
-    return () => clearTimeout(timer);
-  }, [isOpen, googleClientId, handleGoogleCredential, modalMode]);
+    if (!trySetupGoogleGsi()) {
+      pollTimer = setInterval(() => {
+        attempts += 1;
+        if (trySetupGoogleGsi() || attempts >= 40) {
+          if (pollTimer) {
+            clearInterval(pollTimer);
+            pollTimer = null;
+          }
+        }
+      }, 150);
+    }
+
+    return () => {
+      cancelled = true;
+      if (pollTimer) {
+        clearInterval(pollTimer);
+      }
+    };
+  }, [isOpen, googleClientId, handleGoogleCredential, modalMode, roleSelectionStep, signupRole]);
 
   const handleGoogleOAuthFallback = (mode: "login" | "register" = "login") => {
     if (!googleClientId) {
@@ -854,7 +890,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
           <div className="space-y-4">
             {/* OPTION A: CONTINUE WITH GOOGLE */}
             <div>
-              <div ref={googleBtnContainerRef} className="w-full min-h-[42px] flex items-center justify-center">
+              <div
+                ref={googleBtnContainerRef}
+                className={gsiReady ? "w-full min-h-[42px] flex items-center justify-center" : "hidden"}
+              />
+              {!gsiReady && (
                 <button
                   type="button"
                   disabled={isGoogleLoading}
@@ -881,7 +921,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   </svg>
                   <span>{isGoogleLoading ? "Verifying Google Identity..." : "Continue with Google"}</span>
                 </button>
-              </div>
+              )}
             </div>
 
             {/* DIVIDER: OR */}
@@ -1146,7 +1186,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                   <div className="space-y-4">
                     {/* OPTION A: CONTINUE WITH GOOGLE REGISTRATION */}
                     <div>
-                      <div ref={googleSignupBtnContainerRef} className="w-full min-h-[42px] flex items-center justify-center">
+                      <div
+                        ref={googleSignupBtnContainerRef}
+                        className={gsiReady ? "w-full min-h-[42px] flex items-center justify-center" : "hidden"}
+                      />
+                      {!gsiReady && (
                         <button
                           type="button"
                           disabled={isGoogleLoading}
@@ -1173,7 +1217,7 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                           </svg>
                           <span>{isGoogleLoading ? "Creating Patient Account..." : "Sign Up with Google"}</span>
                         </button>
-                      </div>
+                      )}
                     </div>
 
                     {/* DIVIDER: OR REGISTER MANUALLY */}
