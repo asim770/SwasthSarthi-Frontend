@@ -13,7 +13,7 @@ export default defineConfig({
     strictPort: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:4000',
+        target: 'https://swasthsarthi-backend.onrender.com',
         changeOrigin: true,
         secure: false,
       },
