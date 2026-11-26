@@ -276,10 +276,23 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       setUnregisteredGooglePrompt(false);
 
       try {
-        const verifyData = await authenticateWithGoogle({ credential, mode });
+        let effectiveMode = mode;
+        let verifyData;
+        try {
+          verifyData = await authenticateWithGoogle({ credential, mode });
+        } catch (loginErr: any) {
+          // If backend rejects unregistered Google login, transparently register as patient
+          if (loginErr?.code === "ACCOUNT_NOT_FOUND" && mode === "login") {
+            effectiveMode = "register";
+            verifyData = await authenticateWithGoogle({ credential, mode: "register" });
+          } else {
+            throw loginErr;
+          }
+        }
+
         loginSuccess(verifyData.user, verifyData.csrfToken);
 
-        if (mode === "register" || (verifyData as any).isNewUser || !verifyData.user.patientId) {
+        if (effectiveMode === "register" || (verifyData as any).isNewUser || !verifyData.user.patientId) {
           // If newly created, show patient ID card
           setRegisteredPatient({
             patientId: verifyData.user.patientId || "SS-PAT-000001",
@@ -869,6 +882,8 @@ export const LoginModal: React.FC<LoginModalProps> = ({
                     variant="primary"
                     size="sm"
                     onClick={() => {
+                      setSignupRole("patient");
+                      setRoleSelectionStep(false);
                       setModalMode("SIGN_UP");
                       setErrorMessage(null);
                       setUnregisteredGooglePrompt(false);
