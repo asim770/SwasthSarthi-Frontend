@@ -181,8 +181,13 @@ export const LoginModal: React.FC<LoginModalProps> = ({
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [unregisteredGooglePrompt, setUnregisteredGooglePrompt] = useState<boolean>(false);
 
+  // Active fallback Google Client ID verified in Google Cloud Console
+  const DEFAULT_GOOGLE_CLIENT_ID = "666611753013-91i8o6iasa6b80041k2kl07ocjoa9lk3.apps.googleusercontent.com";
+
   // Configuration
-  const [googleClientId, setGoogleClientId] = useState<string | null>(null);
+  const [googleClientId, setGoogleClientId] = useState<string | null>(
+    (import.meta.env.VITE_GOOGLE_CLIENT_ID as string) || DEFAULT_GOOGLE_CLIENT_ID
+  );
   const [googleRedirectUri, setGoogleRedirectUri] = useState<string>(
     "http://localhost:3000/api/auth/callback/google"
   );
@@ -214,7 +219,11 @@ export const LoginModal: React.FC<LoginModalProps> = ({
     fetchGoogleConfig()
       .then((cfg) => {
         if (isMounted && cfg.clientId) {
-          setGoogleClientId(cfg.clientId);
+          // If the backend returns the old/dead dummy client ID, override it with the active one
+          const activeClientId = cfg.clientId.includes("cp94eclg8ts7i1ddlqq9eijlnqbc9qgl")
+            ? DEFAULT_GOOGLE_CLIENT_ID
+            : cfg.clientId;
+          setGoogleClientId(activeClientId);
           if (cfg.redirectUri) setGoogleRedirectUri(cfg.redirectUri);
         }
       })
@@ -346,12 +355,9 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       }
     };
 
-    if (window.google?.accounts?.id) {
-      setupGoogleGsi();
-    } else {
-      const timer = setTimeout(setupGoogleGsi, 500);
-      return () => clearTimeout(timer);
-    }
+    // Delay slightly to ensure modal DOM nodes are mounted
+    const timer = setTimeout(setupGoogleGsi, 100);
+    return () => clearTimeout(timer);
   }, [isOpen, googleClientId, handleGoogleCredential, modalMode]);
 
   const handleGoogleOAuthFallback = (mode: "login" | "register" = "login") => {
@@ -363,11 +369,15 @@ export const LoginModal: React.FC<LoginModalProps> = ({
       handleGoogleCredential(mockToken, mode);
       return;
     }
-    const stateParam = encodeURIComponent(JSON.stringify({ mode }));
+    const currentOrigin = typeof window !== "undefined" ? window.location.origin : "http://localhost:3000";
+    const effectiveRedirectUri = (googleRedirectUri && googleRedirectUri.startsWith(currentOrigin))
+      ? googleRedirectUri
+      : `${currentOrigin}/api/auth/callback/google`;
+    const stateParam = encodeURIComponent(JSON.stringify({ mode, origin: currentOrigin }));
     const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${encodeURIComponent(
       googleClientId
     )}&redirect_uri=${encodeURIComponent(
-      googleRedirectUri
+      effectiveRedirectUri
     )}&response_type=code&scope=openid%20email%20profile&state=${stateParam}&prompt=select_account`;
     window.location.href = authUrl;
   };
